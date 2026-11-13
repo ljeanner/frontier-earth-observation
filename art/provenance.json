@@ -1,0 +1,52 @@
+{
+  "status": "Image provenance for Agentic Earth-Observation Tasking and Downlink",
+  "direction": "Existing Frontier Graphisme project skill: graphite drawings, ivory paper, restrained sage accents.",
+  "reuse": "Existing generated artwork reused at the user's request. Source files remain unchanged. Four new graphite studies and one synthetic optical-style teaching image were generated for this reader on 10 November 2026.",
+  "assets": [
+    { "file": "earth-sketch.png", "source": "meridian-corporate/public/art/earth-sketch.png", "use": "Cover and glossary", "limit": "Illustrative globe, not a physical orbital simulation." },
+    { "file": "mission-control.webp", "source": "meridian-corporate/public/art/mission-control.webp", "use": "Functional chapter", "limit": "Representative drawn people and room, not a verified facility." },
+    { "file": "ground-station.webp", "source": "meridian-corporate/public/art/ground-station.webp", "use": "Front matter, contents and existing architecture", "limit": "Representative drawn ground station, not a verified installation." },
+    { "file": "forest.webp", "source": "cinematic-preview/public/art/forest.webp", "use": "Challenges, scenario and closing page", "limit": "Illustrative landscape, not a real incident." },
+    { "file": "orbital-observation.png", "readingDerivative": "orbital-observation-reading.webp", "source": "Generated in this session with image_generation", "assetId": "sha256:9058ded967055f65e22798bd0d64bb33a9fff8f44615c70f84faa4805a5dd79c", "direction": "Frontier Graphisme: graphite hatching on matte ivory, selective contours, soft upper-left light, restrained sage observation footprint; no text or logos.", "use": "Meridian introduction and the observation-to-delivery process plate", "derivative": "Proportional resize within 1200 x 1200, WebP quality 86. Original PNG retained.", "limit": "Conceptual observation geometry, not a verified orbit, sensor footprint or Meridian spacecraft." },
+    { "file": "optical-radar-study.png", "readingDerivative": "optical-radar-study-reading.webp", "source": "Generated in this session with image_generation", "assetId": "sha256:2ff8d3db258de0ee92087f8bc47cd00e3e3274f58ec39ca670e4e9ecb8e2681c", "direction": "Frontier Graphisme: paired graphite instrument studies on matte ivory, fine cross-hatching, quiet margins, no text or logos.", "use": "Optical and radar concepts", "derivative": "Proportional resize within 1200 x 1200, WebP quality 86. Original PNG retained.", "limit": "Conceptual illustration of illumination and cloud conditions, not actual imagery, flame detection or a sensor-performance model." },
+    { "file": "antenna-vignette.png", "readingDerivative": "antenna-vignette-reading.webp", "source": "Generated in this session with image_generation", "assetId": "sha256:5c04340a5186e4c2d1e39952b8c9d24c4934e45b8fd9b4512df76483306fa3b5", "direction": "Frontier Graphisme: lower-right graphite dish study, fine technical hatching, quiet ivory margins, plausible pedestal and contact shadow.", "use": "Small corner drawing beside downlink and station-planning explanations", "derivative": "Crop from (480, 450) to the original bottom-right corner; proportional resize within 1200 x 1200, WebP quality 86. Original PNG retained.", "limit": "Generic antenna, not a verified Meridian installation or station location." },
+    { "file": "mission-review.png", "readingDerivative": "mission-review-reading.webp", "source": "Generated in this session with image_generation", "assetId": "sha256:3fc189399cdbc8ec5cdce38ede26302f924535968392cd36efcfa8c26f80fdf1", "direction": "Frontier Graphisme: naturalistic graphite hand and pencil, matte paper, fine hatching and soft contact shadows, no legible operational data.", "use": "Human review and approval of a mission plan", "derivative": "Proportional resize within 1200 x 1200, WebP quality 86. Original PNG retained.", "limit": "Illustrative gesture and fictional plan, not actual command data or approval evidence." },
+    { "file": "synthetic-optical-terrain.png", "readingDerivative": "synthetic-optical-terrain-reading.webp", "source": "Generated in this session with image_generation", "assetId": "sha256:62798b999b2c0349b4e7a85e384730d3349a1fbd05400de04f310c9afe082c3a", "direction": "Synthetic natural-color, nadir optical-style terrain for the user's requested photographic comparison; deliberately distinct from the graphite illustrations.", "use": "Visible versus cloud-obscured area of interest", "derivative": "Proportional resize within 1200 x 1200, WebP quality 86. Both comparison panels use the exact same derivative; a CSS simulated cloud layer is added to the second panel. Original PNG retained.", "limit": "Not real satellite imagery, not Attica, not a documented fire or sensor product. Cloud coverage is simulated, and visibility alone does not establish product acceptance." },
+    {
+      "file": "sentinel-2-rome-2023-original.webp",
+      "readingDerivative": "sentinel-2-rome-2023-reading.webp",
+      "kind": "real-satellite-imagery",
+      "source": "https://eu-space.europa.eu/components/earth-observation-copernicus/image-of-the-day/rome-italy",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Rome%2C_Italy_%28Copernicus_2023-03-25%29.webp",
+      "rightsSource": "https://commons.wikimedia.org/wiki/File:Rome,_Italy_(Copernicus_2023-03-25).webp",
+      "credit": "European Union, Copernicus Sentinel-2 imagery; processed by @DEFIS_EU. Contains modified Copernicus Sentinel data 2023.",
+      "licence": "Copernicus attribution; original institutional credits retained.",
+      "acquired": "2023-03-16",
+      "downloaded": "2026-11-10",
+      "originalSha256": "923fa2a0270d9dc1943c47ae24e5d6b9bde9ea18e68989bbee693163231285ad",
+      "derivative": "Full original retained at 4008 x 2543. Proportional reading resize to 1400 x 888, WebP quality 88; no crop or recolouring.",
+      "use": "Optical instrument example after the synthetic cloud-quality plate",
+      "limit": "Real Rome scene, not Meridian imagery. Different date and extent from the radar example; not a co-registered performance comparison. Original EU and Copernicus marks belong to the credited source, not this book."
+    },
+    {
+      "file": "sentinel-1-central-italy-2018-original.jpg",
+      "readingDerivative": "sentinel-1-central-italy-2018-reading.webp",
+      "kind": "real-satellite-imagery",
+      "source": "https://www.esa.int/ESA_Multimedia/Images/2018/09/Central_Italy",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Central_Italy_ESA400208.jpg",
+      "rightsSource": "https://commons.wikimedia.org/wiki/File:Central_Italy_ESA400208.jpg",
+      "credit": "Contains modified Copernicus Sentinel data (2018), processed by ESA.",
+      "licence": "CC BY-SA 3.0 IGO",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0/igo/",
+      "acquired": "2018-07-06",
+      "downloaded": "2026-11-10",
+      "originalSha256": "d8094bc09df28cd5694de571c36373d1fbec6efdc8ceb80cb85b98d1ae978588",
+      "derivative": "Full original retained at 6814 x 5339. Proportional reading resize to 1400 x 1097, WebP quality 88; no crop or recolouring. Reading derivative also CC BY-SA 3.0 IGO.",
+      "use": "SAR instrument example after the synthetic cloud-quality plate",
+      "limit": "Real Sentinel-1B dual-polarisation radar scene in false colours. The colours encode radar information, not natural surface colours. Different date and extent from the optical example; not Meridian imagery, an optical substitute or evidence of flame detection."
+    }
+  ],
+  "navigationReference": "https://microsoft.github.io/physical-ai-toolchain/",
+  "referenceUse": "User-provided screenshot used as a structural navigation reference, reinterpreted as a book table of contents. No Microsoft branding or page copy reused.",
+  "scenario": "Local, scripted editorial interaction. No live agent, mission system, CRM, SharePoint or MCP connections. No performance claims."
+}

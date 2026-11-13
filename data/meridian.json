@@ -1,0 +1,114 @@
+{
+  "$comment": "Source de vérité partagée Meridian. Toute session/application lit ces valeurs au lieu d'inventer les siennes. Modifier ICI en premier, puis lancer: node scripts/check-meridian-dataset.mjs. Détails: meridian-dataset.README.md",
+  "version": 2,
+  "updated": "2026-11-09",
+  "governance": {
+    "imposed": {
+      "rule": "DONNÉES IMPOSÉES PAR LE BUSINESS CASE. Ne JAMAIS modifier, même pour simplifier une démo. Tout désaccord se discute avec l'utilisateur, pas dans le code.",
+      "profile": {
+        "name": "Meridian",
+        "industry": "Aerospace (Space & Earth Observation)",
+        "headquartersCountry": "Italy",
+        "operatingRegion": "Italy, with ground stations in Norway, Spain, and Kenya",
+        "groundStationCountries": ["Norway", "Spain", "Kenya"],
+        "ecosystem": "ESA and Copernicus interfaces",
+        "regulatoryContext": [
+          "EU Space Act (proposal targeting 2030 application)",
+          "Copernicus data policy",
+          "GDPR",
+          "Dual-use export controls",
+          "NIS2"
+        ]
+      },
+      "businessChallenge": {
+        "headquartersCity": "Rome",
+        "customers": ["Emergency agencies", "Agriculture", "Defence"],
+        "fleetDescription": "30 radar and optical satellites",
+        "planningCycle": "Daily planning cycles",
+        "planningInputs": [
+          "Customer tasking requests",
+          "Orbital constraints",
+          "Ground-station availability",
+          "Cloud and weather forecasts"
+        ]
+      },
+      "fleet": { "satellites": 30, "sensorTypes": ["radar", "optical"] },
+      "paths": [
+        "company.name",
+        "company.headquarters (Rome, Italy)",
+        "company.customers",
+        "company.ecosystem",
+        "fleet.satellites",
+        "groundStations (pays: Norway, Spain, Kenya)"
+      ]
+    },
+    "invented": {
+      "rule": "DONNÉES INVENTÉES (synthétiques). Modifiables, mais de façon logique (ex. planes x satellitesPerPlane = satellites, radar + optical = satellites) et persistante : modifier ce fichier ET la source détaillée, incrémenter version/updated, noter dans le README, lancer scripts/check-meridian-dataset.mjs.",
+      "paths": [
+        "company.description",
+        "company.headquarters.id",
+        "fleet.radar / optical (répartition)",
+        "fleet.orbitalPlanes, satellitesPerPlane",
+        "fleet.altitudeKm, inclinationDeg, idFormat, orbitModel",
+        "groundStations.items (noms, antennes, emplacements précis)",
+        "requests (ids, nombre)",
+        "wildfireScenario (tout)"
+      ],
+      "constraints": [
+        "fleet.orbitalPlanes * fleet.satellitesPerPlane = fleet.satellites (imposé)",
+        "fleet.radar + fleet.optical = fleet.satellites",
+        "groundStations.totalAntennas = somme des antennes",
+        "groundStations.count = nombre de items, pays limités à Norway, Spain, Kenya"
+      ]
+    }
+  },
+  "company": {
+    "name": "Meridian",
+    "description": "Italian Earth-observation operator",
+    "headquarters": { "id": "hq-rome", "city": "Rome", "country": "Italy" },
+    "customers": ["Emergency agencies", "Agriculture", "Defence"],
+    "ecosystem": "ESA and Copernicus interfaces"
+  },
+  "fleet": {
+    "satellites": 30,
+    "radar": 15,
+    "optical": 15,
+    "orbitalPlanes": 5,
+    "satellitesPerPlane": 6,
+    "altitudeKm": 550,
+    "inclinationDeg": 97.6,
+    "idFormat": { "radar": "SAR-01..SAR-15", "optical": "OPT-01..OPT-15" },
+    "orbitModel": "Simplified Keplerian (illustrative, not SGP4)",
+    "detail": "scenarios/constellation.json"
+  },
+  "groundStations": {
+    "count": 3,
+    "totalAntennas": 4,
+    "items": [
+      { "id": "gs-norway", "name": "Svalbard, Norway", "antennas": 2 },
+      { "id": "gs-spain", "name": "Southern Europe Station (Maspalomas area)", "antennas": 1 },
+      { "id": "gs-kenya", "name": "Equatorial Station (Malindi area)", "antennas": 1 }
+    ],
+    "detail": "scenarios/stations.json"
+  },
+  "requests": {
+    "count": 5,
+    "ids": [
+      "req-fire-attica",
+      "req-flood-emilia",
+      "req-maritime-med",
+      "req-crop-andalusia",
+      "req-crop-po"
+    ],
+    "detail": "eo-operator-explorer/src/data/requests.json"
+  },
+  "wildfireScenario": {
+    "id": "attica-20260714-afternoon",
+    "requestId": "AR-1842",
+    "legacyRequestId": "req-fire-attica",
+    "location": "Attica, Greece",
+    "deadlineHours": 4,
+    "detail": "scenarios/attica.ts"
+  },
+  "disclaimer": "All data is synthetic and illustrative; it does not describe a real operator."
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#efeee5">
+    <meta name="description" content="An illustrated white paper on agentic Earth-observation tasking and downlink, connecting mission planning, ground resources and product delivery.">
+    <title>Agentic Earth-Observation Tasking and Downlink</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23345b4c'/%3E%3Cpath d='M18 46V18h28M18 30h22' fill='none' stroke='%23efeee5' stroke-width='3'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="./editorial.css">
+    <script type="module" src="./editorial-reader.js"></script>
+  </head>
+  <body class="web-reader">
+    <a class="skip-link" href="#reading-content">Skip to reading</a>
+    <header class="editorial-header">
+      <a href="#cover" class="brand" aria-label="Frontier — cover">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M7 29V7h22M7 17h17M13 29V12h16"/></svg>
+        <span>FRONTIER<span class="brand-caption">MISSION ARCHITECTURE</span></span>
+      </a>
+      <span class="header-context">EARTH OBSERVATION / TASKING &amp; DOWNLINK</span>
+      <div class="header-actions">
+        <button type="button" id="contents-button" aria-haspopup="dialog" aria-controls="contents-drawer">Contents</button>
+        <details id="reader-actions">
+          <summary>Reading tools</summary>
+          <div class="action-list">
+            <button type="button" id="bookmark" aria-pressed="false">Bookmark</button>
+            <a id="saved-page" hidden>Return to bookmark</a>
+            <button type="button" id="print-button">Print</button>
+            <a id="book-view" href="./book.html#cover">Book view</a>
+          </div>
+        </details>
+      </div>
+      <div class="reading-progress" aria-hidden="true"><div id="progress"></div></div>
+    </header>
+    <div class="reading-status"><span id="position">ILLUSTRATED WHITE PAPER</span><span id="current-title"></span></div>
+    <div id="storage-notice" class="notice" role="status" hidden></div>
+    <main id="reading-content" tabindex="-1"><p class="loading-notice" role="status">Loading the white paper…</p></main>
+    <dialog id="contents-drawer" aria-labelledby="contents-title">
+      <div class="dialog-heading"><h2 id="contents-title">Contents</h2><button type="button" data-close-dialog>Close</button></div>
+      <p class="drawer-note">7 chapters · 29 reading sequences, with glossary, sources and image credits.</p>
+      <nav id="navigation" aria-label="White-paper contents"></nav>
+    </dialog>
+    <dialog id="definition-dialog" aria-labelledby="definition-title">
+      <div class="dialog-heading"><h2 id="definition-title">Definition</h2><button type="button" data-close-dialog>Return to text</button></div>
+      <div id="definition-content"></div>
+    </dialog>
+    <dialog id="image-dialog" aria-labelledby="image-title">
+      <div class="dialog-heading"><h2 id="image-title">Inspect the image</h2><button type="button" data-close-dialog>Close</button></div>
+      <div class="image-viewport"><img id="inspected-image" alt=""></div>
+      <p id="image-caption"></p>
+      <a id="image-original" target="_blank" rel="noopener noreferrer">Open original image</a>
+    </dialog>
+    <p id="announcement" class="sr-only" aria-live="polite"></p>
+    <noscript><p class="notice">Enable JavaScript to read this interactive white paper.</p></noscript>
+  </body>
+</html>
