@@ -1,6 +1,17 @@
-export const bookTitle = 'Agentic Earth-Observation Tasking and Downlink';
+import { createManuscriptBook, manuscriptChapters } from './manuscript-content.js';
 
-export const chapters = [
+export const publication = Object.freeze({
+  eyebrow: 'ILLUSTRATED WHITE PAPER · 2026',
+  title: 'Agentic Earth Observation',
+  subtitle: 'Tasking & Downlink',
+  author: 'Lucile Jeanneret',
+  description: 'Exploring how AI agents and Microsoft technologies can help coordinate satellite observations, ground-station operations, and the delivery of geospatial products.',
+});
+export const bookTitle = `${publication.title} — ${publication.subtitle}`;
+
+export const chapters = manuscriptChapters;
+
+const legacyChapters = [
   { number: '01', id: 'industry', title: 'About Meridian and the Geospatial Industry', sections: [
     ['industry', 'Meridian’s place in the geospatial industry'],
     ['observation-lifecycle', 'How an observation becomes useful information'],
@@ -144,12 +155,10 @@ const explorerPlate = () => `<section class="illustration-plate explorer-plate" 
   <span class="section-label">FIELD VIEW / THE CONSTELLATION</span>
   <h2>Explore the<br><em>orbital network.</em></h2>
   <div class="explorer-slot" data-state="idle">
-    <img class="explorer-poster" src="./art/earth-sketch.png" alt="Drawn globe. Load the interactive Explorer to see simulated satellites and orbital planes.">
+    <img class="explorer-poster" src="./art/earth-sketch-complete-reading.webp" alt="Drawn globe. Load the interactive Explorer to see simulated satellites and orbital planes.">
     <div class="explorer-placeholder"><p data-explorer-status role="status"></p><button type="button" class="ink-button" data-explorer-start>Load interactive globe</button></div>
   </div>
-  <p class="plate-note">Watch the satellites move along their orbital planes. Drag to rotate and scroll to zoom; the full Explorer includes the ground network and planning views.</p>
   <a class="explorer-open" href="https://polite-tree-06ae32c10.3.azurestaticapps.net/" target="_blank" rel="noopener noreferrer">Open full Explorer ↗</a>
-  <p class="plate-note">Orbital simulation: time runs at 60×, not in real time. Spacecraft sizes are exaggerated. Playback stops when you leave this page.</p>
 </section>`;
 const processPlate = () => `<section class="illustration-plate process-plate" aria-label="Illustrated observation-to-delivery process"><span class="section-label">PLATE 1 / THE OBSERVATION JOURNEY</span><h2>From a question<br>to a <em>product.</em></h2><img class="plate-art" src="./art/orbital-observation-reading.webp" alt="Graphite satellite observing a patch of terrain from orbit."><ol class="process-map">${[
   ['Request', 'Define the area, product and deadline.'],
@@ -229,7 +238,7 @@ function agentCard(number, name, level, responsibility, boundary) {
   return `<section class="agent-card"><div class="agent-card-top"><span>${number}</span><span>${level}</span></div><h3>${name}</h3><p>${responsibility}</p><p class="agent-boundary">${boundary}</p></section>`;
 }
 
-export function createBook(data) {
+export function createSupportingBook(data) {
   const company = escape(data.company.name);
   const hq = `${escape(data.company.headquarters.city)}, ${escape(data.company.headquarters.country)}`;
   const countries = data.governance.imposed.profile.groundStationCountries.map(escape).join(', ');
@@ -714,12 +723,13 @@ export function createBook(data) {
 
   const pages = [
     { id: 'cover', title: 'Cover', type: 'front', label: '—', left:
-      `<h1>Agentic<br>Earth-Observation<br><em>Tasking and<br>Downlink</em></h1><div class="cover-rule"></div>${p('Coordinating acquisitions, ground contacts and product delivery as requests and conditions change.')}<a class="ink-button" href="#title-page">Open <span aria-hidden="true">↗</span></a><div class="cover-identity"><strong>EARTH OBSERVATION / REFERENCE ARCHITECTURE</strong><span>Context · Challenges · Approach · Solution</span></div>`,
-      right: `<img class="cover-art" src="./art/earth-sketch.png" alt="Graphite study of Earth, satellite observations and ground links."><div class="figure-index">PLATE 00 / CONSTELLATION, GROUND AND MISSION</div><p class="hand-note">Acquisition → downlink<br>→ processing → delivery</p><div class="cover-label">ILLUSTRATED WHITE PAPER<br>2026</div>`, className: 'cover', leftClass: 'cover-left', rightClass: 'cover-right' },
+      `<span class="cover-eyebrow">${publication.eyebrow}</span><h1>${publication.title}<em>${escape(publication.subtitle)}</em></h1>${p(publication.description)}<p class="publication-byline">${publication.author}</p><a class="ink-button" href="#title-page">Begin reading <span aria-hidden="true">→</span></a>`,
+      right: '<img class="cover-art" src="./art/earth-sketch-complete-reading.webp" alt="Graphite study of Earth, complete satellites, orbital paths and a ground antenna.">', className: 'cover', leftClass: 'cover-left', rightClass: 'cover-right' },
     { id: 'title-page', title: 'Title page', type: 'front', label: 'i', left:
       heading('Earth observation', 'Planning an<br>Earth-observation<br><em>mission.</em>') +
       figure('ground-station.webp', 'Graphite study of a ground-station antenna in an Arctic landscape.', 'FRONTISPIECE — A ground station receives data during a satellite contact.', 'full-art'),
-      right: heading('White paper', 'Agentic Earth-Observation<br>Tasking and Downlink') +
+      right: heading(publication.eyebrow, `${publication.title}<br>${escape(publication.subtitle)}`) +
+      `<p class="publication-byline">${publication.author}</p>` +
       p('Continuous mission planning across customer requests, orbital opportunities, ground-station availability and product delivery.') +
       '<dl class="colophon"><div><dt>Scope</dt><dd>Tasking, downlink, processing and product delivery</dd></div><div><dt>Audience</dt><dd>Mission architects, operations teams and platform engineers</dd></div><div><dt>Reference operator</dt><dd>Meridian · Rome, Italy</dd></div><div><dt>Edition</dt><dd>November 2026</dd></div></dl>' +
       link('abstract', 'Read the abstract') },
@@ -738,7 +748,7 @@ export function createBook(data) {
   ];
 
   let folio = 1;
-  for (const chapter of chapters) {
+  for (const chapter of legacyChapters) {
     chapter.folio = folio;
     chapter.sections.forEach(([id, title], index) => {
       const body = content.get(id);
@@ -752,7 +762,7 @@ export function createBook(data) {
     { id: 'glossary', title: 'Glossary', type: 'back', label: 'A', folio: folio++, left:
       heading('Appendix A', 'Mission and<br><em>architecture terms.</em>') +
       p('Use these definitions consistently in requests, tool contracts and evaluation records. In particular, state which product is required, which events define its latency and who can approve an action.') +
-      figure('earth-sketch.png', 'Graphite illustration of Earth and satellite observation links.', 'PLATE A — Observation geometry shown illustratively, not as verified ephemerides.', 'full-art'),
+      figure('earth-sketch-complete-reading.webp', 'Graphite illustration of Earth and satellite observation links.', 'PLATE A — Observation geometry shown illustratively, not as verified ephemerides.', 'full-art'),
       right: heading('Index of terms', 'Search the<br><em>glossary.</em>') +
       '<label class="sr-only" for="definition-search">Search all definitions</label><input id="definition-search" class="definition-search" type="search" placeholder="Downlink, agent, latency…" autocomplete="off">' +
       `<div id="definition-results">${definitionList(definitions.slice(0, 5))}</div><p id="definition-count" class="note-foot" aria-live="polite">Showing 5 of ${definitions.length} terms. Search the complete glossary above.</p>` },
@@ -774,7 +784,7 @@ export function createBook(data) {
         'The two images have different dates and geographic extents. They illustrate different measurement types, not a matched sensor-performance comparison. Original files are retained; reading copies are resized without cropping or recolouring.') +
       '<a class="text-button" href="https://creativecommons.org/licenses/by-sa/3.0/igo/" target="_blank" rel="noopener noreferrer">Radar image licence <span aria-hidden="true">↗</span></a>',
       right: heading('Illustrations', 'Observation.<br>Ground contact.<br><em>Human review.</em>') +
-      p('The graphite illustrations follow the Frontier Graphisme direction. They depict observation, instrument differences, ground contact and human review; they are conceptual illustrations rather than photographs of Meridian hardware or facilities.',
+      p('The graphite illustrations use fine naturalistic drawing on ivory paper. They depict observation, instrument differences, ground contact and human review; they are conceptual illustrations rather than photographs of Meridian hardware or facilities.',
         'The optical-style comparison uses one AI-generated fictional terrain image in both panels. A simulated cloud overlay changes visibility in the second panel without changing the ground beneath it. It is an educational example, not a real satellite acquisition or an evaluation result.',
         'Image provenance records the source files, generated assets, reading derivatives and reuse conditions.') +
       '<a class="text-button" href="./art/provenance.json" target="_blank" rel="noopener noreferrer">Illustration provenance <span aria-hidden="true">↗</span></a>' +
@@ -782,21 +792,30 @@ export function createBook(data) {
     { id: 'back-cover', title: 'Back cover', type: 'back', label: '—', folio: folio + 5, left:
       figure('forest.webp', 'Graphite forest landscape closing the mission study.', 'CLOSING PLATE — Forest landscape used to illustrate the wildfire case.', 'full-art') +
       '<p class="hand-note">AR-1842 · Attica, Greece<br>Optical fire-impact map<br>Four-hour deadline</p>',
-      right: heading('Earth observation', 'Agentic tasking<br>and <em>downlink.</em>') +
+      right: heading(publication.eyebrow, `${publication.title}<br><em>${escape(publication.subtitle)}</em>`) +
+      `<p class="publication-byline">${publication.author}</p>` +
       p('A mission is more than an observation opportunity. The measurement, ground contact, processing and delivery must form one feasible service.',
         'Agentic coordination helps assemble and revise that service as conditions change. Its role is to connect the work—not to remove the constraints that make the result trustworthy.') +
       link('contents', 'Return to contents') +
-      '<div class="figure-index">AGENTIC EARTH-OBSERVATION<br>TASKING AND DOWNLINK</div>', rightClass: 'back-cover' },
+      `<div class="figure-index">${publication.title} — ${escape(publication.subtitle)}</div>`, rightClass: 'back-cover' },
   );
-  return { pages, chapters, company, caseNote };
+  return { pages, chapters: legacyChapters, company, caseNote };
+}
+
+export function createBook(data) {
+  return createManuscriptBook(data, createSupportingBook(data), {
+    publication, explorerPlate, processPlate, comparisonPlate, sensorExamples,
+    operatorFlow, runtimeView, systems, scenarioOptions, definitions, definitionList,
+  });
 }
 
 export function renderContents(chapterNumbers, pages) {
   return chapterNumbers.map(index => {
     const chapter = chapters[index];
-    return `<section class="toc-chapter"><a href="#${chapter.id}" class="toc-entry"><span class="toc-num">${chapter.number}</span><span class="toc-title">${chapter.title}</span><span class="toc-dots"></span><span class="toc-page">${String(chapter.folio).padStart(2, '0')}</span></a><ol class="toc-sections">${chapter.sections.map(([id, title], sectionIndex) => {
+    const first = pages.find(page => page.id === chapter.id);
+    return `<section class="toc-chapter"><a href="#${chapter.id}" class="toc-entry"><span class="toc-num">${chapter.number}</span><span class="toc-title">${chapter.title}</span><span class="toc-dots"></span><span class="toc-page">${String(first.folio).padStart(2, '0')}</span></a><ol class="toc-sections">${chapter.sections.map(([id, title], sectionIndex) => {
       const page = pages.find(entry => entry.id === id);
-      return `<li><a href="#${id}" data-toc-section="${id}"><span class="toc-section-number">${index + 1}.${sectionIndex + 1}</span><span>${title}</span><span class="toc-section-folio">${String(page.folio).padStart(2, '0')}</span></a></li>`;
+      return `<li><a href="#${id}" data-toc-section="${id}"><span class="toc-section-number">${page.sectionNumber}</span><span>${title}</span><span class="toc-section-folio">${String(page.folio).padStart(2, '0')}</span></a></li>`;
     }).join('')}</ol></section>`;
   }).join('');
 }

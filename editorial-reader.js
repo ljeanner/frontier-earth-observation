@@ -1,7 +1,9 @@
-import { bookTitle, definitions, definitionList, systems, scenarioOptions } from './book-content.js';
-import { createEditorialContent, editorialParts } from './editorial-content.js';
+import { bookTitle, publication, definitions, definitionList, systems, scenarioOptions } from './book-content.js';
+import { createEditorialContent } from './editorial-content.js';
 import { assetBriefs } from './editorial-assets.js';
 import { createExplorerPreview } from './explorer-preview.js';
+import { legacyAnchors } from './manuscript-content.js';
+import { createMissionInteractions } from './mission-interactions.js';
 
 const root = document.querySelector('#reading-content');
 const notice = document.querySelector('#storage-notice');
@@ -11,11 +13,15 @@ const bookmark = document.querySelector('#bookmark');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobileActions = matchMedia('(max-width: 620px)');
 const explorer = createExplorerPreview(root, { editorial: true });
-const aliases = { couverture: 'cover', 'page-de-garde': 'title-page', resume: 'abstract', sommaire: 'contents', industrie: 'industry', contraintes: 'regulation', existant: 'existing-architecture', accelerateur: 'accelerator', incendie: 'wildfire', glossaire: 'glossary', sources: 'references', colophon: 'image-credits', quatrieme: 'back-cover', definitions: 'glossary', 'autonomy-and-mcp': 'hybrid-connectivity', 'publication-notes': 'image-credits', 'contents-continued': 'contents' };
+const aliases = { ...legacyAnchors, 'contents-continued': 'contents' };
 let model;
+let mission;
 let activeId = 'cover';
 let saved = null;
 let scrollFrame = 0;
+let positionStorageAvailable = true;
+let restoredId = null;
+const positionKey = 'earth-observation-position';
 const dialogOrigins = new WeakMap();
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const canonical = value => aliases[value.split('~')[0]] ?? value.split('~')[0];
@@ -47,7 +53,9 @@ function enhanceImages(container, eager = false) {
       error.className = 'image-failure notice';
       error.setAttribute('role', 'alert');
       error.textContent = `Illustration unavailable: ${image.alt}. See the image credits for its source.`;
-      image.replaceWith(error);
+      const control = image.closest('button[data-inspect]');
+      if (control) control.replaceWith(error);
+      else image.replaceWith(error);
     }, { once: true });
     if (image.classList.contains('explorer-poster')) continue;
     const link = image.closest('a');
@@ -69,7 +77,8 @@ function enhanceImages(container, eager = false) {
 
 function enhanceDiagrams(container) {
   const boards = [...container.querySelectorAll('.si-diagram')];
-  if (container.querySelector('.gateway')) {
+  const gateway = container.querySelector('.gateway');
+  if (gateway && !gateway.closest('.si-diagram')) {
     const board = document.createElement('figure');
     board.className = 'si-diagram';
     const first = container.querySelector('.domain');
@@ -87,10 +96,15 @@ function enhanceDiagrams(container) {
   for (const board of boards) {
     const shell = document.createElement('div');
     shell.className = 'diagram-shell';
-    shell.innerHTML = `<div class="diagram-controls"><label>Diagram scale <input type="range" min="100" max="180" value="100" step="10" data-diagram-scale aria-label="Diagram scale"></label><button type="button" data-diagram-reset>Reset</button><button type="button" data-diagram-layer>Highlight next responsibility</button></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Scrollable architecture diagram"></div>`;
+    shell.innerHTML = `<div class="diagram-controls"><label>Diagram scale <input type="range" min="100" max="180" value="100" step="10" data-diagram-scale aria-label="Diagram scale"></label><button type="button" data-diagram-reset>Reset</button><button type="button" data-diagram-layer>Highlight next responsibility</button><button type="button" data-diagram-pan="-1" aria-label="Pan diagram left">←</button><button type="button" data-diagram-pan="1" aria-label="Pan diagram right">→</button></div><div class="diagram-viewport" tabindex="0" role="region" aria-label="Scrollable architecture diagram. Use arrow keys to pan."></div>`;
     board.replaceWith(shell);
     board.classList.add('diagram-board');
-    shell.querySelector('.diagram-viewport').append(board);
+    const viewport = shell.querySelector('.diagram-viewport');
+    viewport.append(board);
+    // A concrete baseline width keeps zoom from simply reflowing to fit.
+    new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0) board.style.width = `${entry.contentRect.width}px`;
+    }).observe(viewport);
   }
 }
 
@@ -111,7 +125,7 @@ function enhanceComparisons(container) {
   }
 }
 
-function renderSection(section, index) {
+function renderSection(section) {
   if (section.id === 'cover') {
     const source = fragment(section.left + section.right);
     const hero = document.createElement('section');
@@ -121,14 +135,9 @@ function renderSection(section, index) {
     hero.setAttribute('aria-labelledby', 'hero-title');
     const paragraph = source.querySelector('p');
     const image = source.querySelector('img');
-    source.querySelector('h1').remove();
-    source.querySelector('.ink-button').remove();
-    paragraph.remove();
-    image.remove();
-    hero.innerHTML = `<div class="hero-copy"><span class="eyebrow">EARTH OBSERVATION / WHITE PAPER</span><h1 id="hero-title">Agentic<br>Earth-Observation<br><em>Tasking and Downlink</em></h1><a class="begin-reading" href="#title-page">Begin reading <span aria-hidden="true">→</span></a></div><div class="hero-art"></div><details class="hero-notes"><summary>Publication context</summary><div></div></details>`;
-    hero.querySelector('.begin-reading').before(paragraph);
+    hero.innerHTML = `<div class="hero-copy"><span class="eyebrow">${escape(publication.eyebrow)}</span><h1 id="hero-title">${escape(publication.title)}<em>${escape(publication.subtitle)}</em></h1><p class="publication-byline">${escape(publication.author)}</p><a class="begin-reading" href="#part-1">Begin reading <span aria-hidden="true">→</span></a></div><div class="hero-art"></div>`;
+    hero.querySelector('.publication-byline').before(paragraph);
     hero.querySelector('.hero-art').append(image);
-    hero.querySelector('.hero-notes>div').append(source);
     enhanceImages(hero, true);
     return hero;
   }
@@ -138,13 +147,43 @@ function renderSection(section, index) {
   article.dataset.template = section.template;
   article.dataset.sequence = section.sequenceNumber ?? '';
   article.tabIndex = -1;
-  article.setAttribute('aria-labelledby', `heading-${section.id}`);
-  const kicker = section.sequenceNumber ? `PART ${section.part + 1} / SEQUENCE ${String(section.sequenceNumber).padStart(2, '0')}` : 'REFERENCE MATERIAL';
-  article.innerHTML = `<header class="sequence-header"><span class="sequence-kicker">${kicker}</span>${section.opening ? `<p class="chapter-title">Chapter ${Number(section.chapter)} · ${escape(section.chapterTitle)}</p>` : ''}<h2 class="sequence-heading" id="heading-${section.id}">${section.sectionNumber ? `${section.sectionNumber} / ` : ''}${escape(section.title)}</h2></header><div class="sequence-body"><div class="sequence-prose"></div></div>`;
+  const page = model.readingPages[section.part];
+  const isPartBody = page?.sectionIds.length === 1 && page.title === section.title;
+  article.setAttribute('aria-labelledby', `heading-${isPartBody ? page.id : section.id}`);
+  const kicker = page ? '' : '<span class="sequence-kicker">REFERENCE MATERIAL</span>';
+  const headingLevel = page ? 'h3' : 'h2';
+  const header = isPartBody ? '' : `<header class="sequence-header">${kicker}<${headingLevel} class="sequence-heading" id="heading-${section.id}">${escape(section.title)}</${headingLevel}></header>`;
+  article.innerHTML = `${header}<div class="sequence-body"><div class="sequence-prose"></div></div>`;
   const prose = article.querySelector('.sequence-prose');
   prose.append(fragment(section.left + section.right));
+  if (isPartBody) {
+    for (const details of [...prose.querySelectorAll(':scope>details.supporting-note')]) {
+      const subsection = document.createElement('section');
+      subsection.className = 'technical-subsection';
+      const heading = document.createElement('h3');
+      heading.className = 'technical-heading';
+      heading.textContent = details.querySelector('summary').textContent;
+      const copy = document.createElement('div');
+      copy.className = 'technical-copy';
+      copy.append(...details.querySelector(':scope>div').childNodes);
+      let visual = [...copy.querySelectorAll('figure')].find(figure => figure.querySelector('img') && !figure.matches('.si-diagram'));
+      if (!visual && copy.querySelector('.agent-card')) {
+        visual = document.createElement('figure');
+        visual.innerHTML = '<img src="./art/mission-review-reading.webp" alt="Graphite hand and pencil reviewing a fictional mission plan."><figcaption>Conceptual human review of a mission plan. Safety-critical validation and command authorization remain outside the language model.</figcaption>';
+      }
+      if (visual) {
+        visual.classList.add('technical-art');
+        copy.prepend(visual);
+      }
+      subsection.append(heading, copy);
+      details.replaceWith(subsection);
+    }
+  }
   for (const heading of [...prose.querySelectorAll('h2,h3')]) {
-    const replacement = document.createElement(heading.tagName === 'H2' ? 'h3' : 'h4');
+    if (heading.classList.contains('technical-heading')) continue;
+    const level = heading.tagName === 'H2' ? (page ? 'h4' : 'h3') : (page ? 'h5' : 'h4');
+    const replacement = document.createElement(level);
+    replacement.className = 'prose-heading';
     replacement.innerHTML = heading.innerHTML;
     heading.replaceWith(replacement);
   }
@@ -167,45 +206,79 @@ function renderSection(section, index) {
       prose.before(composition);
       composition.append(aside, prose);
       aside.append(visual);
+      const portrait = prose.querySelector('.meridian-portrait');
+      if (portrait) composition.after(portrait);
     }
   }
   for (const plate of [...prose.querySelectorAll('.process-plate,.comparison-plate,.sensor-plate')]) {
     plate.classList.add('wide-block');
-    article.querySelector('.sequence-body').append(plate);
+    if (section.id !== 'sensors-and-customers') article.querySelector('.sequence-body').append(plate);
   }
   if (section.id === 'glossary') {
     prose.querySelector('#definition-results').innerHTML = definitionList(definitions);
     prose.querySelector('#definition-count').textContent = `Showing all ${definitions.length} terms.`;
   }
-  if (section.id === 'accelerator' || section.id === 'mission-lab') {
+  if (section.id === 'accelerator') {
     const print = document.createElement('div');
     print.className = 'print-only';
     const entries = section.id === 'accelerator' ? systems.map(([title, , description]) => [title, description]) : scenarioOptions.map(([, title, , outcome]) => [title, outcome]);
     print.innerHTML = entries.map(([title, description]) => `<h4>${escape(title)}</h4><p>${escape(description)}</p>`).join('');
     prose.append(print);
   }
+  const wideElements = section.template === 'split-screen'
+    ? [...prose.children].filter(element => element.matches('.mission-widget,.si-diagram,.customer-uses,.business-choices,.process-list,.supporting-links'))
+    : [];
+  if (wideElements.length) {
+    const body = article.querySelector('.sequence-body');
+    body.append(...wideElements);
+    body.append(...prose.querySelectorAll(':scope>.support-link,:scope>.note-foot'));
+  }
   enhanceImages(article);
   enhanceDiagrams(article);
   enhanceComparisons(article);
-  const next = model.sections[index + 1];
-  if (next) {
-    article.insertAdjacentHTML('beforeend', `<footer class="sequence-next"><a href="#${next.id}"><small>CONTINUE READING</small>${escape(next.title)} →</a><a href="#contents">Contents</a></footer>`);
-  }
   return article;
 }
 
+function renderReadingPages() {
+  const sections = new Map(model.sections.map(section => [section.id, renderSection(section)]));
+  const parts = model.readingPages.map(page => {
+    const article = document.createElement('section');
+    article.id = page.id;
+    article.className = 'part-page';
+    article.tabIndex = -1;
+    article.setAttribute('aria-labelledby', `heading-${page.id}`);
+    article.innerHTML = `<header class="reading-part-header"><span class="eyebrow">PART ${String(page.number).padStart(2, '0')}</span><h2 class="part-title" id="heading-${page.id}">${escape(page.title)}</h2></header>`;
+    article.append(...page.sectionIds.map(id => sections.get(id)));
+    return article;
+  });
+  const contents = document.createElement('nav');
+  contents.id = 'part-navigation';
+  contents.className = 'part-switcher';
+  contents.setAttribute('aria-label', 'Reading parts');
+  contents.innerHTML = model.readingPages.map(part => `<a href="#${part.id}" data-part-page="${part.id}">${String(part.number).padStart(2, '0')} · ${escape(part.title)}</a>`).join('');
+  root.replaceChildren(sections.get('cover'), contents, ...parts,
+    ...model.sections.filter(section => section.part < 0 && section.id !== 'cover').map(section => sections.get(section.id)));
+  root.dataset.layout = 'continuous';
+}
+
+function sectionFor(id) {
+  const page = model.readingPages.find(page => page.id === id);
+  return model.sections.find(section => section.id === (page ? page.sectionIds[0] : id));
+}
+
 function buildNavigation() {
-  const link = section => `<a href="#${section.id}" data-page="${section.id}">${section.sequenceNumber ? `${String(section.sequenceNumber).padStart(2, '0')} · ` : ''}${escape(section.title)}</a>`;
+  document.querySelector('#contents-summary').textContent = `${model.readingPages.length} parts, with subsections, glossary, sources and image credits.`;
+  const link = section => `<a href="#${section.id}" data-page="${section.id}">${escape(section.title)}</a>`;
   navigation.innerHTML = link(model.sections[0]) + model.sections.filter(section => section.type === 'front' && section.id !== 'cover').map(link).join('') +
-    editorialParts.map((part, index) => `<details open><summary>Part ${index + 1} — ${part.title}</summary>${model.chapters.filter(chapter => part.chapters.includes(chapter.number)).map(chapter => `<h3>${chapter.number} · ${escape(chapter.title)}</h3>${model.sections.filter(section => section.chapter === chapter.number).map(link).join('')}`).join('')}</details>`).join('') +
-    '<h3>APPENDICES</h3>' + model.sections.filter(section => section.type === 'back').map(link).join('');
+    model.readingPages.map(page => `<section class="contents-part"><h3><a href="#${page.id}" data-part-page="${page.id}">Part ${page.number} — ${escape(page.title)}</a></h3>${page.sectionIds.filter(id => page.sectionIds.length > 1 || sectionFor(id).title !== page.title).map(id => link(sectionFor(id))).join('')}</section>`).join('') +
+    '<h3>APPENDICES</h3>' + model.sections.filter(section => section.type === 'back' && section.part < 0).map(link).join('');
 }
 
 function updateBookmark() {
   const isSaved = saved === activeId;
   bookmark.setAttribute('aria-pressed', String(isSaved));
   bookmark.textContent = isSaved ? 'Bookmarked' : 'Bookmark';
-  bookmark.setAttribute('aria-label', isSaved ? 'Remove this section bookmark' : 'Bookmark this section');
+  bookmark.setAttribute('aria-label', isSaved ? 'Remove this bookmark' : 'Bookmark this location');
   const link = document.querySelector('#saved-page');
   link.hidden = !saved;
   if (saved) {
@@ -218,35 +291,55 @@ function updateBookmark() {
 function setActive(id, updateAddress = true) {
   const section = model.sections.find(entry => entry.id === id);
   if (!section) return;
+  const page = model.readingPages[section.part];
+  const changed = activeId !== id;
   activeId = id;
   root.dataset.location = id;
-  document.querySelector('#position').textContent = section.sequenceNumber ? `SEQUENCE ${String(section.sequenceNumber).padStart(2, '0')} / ${model.sequenceCount}` : section.title.toUpperCase();
+  root.dataset.page = page?.id ?? id;
+  document.querySelector('#position').textContent = page ? `PART ${page.number} / ${model.readingPages.length}` : section.title.toUpperCase();
   document.querySelector('#current-title').textContent = section.title;
-  document.querySelector('#progress').style.width = `${(section.sequenceNumber ?? (section.type === 'back' ? model.sequenceCount : 0)) / model.sequenceCount * 100}%`;
+  const distance = document.documentElement.scrollHeight - innerHeight;
+  document.querySelector('#progress').style.width = `${distance > 0 ? Math.min(100, Math.max(0, scrollY / distance * 100)) : 0}%`;
   document.querySelector('#book-view').href = `./book.html#${id}`;
-  document.title = id === 'cover' ? bookTitle : `${section.title} | ${bookTitle}`;
+  document.title = id === 'cover' ? bookTitle : `${page ? `Part ${page.number} — ${page.title}` : section.title} | ${bookTitle}`;
   for (const item of navigation.querySelectorAll('[data-page]')) {
     if (item.dataset.page === id) item.setAttribute('aria-current', 'location');
     else item.removeAttribute('aria-current');
   }
+  for (const link of document.querySelectorAll('[data-part-page]')) {
+    if (link.dataset.partPage === page?.id) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
   updateBookmark();
-  if (updateAddress && location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
+  if (changed && positionStorageAvailable) {
+    try { localStorage.setItem(positionKey, id); }
+    catch {
+      positionStorageAvailable = false;
+      showNotice('Reading position could not be saved. Local browser storage is unavailable.');
+    }
+  }
+  const atPartStart = page?.sectionIds[0] === id && location.hash === `#${page.id}`;
+  if (updateAddress && !atPartStart && location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
 }
 
 function openDialog(dialog, origin) {
   dialogOrigins.set(dialog, origin);
+  if (origin?.hasAttribute('aria-haspopup')) origin.setAttribute('aria-expanded', 'true');
   dialog.showModal();
   dialog.querySelector('[data-close-dialog]')?.focus();
 }
 
 function goTo(id, { focus = true } = {}) {
-  const target = document.getElementById(id);
-  if (!model.sections.some(section => section.id === id) || !target) return;
+  const section = sectionFor(id);
+  if (!section) return;
+  const page = model.readingPages[section.part];
+  const target = document.getElementById(page?.sectionIds.length === 1 && page.title === section.title ? page.id : id);
+  if (!target) return;
   if (id === 'cover') window.scrollTo({ top: 0, behavior: 'instant' });
   else target.scrollIntoView({ behavior: 'instant', block: 'start' });
-  setActive(id, false);
+  setActive(section.id, false);
   if (focus) target.focus({ preventScroll: true });
-  document.querySelector('#announcement').textContent = model.sections.find(section => section.id === id).title;
+  document.querySelector('#announcement').textContent = section.title;
   explorer.sync();
 }
 
@@ -262,8 +355,8 @@ function readAddress(focus = false) {
     if (!drawer.open) openDialog(drawer, document.querySelector('#contents-button'));
     return;
   }
-  if (!model.sections.some(section => section.id === id)) {
-    showNotice('This section does not exist. The cover is displayed instead.');
+  if (!sectionFor(id)) {
+    showNotice('This reading location does not exist. The cover is displayed instead.');
     id = 'cover';
   }
   if (location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
@@ -274,19 +367,25 @@ function onScroll() {
   if (!model || scrollFrame) return;
   scrollFrame = requestAnimationFrame(() => {
     scrollFrame = 0;
-    if (document.querySelector('dialog[open]')) return;
+    if (preparingPrint || document.querySelector('dialog[open]')) return;
+    if (location.hash && sectionFor(canonical(location.hash.slice(1)))?.id !== activeId) return;
     const threshold = document.querySelector('.editorial-header').getBoundingClientRect().bottom + Math.min(130, innerHeight * .15);
-    const elements = [...root.children];
-    let current = elements[0];
-    for (const section of elements) if (section.getBoundingClientRect().top <= threshold) current = section;
-    setActive(current.id);
+    const elements = [...root.querySelectorAll('.hero,.reading-part-header,.sequence')];
+    let current = 'cover';
+    for (const element of elements) {
+      if (element.getBoundingClientRect().top <= threshold)
+        current = element.matches('.reading-part-header') ? sectionFor(element.parentElement.id).id : element.id;
+    }
+    setActive(current);
     for (const process of root.querySelectorAll('.process-map,.process-list')) {
+      if (!process.getClientRects().length) continue;
       const steps = [...process.children];
       let chosen;
       if (process.classList.contains('process-map')) {
         const rect = process.getBoundingClientRect();
-        const lead = innerHeight * .25;
-        const progress = (threshold + lead - rect.top) / (rect.height + lead);
+        const start = Math.max(0, scrollY + rect.top - innerHeight * .8);
+        const end = Math.min(document.documentElement.scrollHeight - innerHeight, scrollY + rect.bottom - threshold);
+        const progress = (scrollY - start) / Math.max(1, end - start);
         chosen = steps[Math.max(0, Math.min(steps.length - 1, Math.floor(progress * steps.length)))];
       } else chosen = steps.find(step => step.getBoundingClientRect().bottom >= threshold) ?? steps.at(-1);
       for (const step of steps) step.classList.toggle('is-current', step === chosen);
@@ -298,6 +397,7 @@ function onScroll() {
 document.querySelectorAll('dialog').forEach(dialog => {
   dialog.querySelector('[data-close-dialog]').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => {
+    if (dialog === drawer) document.querySelector('#contents-button').setAttribute('aria-expanded', 'false');
     const origin = dialogOrigins.get(dialog);
     if (origin?.isConnected) {
       origin.setAttribute('aria-expanded', 'false');
@@ -339,6 +439,7 @@ document.addEventListener('click', async event => {
   if (inspect) {
     event.preventDefault();
     const image = inspect.querySelector('img');
+    if (!image) return;
     const original = inspect.getAttribute('href');
     const display = document.querySelector('#inspected-image');
     display.src = original ?? image.src;
@@ -377,12 +478,19 @@ document.addEventListener('click', async event => {
   }
   const reset = event.target.closest('[data-diagram-reset]');
   const layer = event.target.closest('[data-diagram-layer]');
+  const pan = event.target.closest('[data-diagram-pan]');
+  if (pan) {
+    const viewport = pan.closest('.diagram-shell').querySelector('.diagram-viewport');
+    viewport.scrollBy({ left: Number(pan.dataset.diagramPan) * viewport.clientWidth * .75, behavior: 'instant' });
+    return;
+  }
   if (reset || layer) {
     const shell = (reset ?? layer).closest('.diagram-shell');
     const board = shell.querySelector('.diagram-board');
     if (reset) {
       shell.querySelector('input').value = '100';
       board.style.setProperty('--diagram-scale', 1);
+      shell.querySelector('.diagram-viewport').scrollTo({ left: 0, top: 0, behavior: 'instant' });
       board.querySelectorAll('.is-highlighted').forEach(node => node.classList.remove('is-highlighted'));
       shell.dataset.layer = '-1';
     } else {
@@ -412,7 +520,7 @@ document.addEventListener('click', async event => {
     root.focus();
     return;
   }
-  if (model.sections.some(section => section.id === id)) {
+  if (sectionFor(id)) {
     history.pushState(null, '', `#${id}`);
     goTo(id);
   }
@@ -436,10 +544,11 @@ root.addEventListener('input', event => {
 
 document.addEventListener('keydown', event => {
   if (!model || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || document.querySelector('dialog[open]')) return;
-  if (event.target instanceof Element && event.target.closest('input,textarea,select,button,[contenteditable="true"]')) return;
+  if (event.target instanceof Element && event.target.closest('input,textarea,select,button,.diagram-viewport,.mission-widget,[contenteditable="true"]')) return;
   if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-  const index = model.sections.findIndex(section => section.id === activeId) + (event.key === 'ArrowRight' ? 1 : -1);
-  const next = model.sections[index];
+  const sections = [...root.querySelectorAll('.hero,.sequence')];
+  const index = sections.findIndex(section => section.id === activeId) + (event.key === 'ArrowRight' ? 1 : -1);
+  const next = sections[index];
   if (next) {
     event.preventDefault();
     history.pushState(null, '', `#${next.id}`);
@@ -470,7 +579,12 @@ window.addEventListener('hashchange', () => readAddress(true));
 document.addEventListener('fullscreenchange', () => requestAnimationFrame(() => explorer.sync()));
 let printDetails = [];
 let printGlossary = null;
+let preparingPrint = false;
+let printPosition;
 window.addEventListener('beforeprint', () => {
+  if (preparingPrint) return;
+  preparingPrint = true;
+  printPosition = { top: scrollY, left: scrollX, behavior: 'instant' };
   root.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
   printDetails = [...root.querySelectorAll('details:not([open])')];
   printDetails.forEach(details => { details.open = true; });
@@ -482,12 +596,16 @@ window.addEventListener('beforeprint', () => {
   }
 });
 window.addEventListener('afterprint', () => {
+  if (!preparingPrint) return;
   printDetails.forEach(details => { details.open = false; });
   if (printGlossary) {
     root.querySelector('#definition-results').innerHTML = printGlossary.html;
     root.querySelector('#definition-count').textContent = printGlossary.count;
     printGlossary = null;
   }
+  window.scrollTo(printPosition);
+  preparingPrint = false;
+  explorer.sync();
 });
 
 async function initialize() {
@@ -502,7 +620,9 @@ async function initialize() {
     if (data.fleet.satellites !== data.fleet.radar + data.fleet.optical || data.groundStations.count !== data.groundStations.items.length)
       throw new Error('The shared mission dataset is inconsistent');
     model = createEditorialContent(data);
-    root.replaceChildren(...model.sections.map(renderSection));
+    renderReadingPages();
+    mission = createMissionInteractions(root, data);
+    mission.renderInto(root);
     buildNavigation();
   } catch (error) {
     console.error('Unable to load the editorial white paper:', error);
@@ -514,8 +634,15 @@ async function initialize() {
     const value = localStorage.getItem('frontier-notebook-mark');
     const id = value ? canonical(value) : null;
     saved = model.sections.some(section => section.id === id) ? id : null;
-  } catch { showNotice('Local storage is unavailable. A bookmark cannot be preserved after closing this browser.'); }
+    const storedPosition = localStorage.getItem(positionKey);
+    const position = storedPosition ? canonical(storedPosition) : null;
+    restoredId = model.sections.some(section => section.id === position) ? position : null;
+  } catch {
+    positionStorageAvailable = false;
+    showNotice('Local storage is unavailable. Bookmarks and reading position cannot be preserved after closing this browser.');
+  }
   await document.fonts.ready;
+  if (!location.hash && restoredId) history.replaceState(null, '', `#${restoredId}`);
   readAddress();
   updateBookmark();
   root.dataset.ready = 'true';

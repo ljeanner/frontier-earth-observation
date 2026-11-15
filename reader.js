@@ -1,5 +1,7 @@
 import { bookTitle, createBook, definitionList, definitions, renderContents, scenarioOptions, systems } from './book-content.js';
 import { createExplorerPreview } from './explorer-preview.js';
+import { legacyAnchors } from './manuscript-content.js';
+import { createMissionInteractions } from './mission-interactions.js';
 
 const book = document.querySelector('#book');
 const explorerPreview = createExplorerPreview(book);
@@ -11,7 +13,8 @@ const bookmarkButton = document.querySelector('#bookmark');
 const notice = document.querySelector('#storage-notice');
 const stage = document.querySelector('.book-shell');
 const definitionDialog = document.querySelector('#definition-dialog');
-const aliases = { couverture: 'cover', 'page-de-garde': 'title-page', resume: 'abstract', sommaire: 'contents', industrie: 'industry', contraintes: 'regulation', existant: 'existing-architecture', accelerateur: 'accelerator', incendie: 'wildfire', glossaire: 'glossary', sources: 'references', colophon: 'image-credits', quatrieme: 'back-cover', definitions: 'glossary', 'autonomy-and-mcp': 'hybrid-connectivity', 'publication-notes': 'image-credits' };
+const aliases = legacyAnchors;
+let mission;
 let pages = [];
 let chapters = [];
 let currentIndex = 0;
@@ -23,8 +26,10 @@ let layouts = new Map();
 let totalLeaves = 0;
 let definitionCall = null;
 let resizeFrame = 0;
+let paginationReady = false;
 let touchStart = null;
 const interactionState = { system: 0, scenario: null, glossary: '' };
+const illustrationSizes = new Map();
 
 function showNotice(message) {
   notice.textContent = message;
@@ -36,7 +41,7 @@ function escape(value) {
 }
 
 function leaf(page, offset) {
-  const chapter = page.chapter ? `CHAPTER ${page.chapter} / ${page.sectionNumber}` : 'EARTH OBSERVATION / WHITE PAPER';
+  const chapter = page.chapter ? `PART ${page.chapter} / SEQUENCE ${page.sectionNumber}` : 'EARTH OBSERVATION / WHITE PAPER';
   const layout = layouts.get(page.id);
   const exists = currentLeaf + offset < layout.count;
   const folio = exists && page.id !== 'cover' ? String(layout.start + currentLeaf + offset).padStart(2, '0') : '';
@@ -49,22 +54,39 @@ function contentsBody(page) {
   const continuation = pages.find(entry => entry.id === 'contents-continued');
   const left = `<span class="section-label">Contents / ${first ? 'I' : 'II'}</span><h2>${first ? 'Contents' : 'Contents<br><em>continued.</em>'}</h2>${renderContents(page.contents.slice(0, middle), pages)}`;
   const right = `<span class="section-label">${first ? 'Contents continued' : 'Case study & appendices'}</span>${renderContents(page.contents.slice(middle), pages)}${first ?
-    `<a class="text-button" href="#contents-continued">Chapters ${continuation.contents[0] + 1}–${chapters.length} and appendices <span aria-hidden="true">→</span></a>` :
-    `<section class="toc-chapter"><h3>Appendices</h3><ol class="toc-sections">${pages.filter(entry => entry.type === 'back').map(entry => `<li><a href="#${entry.id}" data-toc-section="${entry.id}"><span class="toc-section-number">${entry.label}</span><span>${entry.title}</span><span class="toc-section-folio">${String(entry.folio).padStart(2, '0')}</span></a></li>`).join('')}</ol></section><a class="text-button" href="#contents">Chapters 1–${continuation.contents[0]} <span aria-hidden="true">←</span></a>`}`;
+    `<a class="text-button" href="#contents-continued">Part III and supporting material <span aria-hidden="true">→</span></a>` :
+    `<section class="toc-chapter"><h3>Supporting material</h3><ol class="toc-sections">${pages.filter(entry => entry.type === 'back').map(entry => `<li><a href="#${entry.id}" data-toc-section="${entry.id}"><span class="toc-section-number">${entry.label}</span><span>${entry.title}</span><span class="toc-section-folio">${String(entry.folio).padStart(2, '0')}</span></a></li>`).join('')}</ol></section><a class="text-button" href="#contents">Parts I–II <span aria-hidden="true">←</span></a>`}`;
   return { left, right };
 }
 
 function flowContent(page) {
   const body = page.contents ? contentsBody(page) : page;
-  const opening = page.opening ? `<div class="chapter-topline"><span>CHAPTER ${page.chapter}</span><span>${page.sectionNumber}</span></div><div class="chapter-number">${page.chapter}</div><h2>${page.chapterTitle}</h2>` : '';
+  const opening = page.chapter ? `${page.opening ? `<div class="chapter-topline"><span>PART ${page.chapter}</span><span>${page.sectionNumber}</span></div><h2>${page.chapterTitle}</h2>` : ''}<span class="section-label">SEQUENCE ${page.sectionNumber}</span><h2>${escape(page.title)}</h2>` : '';
   if (page.id === 'cover') {
     return `<section class="cover-page cover-left">${body.left}</section><section class="cover-page cover-right">${body.right}</section>`;
   }
   const html = `${opening}${body.left}<div class="column-start"></div>${body.right}`;
-  if (!['accelerator', 'mission-lab', 'glossary'].includes(page.id)) return html;
   const template = document.createElement('template');
   template.innerHTML = html;
+  for (const image of template.content.querySelectorAll('img')) {
+    const size = illustrationSizes.get(image.getAttribute('src'));
+    if (size) {
+      image.width = size.width;
+      image.height = size.height;
+    }
+    for (const table of template.content.querySelectorAll('.matrix')) {
+      const headings = [...table.querySelectorAll('thead th')].map(heading => heading.textContent);
+      for (const row of table.querySelectorAll('tbody tr')) {
+        [...row.children].forEach((cell, index) => {
+          if (headings[index]) cell.dataset.column = headings[index];
+        });
+      }
+    }
+  }
+  for (const details of template.content.querySelectorAll('details.supporting-note')) details.open = true;
   applyInteractionState(template.content);
+  mission?.renderInto(template.content);
+  for (const details of template.content.querySelectorAll('details')) details.open = true;
   return template.innerHTML;
 }
 
@@ -180,11 +202,11 @@ function buildNavigation() {
   const front = pages.filter(entry => entry.type === 'front');
   const back = pages.filter(entry => entry.type === 'back');
   const simpleLink = entry => `<a class="nav-link" data-page="${entry.id}" href="#${entry.id}" ${entry.id === page.id ? 'aria-current="page"' : ''}><span class="nav-number">${entry.label}</span>${entry.title}</a>`;
-  navigation.innerHTML = `<span class="nav-group">FRONT MATTER</span>${front.map(simpleLink).join('')}<span class="nav-group">CHAPTERS</span>${chapters.map(chapter => {
+  navigation.innerHTML = `<span class="nav-group">FRONT MATTER</span>${front.map(simpleLink).join('')}<span class="nav-group">PARTS</span>${chapters.map(chapter => {
     const active = page.chapter === chapter.number;
-    return `<a class="nav-link ${active ? 'active-chapter' : ''}" data-page="${chapter.id}" data-chapter="${chapter.number}" href="#${chapter.id}" ${page.id === chapter.id ? 'aria-current="page"' : ''}><span class="nav-number">${chapter.number}</span>${chapter.title}</a>${active ? `<div class="nav-subsections">${chapter.sections.map(([id, title], index) => `<a href="#${id}" data-page="${id}" ${id === page.id ? 'aria-current="location"' : ''}><span>${Number(chapter.number)}.${index + 1}</span>${title}</a>`).join('')}</div>` : ''}`;
+    return `<a class="nav-link ${active ? 'active-chapter' : ''}" data-page="${chapter.id}" data-chapter="${chapter.number}" href="#${chapter.id}" ${page.id === chapter.id ? 'aria-current="page"' : ''}><span class="nav-number">${chapter.number}</span>${chapter.title}</a>${active ? `<div class="nav-subsections">${chapter.sections.map(([id, title]) => `<a href="#${id}" data-page="${id}" ${id === page.id ? 'aria-current="location"' : ''}><span>${pages.find(page => page.id === id).sectionNumber}</span>${title}</a>`).join('')}</div>` : ''}`;
   }).join('')}<span class="nav-group">APPENDICES</span>${back.map(simpleLink).join('')}`;
-  chapterTabs.innerHTML = chapters.map(chapter => `<a class="chapter-tab" href="#${chapter.id}" ${page.chapter === chapter.number ? 'aria-current="true"' : ''} aria-label="Chapter ${chapter.number}: ${chapter.title}" title="${chapter.title}">${chapter.number}</a>`).join('');
+  chapterTabs.innerHTML = chapters.map(chapter => `<a class="chapter-tab" href="#${chapter.id}" ${page.chapter === chapter.number ? 'aria-current="true"' : ''} aria-label="Part ${chapter.number}: ${chapter.title}" title="${chapter.title}">${chapter.number}</a>`).join('');
   const savedLink = document.querySelector('#saved-page');
   const markedPage = pages.find(entry => entry.id === readingMark?.split('~')[0]);
   savedLink.hidden = !markedPage;
@@ -298,9 +320,9 @@ book.addEventListener('input', event => {
   if (!(event.target instanceof HTMLInputElement) || event.target.id !== 'definition-search') return;
   const query = normalise(event.target.value.trim());
   interactionState.glossary = event.target.value;
-  const results = query ? definitions.filter(entry => normalise(entry.join(' ')).includes(query)) : definitions.slice(0, 5);
+  const results = query ? definitions.filter(entry => normalise(entry.join(' ')).includes(query)) : definitions;
   document.querySelector('#definition-results').innerHTML = definitionList(results);
-  document.querySelector('#definition-count').textContent = query ? `${results.length} ${results.length === 1 ? 'definition' : 'definitions'} found.` : `Showing 5 of ${definitions.length} terms. Search the complete glossary above.`;
+  document.querySelector('#definition-count').textContent = query ? `${results.length} ${results.length === 1 ? 'definition' : 'definitions'} found.` : `All ${definitions.length} terms.`;
   refreshPagination();
 });
 
@@ -343,7 +365,7 @@ book.addEventListener('touchend', event => {
 document.addEventListener('keydown', event => {
   if (!pages.length || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
   if (definitionDialog.open) return;
-  if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"], [role="slider"]')) return;
+  if (event.target instanceof Element && event.target.closest('input, textarea, select, button, .mission-widget, [contenteditable="true"], [role="slider"]')) return;
   if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
     event.preventDefault();
     turnPage(event.key === 'ArrowRight' ? 1 : -1);
@@ -365,9 +387,9 @@ function applyInteractionState(root) {
   if (search) {
     search.value = interactionState.glossary;
     const query = normalise(interactionState.glossary.trim());
-    const results = query ? definitions.filter(entry => normalise(entry.join(' ')).includes(query)) : definitions.slice(0, 5);
+    const results = query ? definitions.filter(entry => normalise(entry.join(' ')).includes(query)) : definitions;
     root.querySelector('#definition-results').innerHTML = definitionList(results);
-    root.querySelector('#definition-count').textContent = query ? `${results.length} ${results.length === 1 ? 'definition' : 'definitions'} found.` : `Showing 5 of ${definitions.length} terms. Search the complete glossary above.`;
+    root.querySelector('#definition-count').textContent = query ? `${results.length} ${results.length === 1 ? 'definition' : 'definitions'} found.` : `All ${definitions.length} terms.`;
   }
 }
 
@@ -376,7 +398,7 @@ function restoreInteractions() {
 }
 
 new ResizeObserver(() => {
-  if (!pages.length || resizeFrame) return;
+  if (!paginationReady || resizeFrame) return;
   resizeFrame = requestAnimationFrame(() => {
     resizeFrame = 0;
     if (matchMedia('print').matches) return;
@@ -404,6 +426,7 @@ async function initialize() {
       throw new Error('The shared mission dataset is inconsistent');
     }
     ({ pages, chapters } = createBook(data));
+    mission = createMissionInteractions(book, data, { onChange: refreshPagination });
     const romanFolios = { 'title-page': 'ii', abstract: 'iv', contents: 'vi', 'contents-continued': 'viii' };
     pages.forEach(page => { if (romanFolios[page.id]) page.rightFolio = romanFolios[page.id]; });
   } catch (error) {
@@ -424,8 +447,25 @@ async function initialize() {
   }
   window.addEventListener('hashchange', renderPage);
   await document.fonts.ready;
+  const illustrations = document.createElement('template');
+  illustrations.innerHTML = pages.map(page => `${page.left ?? ''}${page.right ?? ''}`).join('');
+  const sources = [...new Set([...illustrations.content.querySelectorAll('img')].map(image => image.getAttribute('src')))];
+  const missing = await Promise.all(sources.map(async src => {
+    const image = new Image();
+    image.src = src;
+    try {
+      await image.decode();
+      illustrationSizes.set(src, { width: image.naturalWidth, height: image.naturalHeight });
+    }
+    catch (error) {
+      console.error(`Unable to load illustration ${src}:`, error);
+      return src;
+    }
+  }));
+  if (missing.some(Boolean)) showNotice('Some illustrations could not be loaded. Their reading pages will identify the missing images.');
   measureBook();
   renderPage();
+  paginationReady = true;
 }
 
 await initialize();

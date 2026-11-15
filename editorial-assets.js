@@ -4,10 +4,16 @@ const brief = (file, objective, subject, composition, elements, ratio, caption, 
   style: kind === 'real-satellite-imagery' ? 'Original scientific image colours and institutional credits retained.' : kind === 'synthetic-example' ? 'Labelled fictional optical-style terrain; not satellite evidence.' : graphite,
   aspectRatio: ratio, caption, provenance: './art/provenance.json', alt, limit,
   kind, decision: 'reuse', inspected: '13 November 2026',
+  rationale: 'Retains the stated subject, required elements and educational meaning without altering the source.',
 });
 
 export const assetBriefs = [
-  brief('earth-sketch.png', 'Connect orbit, observation and reception.', 'Earth and orbital context', 'Large intact drawing on the right; typography in a separate calm column, never over the image.', ['Earth', 'orbit paths', 'satellites', 'receiving dish'], '853:751', 'Conceptual orbital geometry, not live mission data.', 'Graphite Earth with orbital paths, satellites and observation links.', 'Orange footprints are illustrative; not fire locations or verified geometry.'),
+  {
+    ...brief('earth-sketch-complete-reading.webp', 'Connect orbit, observation and reception.', 'Earth and orbital context', 'Complete landscape drawing with breathing room around spacecraft and ground antenna; typography in a separate calm column.', ['Earth', 'orbit paths', 'complete satellites', 'complete receiving dish and pedestal'], '4:3', 'Conceptual orbital geometry, not live mission data.', 'Graphite Earth with complete satellites, orbital paths and a ground antenna.', 'AI-assisted completion of an illustrative drawing; not verified geography or orbital geometry. Orange footprints are illustrative, not fire locations.'),
+    inspected: '15 November 2026',
+    decision: 'adapt',
+    rationale: 'Expanded the clipped source composition to complete the upper-left spacecraft and lower-right dish. The original drawing is retained separately.',
+  },
   brief('orbital-observation-reading.webp', 'Distinguish measuring from delivering.', 'Satellite observing terrain', 'Portrait study beside prose or above the process stages; preserve the full instrument and footprint.', ['spacecraft', 'instrument', 'terrain footprint'], '1143:1200', 'An observation is the start of a delivery path.', 'Graphite spacecraft observing a patch of terrain.', 'Not a verified Meridian spacecraft or footprint.'),
   brief('optical-radar-study-reading.webp', 'Explain passive and active observation.', 'Optical and radar studies', 'Wide intact paired sketch; do not crop either cloud or instrument.', ['two instruments', 'cloud', 'different signal paths'], '3:2', 'Conceptual optical and radar illumination.', 'Paired graphite studies of optical and radar observation through different cloud conditions.', 'Not a controlled sensor comparison or flame-detection claim.'),
   brief('antenna-vignette-reading.webp', 'Make the ground contact tangible.', 'Receiving dish', 'Small supporting margin vignette, not a stretched full-width hero.', ['dish', 'pedestal', 'contact shadow'], '734:845', 'Generic ground contact.', 'Graphite dish antenna tilted towards the sky.', 'Not a station location or verified installation.'),
@@ -21,7 +27,7 @@ export const assetBriefs = [
 ];
 
 export const pendingAssetBriefs = [{
-  decision: 'deferred-editorial-phase',
+  decision: 'missing-approved-asset',
   learningObjective: 'Locate the fictional AR-1842 AOI without implying a documented incident.',
   subject: 'Attica geographic context and fictional observation footprint',
   composition: 'Wide map with a quiet legend, separately labelled scenario footprint.',
@@ -31,5 +37,11 @@ export const pendingAssetBriefs = [{
   caption: 'Geographic context; the mission footprint is illustrative.',
   provenance: 'Requires a licensed map and an approved scenario footprint; neither is supplied in the current manuscript.',
   alt: 'Map locating Attica with a separately labelled fictional observation footprint.',
-  limit: 'Do not substitute the alpine forest drawing for a geographic map. Phase 1 retains the original labelled conceptual landscape.',
+  limit: 'The source AOI coordinates are available, but a licensed basemap is not. Do not substitute the alpine forest drawing for an Attica map.',
+}, {
+  decision: 'missing-approved-asset',
+  learningObjective: 'Show agriculture, emergency response and defence in human-scale customer contexts.',
+  subject: 'Three customer illustrations',
+  provenance: 'No existing illustration depicts all three customer contexts faithfully. The integration uses factual application cards without invented people or biographies.',
+  limit: 'No new image was generated; the existing control-room illustration is not passed off as three different customer portraits.',
 }];

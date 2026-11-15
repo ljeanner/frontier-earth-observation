@@ -3,6 +3,20 @@
   "direction": "Existing Frontier Graphisme project skill: graphite drawings, ivory paper, restrained sage accents.",
   "reuse": "Existing generated artwork reused at the user's request. Source files remain unchanged. Four new graphite studies and one synthetic optical-style teaching image were generated for this reader on 10 November 2026.",
   "assets": [
+    {
+      "file": "earth-sketch-complete.png",
+      "readingDerivative": "earth-sketch-complete-reading.webp",
+      "kind": "conceptual-illustration",
+      "source": "AI-assisted edit with image_generation, using the existing art/earth-sketch.png as the sole visual reference.",
+      "assetId": "sha256:b6e9226f063ec79286962e82a1a4a4017440e633cc8dd7ffdd38460a3d6cc54e",
+      "created": "2026-11-15",
+      "decision": "adapt",
+      "credit": "Conceptual AI-assisted illustration for Lucile Jeanneret's illustrated white paper.",
+      "use": "Cover, glossary and educational Explorer poster in both readers.",
+      "derivative": "Full 1448 x 1086 generated PNG retained. Uncropped proportional resize to 1400 x 1050, WebP quality 90.",
+      "rationale": "The original source itself clipped the upper-left spacecraft and lower-right dish. Expanded composition reconstructs both objects with paper margins.",
+      "limit": "Illustrative reconstruction, not pixel-identical outpainting, scientific imagery, verified orbital geometry or evidence of an actual mission. Original earth-sketch.png is retained unchanged."
+    },
     { "file": "earth-sketch.png", "source": "meridian-corporate/public/art/earth-sketch.png", "use": "Cover and glossary", "limit": "Illustrative globe, not a physical orbital simulation." },
     { "file": "mission-control.webp", "source": "meridian-corporate/public/art/mission-control.webp", "use": "Functional chapter", "limit": "Representative drawn people and room, not a verified facility." },
     { "file": "ground-station.webp", "source": "meridian-corporate/public/art/ground-station.webp", "use": "Front matter, contents and existing architecture", "limit": "Representative drawn ground station, not a verified installation." },

@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#efeee5">
-    <meta name="description" content="An illustrated white paper on agentic Earth-observation tasking and downlink, connecting mission planning, ground resources and product delivery.">
-    <title>Agentic Earth-Observation Tasking and Downlink</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23345b4c'/%3E%3Cpath d='M18 46V18h28M18 30h22' fill='none' stroke='%23efeee5' stroke-width='3'/%3E%3C/svg%3E">
+    <meta name="description" content="Exploring how AI agents and Microsoft technologies can help coordinate satellite observations, ground-station operations, and the delivery of geospatial products.">
+    <meta name="author" content="Lucile Jeanneret">
+    <meta property="og:title" content="Agentic Earth Observation — Tasking &amp; Downlink">
+    <meta property="og:description" content="An illustrated white paper by Lucile Jeanneret.">
+    <meta property="og:type" content="article">
+    <title>Agentic Earth Observation — Tasking &amp; Downlink</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23345b4c' stroke-width='2'/%3E%3Cellipse cx='32' cy='32' rx='29' ry='9' transform='rotate(-35 32 32)' fill='none' stroke='%23345b4c' stroke-width='2'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="./editorial.css">
+    <link rel="stylesheet" href="./mission-widgets.css">
     <script type="module" src="./editorial-reader.js"></script>
   </head>
   <body class="web-reader">
     <a class="skip-link" href="#reading-content">Skip to reading</a>
     <header class="editorial-header">
-      <a href="#cover" class="brand" aria-label="Frontier — cover">
-        <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M7 29V7h22M7 17h17M13 29V12h16"/></svg>
-        <span>FRONTIER<span class="brand-caption">MISSION ARCHITECTURE</span></span>
-      </a>
-      <span class="header-context">EARTH OBSERVATION / TASKING &amp; DOWNLINK</span>
+      <a href="#cover" class="publication-home" aria-label="Agentic Earth Observation — cover"><span class="publication-name">Agentic Earth Observation</span><span class="publication-short" aria-hidden="true">Earth Observation</span><small>Tasking &amp; Downlink</small></a>
       <div class="header-actions">
-        <button type="button" id="contents-button" aria-haspopup="dialog" aria-controls="contents-drawer">Contents</button>
+        <button type="button" id="contents-button" aria-haspopup="dialog" aria-controls="contents-drawer" aria-expanded="false">Contents</button>
         <details id="reader-actions">
-          <summary>Reading tools</summary>
+          <summary aria-label="Reading tools">Tools</summary>
           <div class="action-list">
             <button type="button" id="bookmark" aria-pressed="false">Bookmark</button>
             <a id="saved-page" hidden>Return to bookmark</a>
             <button type="button" id="print-button">Print</button>
-            <a id="book-view" href="./book.html#cover">Book view</a>
+            <a id="book-view" href="./book.html#cover">Book / Print view</a>
           </div>
         </details>
       </div>
@@ -37,7 +38,7 @@
     <main id="reading-content" tabindex="-1"><p class="loading-notice" role="status">Loading the white paper…</p></main>
     <dialog id="contents-drawer" aria-labelledby="contents-title">
       <div class="dialog-heading"><h2 id="contents-title">Contents</h2><button type="button" data-close-dialog>Close</button></div>
-      <p class="drawer-note">7 chapters · 29 reading sequences, with glossary, sources and image credits.</p>
+      <p class="drawer-note" id="contents-summary"></p>
       <nav id="navigation" aria-label="White-paper contents"></nav>
     </dialog>
     <dialog id="definition-dialog" aria-labelledby="definition-title">

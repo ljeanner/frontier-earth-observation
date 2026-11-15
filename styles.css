@@ -14,9 +14,9 @@ button{background:none;border:0}
 .skip-link:focus{clip-path:none;width:auto;height:auto;padding:12px}
 code{overflow-wrap:anywhere}
 .masthead{height:88px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c5c8bc;background:#eeeee6;gap:24px}
-.brand{display:flex;align-items:center;gap:13px;font-size:20px;letter-spacing:4px;text-decoration:none;font-weight:600;flex-shrink:0}
-.brand svg{width:35px;height:35px;stroke:var(--green);stroke-width:1.6;fill:none}
-.brand-caption{display:block;font:8px "Segoe UI",sans-serif;letter-spacing:2px;margin-top:5px}
+.publication-home{display:block;min-width:0;color:var(--ink);text-decoration:none;font:20px/1.2 var(--serif)}
+.publication-home small{display:block;margin-top:4px;font:10px/1.5 Consolas,monospace;color:var(--green)}
+@media(max-width:800px){.publication-home{font-size:16px}.publication-home small{font-size:9px}}
 .masthead-center,.edition{font:9px Consolas,monospace;letter-spacing:1.3px}
 .masthead-center{color:var(--muted)}
 .masthead-center span{margin:0 13px;color:#92988b}
@@ -77,7 +77,10 @@ code{overflow-wrap:anywhere}
 .cover .leaf{padding-top:28px}
 .cover-left{background:linear-gradient(90deg,#d9ddce45,transparent 11%)}
 .cover h1{font:clamp(40px,4.4vw,66px)/.99 var(--serif);letter-spacing:-2.7px;font-weight:400;margin:38px 0 24px}
-.cover h1 em{font-weight:400;color:var(--green)}
+.cover h1 em{display:block;font-size:.65em;line-height:1.2;margin-top:12px;font-weight:400;color:var(--green);letter-spacing:-.7px}
+.cover-eyebrow{display:block;font:9px/1.6 Consolas,monospace;color:var(--green);letter-spacing:.7px}
+.publication-byline{font:15px/1.6 "Segoe UI",Arial,sans-serif}
+.cover-page.cover-left,.cover-page.cover-right{min-height:0;background:none}
 .cover .subtitle{font:17px/1.55 var(--serif);max-width:290px;margin:0;color:#525d4f}
 .cover-rule{height:1px;width:50px;background:#6c7d61;margin:28px 0 20px}
 .cover .description{font-size:11px;line-height:1.85;max-width:260px;color:#64705d;margin:0}
@@ -86,7 +89,7 @@ code{overflow-wrap:anywhere}
 .cover-identity span{display:block;font-size:9px;color:#72796b;margin-top:7px}
 .cover-right{overflow:hidden;background:#eaeade}
 .cover-right .leaf-header{position:relative;z-index:2}
-.cover-art{width:calc(100% + 80px);margin:26px -40px 0;height:450px;object-fit:cover;mix-blend-mode:multiply;filter:grayscale(.8);opacity:.88}
+.cover-art{width:calc(100% + 80px);margin:26px -40px 0;height:450px;object-fit:contain;mix-blend-mode:multiply}
 .figure-index{font:8px Consolas,monospace;letter-spacing:1px;color:#69755e;margin-top:14px}
 .hand-note{font:italic 17px/1.45 var(--serif);color:#617356;max-width:240px;transform:rotate(-3deg);margin:10px 0 22px auto}
 .cover-label{align-self:flex-end;border:1px solid #88947b;padding:9px 13px;margin:8px 0 22px;font:8px/1.8 Consolas,monospace;letter-spacing:1px;transform:rotate(-3deg);color:#57634f}
@@ -431,6 +434,7 @@ figcaption{font:8px/1.7 Consolas,monospace;letter-spacing:.3px;color:#697660;mar
   .page-turn{font-size:10px;gap:6px;min-width:65px}
 }
 @media screen and (max-height:600px){
+  .cover .page-flow h1{font-size:24px;line-height:1.2;letter-spacing:-.5px}
   .page-flow .foundry-matrix,.page-flow .foundry-matrix thead,.page-flow .foundry-matrix tbody,.page-flow .foundry-matrix tr,.page-flow .foundry-matrix th,.page-flow .foundry-matrix td{display:block}
   .page-flow .foundry-matrix tr{padding:5px 0;border-bottom:1px solid #cdd3c1}
   .page-flow .foundry-matrix th,.page-flow .foundry-matrix td{padding:2px 3px;border:0}
