@@ -24,8 +24,11 @@ export function parseManuscript(source) {
   }
   const expectedNumbers = Array.from({ length: 17 }, (_, index) => index + 1)
     .filter(number => sections.length === 17 || number !== 2);
-  if (![16, 17].includes(sections.length) || sections.some((section, index) => section.number !== expectedNumbers[index] || section.part === null || !section.blocks.length))
-    throw new Error('Expected the complete approved manuscript with stable sequence IDs; v2 folds sequence 02 into the opening.');
+  const numbers = new Set(sections.map(section => section.number));
+  if (![16, 17].includes(sections.length) || numbers.size !== sections.length ||
+      expectedNumbers.some(number => !numbers.has(number)) ||
+      sections.some((section, index) => section.part === null || !section.blocks.length || index > 0 && section.part < sections[index - 1].part))
+    throw new Error('Expected the complete approved manuscript with unique stable sequence IDs in reading-part order.');
   return sections;
 }
 
@@ -34,7 +37,7 @@ export function compileManuscript(source) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const source = await readFile(new URL('./content/agentic-earth-observation-manuscript-v2.md', import.meta.url), 'utf8');
+  const source = await readFile(new URL('./content/agentic-earth-observation-manuscript-v3.md', import.meta.url), 'utf8');
   const target = new URL('./manuscript-data.js', import.meta.url);
   const compiled = compileManuscript(source);
   if (process.argv.includes('--check')) {

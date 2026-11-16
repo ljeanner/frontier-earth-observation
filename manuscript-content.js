@@ -20,7 +20,6 @@ export const manuscriptChapters = partTitles.map((title, part) => {
 });
 
 export const legacyAnchors = Object.freeze({
-  'meet-meridian': 'industry',
   couverture: 'cover', 'page-de-garde': 'cover', 'title-page': 'cover',
   resume: 'methodology', abstract: 'methodology', sommaire: 'contents',
   industrie: 'industry', contraintes: 'regulatory-notes', regulation: 'regulatory-notes',
@@ -46,6 +45,19 @@ const plate = html => html.replace(/<span class="section-label">[\s\S]*?<\/span>
 const widget = (name, variant = '') => `<section class="mission-widget" data-mission-widget="${name}"${variant ? ` data-variant="${variant}"` : ''} aria-label="${escape(name.replace(/-/g, ' '))}"><p>Preparing the shared teaching scenario…</p></section>`;
 const image = (file, alt, caption, extra = '') => `<figure class="manuscript-illustration ${extra}"><img src="./art/${file}" alt="${escape(alt)}"><figcaption>${caption}</figcaption></figure>`;
 const noteLink = (id, label) => `<p class="support-link"><a href="#${id}">${label} →</a></p>`;
+
+function meridianCompany(section) {
+  return `<section class="meridian-company-plate wide-block" aria-label="Meridian and its mission">
+    <div class="meridian-company-introduction">
+      ${image('meridian-logo-reading.webp', 'Meridian wordmark beside a graphite Earth, inclined orbit and satellite dot.', 'Meridian — illustrated company identity.', 'meridian-logo')}
+      ${prose(section)}
+    </div>
+    <div class="meridian-company-drawings">
+      ${image('meridian-offices-rome-reading.webp', 'Conceptual Meridian offices in Rome, with a stone facade, trees and an orbital emblem beside the entrance.', 'Conceptual offices in Rome, not an actual facility or a ground station.')}
+      ${image('meridian-world-map-reading.webp', 'Graphite world map locating Meridian in Rome, Italy, with an enlarged Italian peninsula inset.', 'Rome, Italy — illustrative cartography, not a georeferenced map.')}
+    </div>
+  </section>`;
+}
 
 const processStages = [
   ['Request', 'Define the area, product and deadline.'],
@@ -126,9 +138,9 @@ export function createManuscriptBook(data, supporting, helpers) {
   };
   const art = {};
   const openingSources = `<span class="opening-sources"><a href="https://sdup.esoc.esa.int/discosweb/statistics/" target="_blank" rel="noopener noreferrer">ESA — Space Environment Statistics</a>. Updated 13 November 2026; consulted 15 November 2026. The functioning-satellite figure covers all missions, not only Earth observation.</span>
-    <span class="opening-sources"><a href="https://dataspace.copernicus.eu/news/2026-9-24-copernicus-data-space-ecosystem-cdse-releases-annual-report-2025" target="_blank" rel="noopener noreferrer">Copernicus Data Space Ecosystem — Annual Report 2025</a>. End-of-2025 archive; report announcement 24 September 2026; consulted 15 November 2026.</span>
-    <span class="opening-sources">Meridian is a fictional Italian company used throughout this article.</span>`;
+    <span class="opening-sources"><a href="https://dataspace.copernicus.eu/news/2026-9-24-copernicus-data-space-ecosystem-cdse-releases-annual-report-2025" target="_blank" rel="noopener noreferrer">Copernicus Data Space Ecosystem — Annual Report 2025</a>. End-of-2025 archive; report announcement 24 September 2026; consulted 15 November 2026.</span>`;
   art[1] = image('earth-sketch-complete-reading.webp', 'Graphite Earth, spacecraft and ground antenna.', `Observing Earth connects a place, a time and a question.${openingSources}`, 'restrained-art');
+  art[2] = '<p class="plate-note">Meridian is a fictional Italian company used throughout this article.</p>';
   art[3] = plate(helpers.explorerPlate()) + `<div class="explorer-information"><details class="explorer-guide"><summary>How to explore</summary>
     <p>Watch the satellites move along their orbital planes. Drag to rotate and scroll to zoom; the full Explorer includes the ground network and planning views.</p>
     <dl class="explorer-cues">${[
@@ -184,8 +196,10 @@ export function createManuscriptBook(data, supporting, helpers) {
     const chapter = manuscriptChapters[section.part];
     let left = section.number === 3 ? '' : prose(section);
     let right = art[section.number] ?? '';
+    if (section.number === 2) left = meridianCompany(section);
     if (section.number === 3) {
-      right = right.replace('<div class="explorer-information">', `${prose(section)}<div class="explorer-information">`);
+      right = right.replace('<div class="explorer-information">', `${prose(section, section.blocks.slice(0, 1))}<div class="explorer-information">`) +
+        `<div class="explorer-explanation">${prose(section, section.blocks.slice(1))}</div>`;
     }
     if (section.number === 4) {
       const split = section.blocks.findIndex(block => block.startsWith('### '));
@@ -215,7 +229,11 @@ export function createManuscriptBook(data, supporting, helpers) {
   ]);
   const references = { ...old('references') };
   references.right += `<section class="opening-reference-notes"><h3>Opening statistics</h3>${openingSources}</section>`;
-  pages.push(methodology, regulatory, architecture, technical, { ...old('glossary') }, references, { ...old('image-credits') });
+  const imageCredits = { ...old('image-credits') };
+  imageCredits.right += `<section><h3>Meridian company illustrations</h3>
+    <p>The <a href="./art/meridian-logo-original.png">company identity</a>, <a href="./art/meridian-offices-rome-concept.png">office exterior</a> and <a href="./art/meridian-world-map-rome.png">Rome locator map</a> were generated with AI for this fictional company on 16 November 2026. They are conceptual illustrations, not evidence of a real facility, address or corporate footprint. The office is not an additional ground station. The map is illustrative rather than georeferenced; its main Rome marker was corrected after generation.</p>
+    <p>Originals are retained. The logo reading copy trims transparent outer margins; the office and map reading copies are proportionally resized without cropping. <a href="./art/provenance.json">Image provenance and limitations</a>.</p></section>`;
+  pages.push(methodology, regulatory, architecture, technical, { ...old('glossary') }, references, imageCredits);
   pages.push({
     id: 'back-cover', title: 'Publication', type: 'back', label: '—',
     left: image('earth-sketch-complete-reading.webp', 'Complete Earth-observation illustration.', 'Conceptual illustration; see image credits.'),

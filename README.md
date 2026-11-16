@@ -7,12 +7,13 @@ reading and print layout. No backend, API keys or package installation is needed
 ## Reading features
 
 Responsive reading, contents, browser navigation, local bookmarks, a searchable
-glossary, illustration zoom, synthetic cloud comparison, architecture highlights,
+glossary, illustration zoom, seven clickable process drawings, synthetic cloud comparison, architecture highlights,
 an embedded orbital Explorer and printing.
 
-The approved English manuscript now contains three narrative parts and 16 subsections:
-the revised industry introduction, physical constraints and Meridian, then the full-width orbital Explorer; customer and
-operational challenges in Part II; agents, architecture, Foundry and operations
+The approved English manuscript contains three narrative parts and 17 subsections:
+a short industry introduction, the full-width orbital Explorer and general
+physical and instrument constraints in Part I; Meridian's illustrated introduction,
+customer and operational challenges in Part II; agents, architecture, Foundry and operations
 in Part III. Architecture and Foundry technical notes forms Part IV in the web
 reader. Methodology, regulations, glossary, sources and image credits remain
 supporting material.
@@ -64,7 +65,7 @@ strip follows the cover, rather than being repeated between parts.
 The masthead, cover and headings share one responsive width and gutter; text keeps
 a readable measure while illustrations, scientific plates, diagrams and interactive
 applications use the wider composition. The first three parts retain
-the approved revised manuscript (4, 6 and 6 subsections); Part IV is
+the approved revised manuscript (4, 7 and 6 subsections); Part IV is
 **Architecture and Foundry technical notes**, promoted from the supporting
 material before the remaining appendices. Its content and existing deep link
 are preserved, with no duplicate part/subsection title. Its technical subsections
@@ -85,13 +86,16 @@ The paginated book remains available separately.
 
 The industry introduction, wildfire and Foundry guidance use side-by-side
 illustrations and prose on desktop. Mobile places prose before the illustration.
-The opening retains the exact revised paragraphs, dated ESA/Copernicus references
-and one brief statement identifying Meridian as fictional. The full-width Explorer
-follows immediately, with the exact italic instruction and optional “How to explore”
-and simulation/accessibility information panels. The optical/radar prose, scientific
-images and cloud demonstration follow without an intervening narrative.
-The current approved source is `content/agentic-earth-observation-manuscript-v2.md`;
-v1 remains archived unchanged. Former `#meet-meridian` links redirect to the opening.
+The opening retains the dated ESA/Copernicus figures and sources and reaches
+the full-width Explorer after 124 words. Its exact italic instruction and optional
+“How to explore” and simulation/accessibility panels precede the general
+observation and ground-contact explanation. The optical/radar explanation,
+scientific images and cloud demonstration remain in Part I without company references.
+Meridian's exact introduction, logo, conceptual offices and Rome locator open Part II.
+The company and map limitations remain in the captions and image credits.
+The current approved source is `content/agentic-earth-observation-manuscript-v3.md`;
+v1 and v2 remain archived unchanged. `#meet-meridian` now links directly to Part II.
+Stable source sequence 02 follows 05 in reading order, without visible numbering.
 
 Architecture viewports support native keyboard panning plus left/right controls.
 Diagram arrow keys no longer turn reader sections. The globe retains wide and
@@ -103,7 +107,7 @@ offscreen disposal, failure/retry and its educational limitations.
 | Educational component | Current reusable material / boundary |
 | --- | --- |
 | Optical/radar and clouds | Original image pairs, provenance, image zoom and synthetic-only opacity control |
-| Delivery process fresco | Seven stages, including a separate quality check |
+| Delivery process fresco | Seven keyboard-accessible stages with matching hatched drawings; original acquisition/downlink images retained for print |
 | Customer request | AR-1842 form with entitlement, export and product checks before planning |
 | 24-hour timeline | Source Attica timestamps, four-hour deadline, cloud failure and late optical retry |
 | Current systems | Four independent app/backlog/detail views over the same five source requests |
@@ -142,11 +146,14 @@ The forest illustration remains conceptual, not geographic evidence of Attica.
 | `editorial-assets.js` | Inspected reuse decisions and explicit missing assets |
 | `publication.test.mjs` | Portable identity, manuscript and static-dependency checks |
 
-The canonical source is `content\agentic-earth-observation-manuscript-v1.md`,
-SHA-256 `5e038122149b0b3d330fa93e9a7d28b76b03e5753e6181674ca1d3df70be52f1`.
-It is the supplied Markdown, not a regenerated export. Visual directions and
-editorial review notes are not reader prose. Narrative paragraphs were not
-rewritten; UI labels, captions and safety qualifications are separate.
+The canonical source is `content\agentic-earth-observation-manuscript-v3.md`,
+SHA-256 `bbc2c17c86059ea7295a966993632566fef4ccb57ea1518a87e0cd3c9d146f3b`.
+The original v1 and preceding v2 are preserved byte-for-byte. The current revision
+moves the company introduction and general explanations without shortening them,
+and changes only the authorized opening and generic Part I transitions.
+Prose from source sequence 06 onward is unchanged. Visual directions and
+editorial review notes are not reader prose; UI labels, captions and safety
+qualifications are separate.
 
 After an explicitly approved source revision, regenerate and verify:
 
@@ -164,5 +171,5 @@ book interactions and every rendered book word at seven viewports.
 Those working checks use the existing sibling Playwright/scenario sources and
 are not required to host this static package.
 
-This revision is prepared locally, not deployed. Pushing `main` updates the
-public GitHub Pages site and requires a separate publication decision.
+Pushing `main` updates the public GitHub Pages site and requires an explicit
+publication decision.

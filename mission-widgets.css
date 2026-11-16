@@ -5,6 +5,18 @@
 .meridian-portrait{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:24px 0;margin:24px 0;border-block:1px solid var(--line)}
 .meridian-portrait dt{font:30px/1.2 var(--serif);color:var(--green)}
 .meridian-portrait dd{margin:8px 0 0;font:12px/1.6 Consolas,monospace}
+.web-reader .meridian-company-plate{margin:40px 0 32px;padding-top:32px;border-top:1px solid var(--line)}
+.web-reader .meridian-company-introduction{display:grid;grid-template-columns:minmax(200px,.8fr) minmax(0,1.2fr);gap:64px;align-items:center}
+.web-reader .meridian-company-plate .meridian-logo{width:100%;max-width:420px;margin:0 auto!important}
+.web-reader .meridian-logo figcaption{text-align:center}
+.web-reader .meridian-company-drawings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin-top:24px}
+.web-reader .meridian-company-drawings figure{margin:0}
+.web-reader .meridian-company-drawings img{aspect-ratio:1400/933;object-fit:contain}
+@media(max-width:800px){
+  .web-reader .meridian-company-introduction{display:flex;flex-direction:column;gap:24px;align-items:stretch}
+  .web-reader .meridian-company-plate .meridian-logo{max-width:320px}
+  .web-reader .meridian-company-drawings{grid-template-columns:1fr;gap:24px}
+}
 .explorer-cues{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
 .explorer-cues dt{font:20px/1.4 var(--serif)}
 .explorer-cues dd{font:14px/1.7 "Segoe UI",sans-serif;margin:8px 0 0;color:var(--muted)}
@@ -12,6 +24,22 @@
 .journey-drawings figure{margin:20px 0!important}
 .journey-drawings img{max-height:260px}
 .web-reader .process-map{grid-template-columns:repeat(7,minmax(0,1fr))}
+.web-reader .process-illustrated .journey-drawings{display:block}
+.process-illustrated .process-scene{margin:0!important}
+.process-illustrated .process-scene>svg,.process-illustrated .process-scene>.inspect-button{display:block;width:100%;height:clamp(280px,32vw,400px);max-width:900px;margin-inline:auto}
+.process-illustrated .process-scene img{display:block;width:100%;height:100%;max-height:none;object-fit:contain}
+.process-illustrated .process-scene figcaption{min-height:3.6em;margin-top:16px}
+.sequence-body .process-instruction{font:italic 14px/1.8 var(--serif);color:var(--muted);margin:16px 0}
+.process-illustrated .process-map{margin-top:20px}
+.process-illustrated .process-map li{padding:0;border:0}
+.process-illustrated .process-step{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;width:100%;height:100%;min-height:44px;text-align:left;border:0;border-top:2px solid var(--line);padding:20px 0;color:var(--ink)}
+.process-illustrated .process-step:hover,.process-illustrated .process-step[aria-pressed="true"]{border-color:var(--green);color:var(--green)}
+.process-step-copy>span{display:block;font:15px/1.8 "Segoe UI",Arial,sans-serif;margin-top:14px}
+@media screen and (max-width:800px){
+  .web-reader .process-illustrated .process-map{display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:6px 6px 12px;margin-inline:-6px}
+  .process-illustrated .process-map li{flex:0 0 160px;scroll-snap-align:start}
+  .process-illustrated .process-step{padding-inline:4px}
+}
 .customer-uses,.business-choices,.coordination-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:32px 0}
 .customer-uses{grid-template-columns:repeat(3,minmax(0,1fr))}
 .customer-uses>section,.business-choices>section,.coordination-comparison>section{border-top:1px solid var(--line);padding-top:18px}
@@ -114,6 +142,17 @@ body:not(.web-reader) .supporting-note>summary{font-size:20px;break-after:avoid}
   body:not(.web-reader) .page-flow .matrix td:before{content:attr(data-column);display:block;font-weight:600}
 }
 @media print{
+  .web-reader .meridian-company-introduction,.web-reader .meridian-company-drawings{display:block}
+  .web-reader .meridian-company-plate .meridian-logo{max-width:85mm}
+  .meridian-company-plate figure{break-inside:avoid}
+  .web-reader .meridian-company-drawings img{max-height:85mm}
+  .web-reader .process-illustrated .journey-drawings{display:grid;grid-template-columns:2fr 1fr}
+  .web-reader .process-illustrated .process-scene{display:none!important}
+  .web-reader .process-illustrated .process-scene[data-original-illustration]{display:block!important}
+  .process-illustrated .process-scene>.inspect-button{height:65mm}
+  .web-reader .sequence-body .process-map button{display:block!important;color:var(--ink);border-color:var(--line)}
+  .web-reader .process-illustrated .process-instruction{display:none}
+  .process-illustrated .process-step-copy>span{font-size:10pt}
   .web-reader .process-map{grid-template-columns:repeat(3,1fr)}
   .mission-widget .print-only{display:block}
   .mission-widget button:not([aria-pressed="true"]),.mission-widget input,.request-form fieldset,.mission-widget .widget-notice{display:none!important}

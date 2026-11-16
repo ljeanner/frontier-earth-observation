@@ -4,6 +4,7 @@ import { assetBriefs } from './editorial-assets.js';
 import { createExplorerPreview } from './explorer-preview.js';
 import { legacyAnchors } from './manuscript-content.js';
 import { createMissionInteractions } from './mission-interactions.js';
+import { enhanceProcessIllustrations } from './process-illustrations.js';
 
 const root = document.querySelector('#reading-content');
 const notice = document.querySelector('#storage-notice');
@@ -196,8 +197,10 @@ function renderSection(section) {
     table.replaceWith(scroll);
     scroll.append(table);
   }
+  const company = prose.querySelector(':scope>.meridian-company-plate');
+  if (company) prose.before(company);
   if (section.template === 'split-screen') {
-    const visual = prose.querySelector('figure:not(.si-diagram)');
+    const visual = prose.querySelector(':scope>figure:not(.si-diagram)');
     if (visual) {
       const composition = document.createElement('div');
       composition.className = 'split-composition';
@@ -233,6 +236,7 @@ function renderSection(section) {
     body.append(...wideElements);
     body.append(...prose.querySelectorAll(':scope>.support-link,:scope>.note-foot'));
   }
+  enhanceProcessIllustrations(article);
   enhanceImages(article);
   enhanceDiagrams(article);
   enhanceComparisons(article);
@@ -378,6 +382,7 @@ function onScroll() {
     }
     setActive(current);
     for (const process of root.querySelectorAll('.process-map,.process-list')) {
+      if (process.closest('.process-illustrated')) continue;
       if (!process.getClientRects().length) continue;
       const steps = [...process.children];
       let chosen;

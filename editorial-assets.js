@@ -9,6 +9,22 @@ const brief = (file, objective, subject, composition, elements, ratio, caption, 
 
 export const assetBriefs = [
   {
+    ...brief('meridian-logo-reading.webp', 'Identify the fictional company without changing the publication identity.', 'Meridian orbital emblem and wordmark', 'Uncropped artwork with only transparent outer margins trimmed; beside the company introduction, never in the publication header.', ['Earth emblem', 'inclined orbit', 'satellite dot', 'Meridian wordmark'], '1000:325', 'Meridian — illustrated company identity.', 'Meridian wordmark with a graphite Earth and inclined orbit.', 'Conceptual identity for a fictional company, not a vector master or a trademark-clearance assessment.'),
+    inspected: '16 November 2026',
+    decision: 'adapt',
+    rationale: 'Reuses the user-approved generated identity, retaining its alpha channel and the complete original; trims only outer transparent space for legibility.',
+  },
+  {
+    ...brief('meridian-offices-rome-reading.webp', 'Give the fictional operator a human-scale setting.', 'Conceptual Rome offices', 'Full building exterior alongside its world-map locator; no crop or invented address.', ['complete facade', 'entrance', 'trees', 'orbital emblem'], '1400:933', 'Conceptual offices in Rome, not an actual facility or a ground station.', 'Conceptual stone-fronted Meridian offices in Rome.', 'Invented building and setting, not a verified facility, real address or additional ground station.'),
+    inspected: '16 November 2026',
+  },
+  {
+    ...brief('meridian-world-map-reading.webp', 'Locate the fictional company in its narrative city.', 'Rome world-map locator', 'Complete world-map drawing and Italy inset; enlarged image remains available.', ['world map', 'Rome marker on mainland Italy', 'Italy inset', 'Rome label'], '1400:933', 'Rome, Italy — illustrative cartography, not a georeferenced map.', 'Graphite world map locating Rome with an Italy inset.', 'AI-drawn approximate cartography, not a georeferenced basemap or a verified corporate footprint. The main locator was corrected after generation.'),
+    inspected: '16 November 2026',
+    decision: 'adapt',
+    rationale: 'Reuses the delivered locator with its corrected mainland Rome marker; original and corrected versions are retained.',
+  },
+  {
     ...brief('earth-sketch-complete-reading.webp', 'Connect orbit, observation and reception.', 'Earth and orbital context', 'Complete landscape drawing with breathing room around spacecraft and ground antenna; typography in a separate calm column.', ['Earth', 'orbit paths', 'complete satellites', 'complete receiving dish and pedestal'], '4:3', 'Conceptual orbital geometry, not live mission data.', 'Graphite Earth with complete satellites, orbital paths and a ground antenna.', 'AI-assisted completion of an illustrative drawing; not verified geography or orbital geometry. Orange footprints are illustrative, not fire locations.'),
     inspected: '15 November 2026',
     decision: 'adapt',

@@ -186,7 +186,7 @@ const sensorExamples = () => `<section class="illustration-plate sensor-plate" a
       <figcaption><strong>Radar: returned echoes</strong><span>Sentinel-1B · Central Italy<br>6 July 2018 ${cite(11)}</span><span>Works in darkness and through cloud. These false colours encode radar channels, not the colours of the ground.</span></figcaption>
     </figure>
   </div>
-  <p class="plate-note">Real Copernicus examples, not Meridian acquisitions. Dates and extents differ: this is not a matched sensor-performance test. Select an image to inspect the original.</p>
+  <p class="plate-note">Real Copernicus examples, not acquisitions from the teaching constellation. Dates and extents differ: this is not a matched sensor-performance test. Select an image to inspect the original.</p>
   <p class="plate-note sensor-credits">Optical: European Union, Copernicus Sentinel-2 imagery (2023), processed by @DEFIS_EU. Radar: contains modified Copernicus Sentinel data (2018), processed by ESA; <a href="https://creativecommons.org/licenses/by-sa/3.0/igo/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0 IGO</a>. Reading copies resized, not cropped.</p>
 </section>`;
 const domain = (title, detail) => `<div class="domain"><strong>${title}</strong><span>${detail}</span></div>`;

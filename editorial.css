@@ -79,6 +79,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[
 .sequence-body .opening-sources{display:block;margin-top:16px;font:13px/1.7 "Segoe UI",Arial,sans-serif;color:var(--muted)}
 #orbital-network .manuscript-prose{max-width:none}
 #orbital-network .manuscript-prose p{font-size:15px;line-height:1.75;margin:16px 0}
+#orbital-network .explorer-explanation{margin-top:40px}
+#orbital-network .explorer-explanation .manuscript-prose{max-width:720px}
+#orbital-network .explorer-explanation p{font:clamp(18px,1.5vw,20px)/1.8 var(--serif);margin:0 0 24px}
 .explorer-information{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 32px;border-top:1px solid var(--line);padding-top:16px;margin-top:20px}
 .explorer-information summary{cursor:pointer;font:14px/1.8 "Segoe UI",Arial,sans-serif;color:var(--green)}
 .sequence-body .explorer-information p,.sequence-body .explorer-information dd{font:14px/1.8 "Segoe UI",Arial,sans-serif;margin:16px 0;color:var(--muted)}

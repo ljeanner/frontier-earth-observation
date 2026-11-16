@@ -1,8 +1,45 @@
 {
   "status": "Image provenance for Agentic Earth-Observation Tasking and Downlink",
   "direction": "Existing Frontier Graphisme project skill: graphite drawings, ivory paper, restrained sage accents.",
-  "reuse": "Existing generated artwork reused at the user's request. Source files remain unchanged. Four new graphite studies and one synthetic optical-style teaching image were generated for this reader on 10 November 2026.",
+  "reuse": "Existing generated artwork reused at the user's request. Source files remain unchanged. Four new graphite studies and one synthetic optical-style teaching image were generated for this reader on 10 November 2026. Three user-approved Meridian company illustrations were added to its introduction on 16 November 2026.",
   "assets": [
+    {
+      "file": "meridian-logo-original.png",
+      "readingDerivative": "meridian-logo-reading.webp",
+      "kind": "conceptual-illustration",
+      "source": "Generated in this session with image_generation, following the existing Meridian circle, inclined orbit and satellite-dot identity.",
+      "assetId": "sha256:f82dec0ef59c7a6eef0ffd57a89fb5427dca21f90619cd1dc5f43b4abbf2c308",
+      "created": "2026-11-16",
+      "credit": "Conceptual AI-assisted illustration for Lucile Jeanneret's illustrated white paper.",
+      "use": "Meridian company introduction in both readers; not publication branding.",
+      "derivative": "Full transparent original retained at 1774 x 887. Transparent outer margins trimmed to (283, 214, 1552, 626), proportionally resized to 1000 x 325, WebP quality 92 with alpha retained.",
+      "limit": "Illustrated identity for a fictional company, not a vector master or trademark clearance."
+    },
+    {
+      "file": "meridian-offices-rome-concept.png",
+      "readingDerivative": "meridian-offices-rome-reading.webp",
+      "kind": "conceptual-illustration",
+      "source": "Generated in this session with image_generation.",
+      "assetId": "sha256:ca60197f663624f5cfe36ed9ce152da10c38c7f48def1ab443eb6da320aad914",
+      "created": "2026-11-16",
+      "credit": "Conceptual AI-assisted illustration for Lucile Jeanneret's illustrated white paper.",
+      "use": "Meridian company introduction in both readers.",
+      "derivative": "Full 1536 x 1024 original retained. Proportional uncropped resize to 1400 x 933, WebP quality 90.",
+      "limit": "Invented Rome office exterior, not a verified facility, real address or additional ground station."
+    },
+    {
+      "file": "meridian-world-map-rome.png",
+      "readingDerivative": "meridian-world-map-reading.webp",
+      "originalGenerated": "meridian-world-map-generated.png",
+      "kind": "conceptual-illustration",
+      "source": "Generated in this session with image_generation. The delivered derivative corrects the main city locator using Pillow; the generative edit attempt was not used.",
+      "assetId": "sha256:343a067a694b7985809e975e7bc8982f842c83bfef0776c0b764810f63f3ee3b",
+      "created": "2026-11-16",
+      "credit": "Conceptual AI-assisted illustration for Lucile Jeanneret's illustrated white paper.",
+      "use": "Meridian company introduction in both readers.",
+      "derivative": "Original generated 1536 x 1024 PNG and corrected full-resolution PNG both retained. Corrected map proportionally resized without cropping to 1400 x 933, WebP quality 90.",
+      "limit": "Approximate AI-drawn coastlines and relief, not a georeferenced map or navigation aid. The locator indicates the fictional company's Rome setting, not a real office address or ground-station location."
+    },
     {
       "file": "earth-sketch-complete.png",
       "readingDerivative": "earth-sketch-complete-reading.webp",
