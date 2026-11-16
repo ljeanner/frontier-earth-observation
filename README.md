@@ -147,7 +147,7 @@ The forest illustration remains conceptual, not geographic evidence of Attica.
 | `publication.test.mjs` | Portable identity, manuscript and static-dependency checks |
 
 The canonical source is `content\agentic-earth-observation-manuscript-v3.md`,
-SHA-256 `bbc2c17c86059ea7295a966993632566fef4ccb57ea1518a87e0cd3c9d146f3b`.
+SHA-256 `9f7b3cc92e8ffdfda766e6e31d236386513c85318497d499ce5c966aba1c745a`.
 The original v1 and preceding v2 are preserved byte-for-byte. The current revision
 moves the company introduction and general explanations without shortening them,
 and changes only the authorized opening and generic Part I transitions.
