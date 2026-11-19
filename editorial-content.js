@@ -17,8 +17,7 @@ const templates = {
   'existing-architecture': 'architecture-explorer',
   accelerator: 'architecture-explorer',
   'customer-request': 'case-study',
-  challenges: 'case-study',
-  wildfire: 'split-screen',
+  wildfire: 'editorial-explanation',
   'mission-debrief': 'case-study',
 };
 

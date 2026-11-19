@@ -1,5 +1,12 @@
 @charset "UTF-8";
 @import url('./tokens.css');
+@import url('./attica-timeline.css');
+.mission-intro-slot{position:relative;width:100%;aspect-ratio:16/10;max-height:calc(100cqh - 180px);margin:20px 0;break-inside:avoid}
+.mission-intro-slot iframe{position:absolute;inset:0;display:block;width:100%;height:100%;border:1px solid #87978c;background:#efeee5}
+.mission-intro-slot [data-mission-intro-start]{position:absolute;bottom:12px;left:12px;min-height:44px;padding:10px 16px}
+.mission-intro-slot [data-mission-intro-status]{position:absolute;inset:12px 12px auto;font:11px/1.5 "Segoe UI",Arial,sans-serif}
+.mission-intro-slot[data-state="ready"] [data-mission-intro-status]{visibility:hidden}
+@media print{.mission-intro-slot{display:none!important}}
 *{box-sizing:border-box}
 body{margin:0}
 button,a{-webkit-tap-highlight-color:transparent}

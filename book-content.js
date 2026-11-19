@@ -2,10 +2,10 @@ import { createManuscriptBook, manuscriptChapters } from './manuscript-content.j
 
 export const publication = Object.freeze({
   eyebrow: 'ILLUSTRATED WHITE PAPER · 2026',
-  title: 'Agentic Earth Observation',
-  subtitle: 'Tasking & Downlink',
+  title: 'The World Can’t Wait',
+  subtitle: 'Coordinating Earth Observation with AI Agents',
   author: 'Lucile Jeanneret',
-  description: 'Exploring how AI agents and Microsoft technologies can help coordinate satellite observations, ground-station operations, and the delivery of geospatial products.',
+  description: 'When a wildfire spreads or a river floods, satellite images can help emergency teams see what is happening and decide where to act. But getting those images to the people who need them takes time—while the situation on the ground keeps changing.',
 });
 export const bookTitle = `${publication.title} — ${publication.subtitle}`;
 

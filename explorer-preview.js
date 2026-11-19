@@ -1,5 +1,6 @@
 export function createExplorerPreview(book, { editorial = false } = {}) {
   let active = null;
+  let intro = null;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const desktop = matchMedia('(min-width: 801px)');
   const printing = matchMedia('print');
@@ -13,7 +14,18 @@ export function createExplorerPreview(book, { editorial = false } = {}) {
       rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1;
   }
 
+  function stopIntro() {
+    if (!intro) return;
+    clearTimeout(intro.timeout);
+    intro.frame.remove();
+    intro.slot.dataset.state = 'idle';
+    intro.slot.querySelector('[data-mission-intro-start]').hidden = false;
+    intro.slot.querySelector('[data-mission-intro-status]').textContent = 'Introduction stopped. Load it again or open it in a separate tab.';
+    intro = null;
+  }
+
   function stop() {
+    stopIntro();
     if (!active) return;
     clearTimeout(active.timeout);
     active.frame.remove();
@@ -51,14 +63,52 @@ export function createExplorerPreview(book, { editorial = false } = {}) {
     slot.append(frame);
   }
 
+  function startIntro(slot) {
+    if (!isVisible(slot) || intro?.slot === slot) return;
+    stopIntro();
+    const frame = document.createElement('iframe');
+    frame.title = 'The World Can’t Wait — illustrated wildfire mission with the doe';
+    frame.src = 'https://polite-tree-06ae32c10.3.azurestaticapps.net/intro/';
+    frame.allow = 'fullscreen';
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = 'no-referrer';
+    const status = slot.querySelector('[data-mission-intro-status]');
+    const failIntro = () => {
+      if (intro?.frame !== frame) return;
+      stopIntro();
+      slot.dataset.state = 'error';
+      status.textContent = 'The external introduction could not be loaded. Retry or use the separate-tab link.';
+    };
+    slot.dataset.state = 'loading';
+    status.textContent = 'Loading the opening film…';
+    slot.querySelector('[data-mission-intro-start]').hidden = true;
+    intro = { slot, frame, timeout: setTimeout(failIntro, 30000) };
+    frame.addEventListener('load', () => {
+      if (intro?.frame !== frame) return;
+      clearTimeout(intro.timeout);
+      slot.dataset.state = 'ready';
+      status.textContent = 'Use the film’s play, pause and timeline controls. Sound is off unless you enable it. If the film is unavailable, use the separate-tab link.';
+    });
+    frame.addEventListener('error', failIntro);
+    slot.insertBefore(frame, status);
+  }
+
   function sync() {
+    if (intro && !isVisible(intro.slot)) stopIntro();
     if (active && !isVisible(active.slot)) stop();
+    const film = book.querySelector('[data-mission-intro-featured]');
+    if (film && film.dataset.state !== 'error') startIntro(film);
     const slot = book.querySelector('.explorer-slot');
     if (slot && slot.dataset.state !== 'error' && isVisible(slot) && desktop.matches && !reducedMotion.matches)
       start(slot);
   }
 
   book.addEventListener('click', event => {
+    const launch = event.target instanceof Element && event.target.closest('[data-mission-intro-start]');
+    if (launch) {
+      startIntro(launch.closest('.mission-intro-slot'));
+      return;
+    }
     const button = event.target instanceof Element && event.target.closest('[data-explorer-start]');
     if (button) start(button.closest('.explorer-slot'));
   });

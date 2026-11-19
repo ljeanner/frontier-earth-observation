@@ -9,6 +9,33 @@ const brief = (file, objective, subject, composition, elements, ratio, caption, 
 
 export const assetBriefs = [
   {
+    ...brief('changing-planet-observation-reading.webp', 'Introduce Earth observation through land, water and human activity.', 'Satellite observing a changing planet', 'Complete portrait graphite scene beside the opening paragraphs; intact solar wings and coastline, no crop.', ['Earth-observation satellite', 'complete solar panels', 'coastline', 'fields', 'river', 'city', 'sage observation outline'], '933:1400', 'Observing land, water and human activity on a changing planet. Conceptual drawing, not a satellite image or a verified sensor footprint.', 'Graphite satellite above a conceptual coast, fields, river and city.', 'AI-generated illustrative geography and observation geometry, not a named place, real satellite scene, verified footprint or measured change.'),
+    inspected: '19 November 2026',
+    decision: 'create',
+    rationale: 'Generated at the user’s request to replace only the industry introduction drawing with a scene illustrating its paragraph. The prior globe remains on the cover and elsewhere.',
+  },
+  {
+    ...brief('foundry-agents-graphite-reading.webp', 'Recognize Microsoft Foundry and the five Meridian demo agents.', 'Illustrated Foundry Agents deployment view', 'Complete landscape roster, full-width below the Foundry explanation, with the original PNG accessible through the image inspector.', ['Microsoft Foundry title', 'five readable agent names', 'five agent rows', 'status column', 'navigation sidebar'], '1750:899', 'Meridian’s five demo agents in Microsoft Foundry; illustrated reconstruction, not a live status view.', 'Microsoft Foundry Agents view listing the five Meridian demo agents.', 'AI-generated reconstruction based on the supplied screenshot, not an unaltered screenshot or evidence of current health, production readiness or mission execution. Account and subscription identifiers omitted.'),
+    inspected: '17 November 2026',
+    decision: 'reuse',
+    rationale: 'Uses the user-approved readable graphite revision unchanged, with a same-resolution lossless reading copy to preserve agent-name legibility.',
+  },
+  ...[
+    ['del', 'Sentinel-2 initial delineation', '1800:1271'],
+    ['monit01', 'WorldView-2 monitoring 01', '1800:1271'],
+    ['monit02', 'WorldView-2 monitoring 02', '1800:1271'],
+    ['grading', 'GeoEye-1 damage grading', '1270:899'],
+    ['fire-evolution', 'Fire evolution', '1800:1030'],
+    ['damage-overview', 'Damage assessment overview', '1800:1527'],
+    ['damage-detail01', 'Damage assessment detail 01', '1800:1527'],
+    ['damage-detail02', 'Damage assessment detail 02', '1800:1527'],
+    ['damage-detail03', 'Damage assessment detail 03', '1800:1527'],
+  ].map(([stem, title, ratio]) => ({
+    ...brief(`cems-emsr746-${stem}-reading.webp`, 'Distinguish historical CEMS mapping evidence from the fictional Meridian mission.', title, 'Complete official map, uncropped, with legend and embedded source credits; original accessible through the existing image inspector.', ['historical geography', 'original legend', 'embedded source credits'], ratio, 'Copernicus EMSR746, Varnavas / Attica, August 2024. © 2024 European Union.', `Official CEMS EMSR746 map: ${title}.`, 'Published mapping product, not raw imagery or a Meridian acquisition. Detail maps are not additional products or acquisitions. Original third-party imagery credits remain applicable.', 'historical-map'),
+    style: 'Original map colours, legend and credits retained. No graphite filter or recolouring.',
+    inspected: '16 November 2026',
+  })),
+  {
     ...brief('meridian-logo-reading.webp', 'Identify the fictional company without changing the publication identity.', 'Meridian orbital emblem and wordmark', 'Uncropped artwork with only transparent outer margins trimmed; beside the company introduction, never in the publication header.', ['Earth emblem', 'inclined orbit', 'satellite dot', 'Meridian wordmark'], '1000:325', 'Meridian — illustrated company identity.', 'Meridian wordmark with a graphite Earth and inclined orbit.', 'Conceptual identity for a fictional company, not a vector master or a trademark-clearance assessment.'),
     inspected: '16 November 2026',
     decision: 'adapt',
@@ -31,6 +58,12 @@ export const assetBriefs = [
     rationale: 'Expanded the clipped source composition to complete the upper-left spacecraft and lower-right dish. The original drawing is retained separately.',
   },
   brief('orbital-observation-reading.webp', 'Distinguish measuring from delivering.', 'Satellite observing terrain', 'Portrait study beside prose or above the process stages; preserve the full instrument and footprint.', ['spacecraft', 'instrument', 'terrain footprint'], '1143:1200', 'An observation is the start of a delivery path.', 'Graphite spacecraft observing a patch of terrain.', 'Not a verified Meridian spacecraft or footprint.'),
+  {
+    ...brief('satellite-downlink-reading.webp', 'Distinguish ground reception from observation and subsequent processing.', 'Satellite transmitting to a receiving dish', 'Complete square graphite view beside the downlink explanation; retain both spacecraft and anchored dish without cropping.', ['satellite solar panels', 'spacecraft communications antenna', 'dashed spacecraft-to-ground arrow', 'receiving dish', 'pedestal and terrain'], '1:1', 'Later, during a compatible contact: the satellite transmits stored data to a receiving station. Processing and product acceptance still follow.', 'Graphite satellite transmitting toward a grounded receiving dish along a dashed radio-link arrow.', 'AI-generated conceptual composition, not physical scale, a hardware blueprint, a verified station or an actual contact calculation. The arrow represents radio transmission, not a visible beam.'),
+    inspected: '16 November 2026',
+    decision: 'create',
+    rationale: 'Generated as a naturalistic companion to the approved observation drawing at the user’s request, with a distinct communications antenna, directed radio path and complete ground dish. Original and uncropped reading derivative are retained.',
+  },
   brief('optical-radar-study-reading.webp', 'Explain passive and active observation.', 'Optical and radar studies', 'Wide intact paired sketch; do not crop either cloud or instrument.', ['two instruments', 'cloud', 'different signal paths'], '3:2', 'Conceptual optical and radar illumination.', 'Paired graphite studies of optical and radar observation through different cloud conditions.', 'Not a controlled sensor comparison or flame-detection claim.'),
   brief('antenna-vignette-reading.webp', 'Make the ground contact tangible.', 'Receiving dish', 'Small supporting margin vignette, not a stretched full-width hero.', ['dish', 'pedestal', 'contact shadow'], '734:845', 'Generic ground contact.', 'Graphite dish antenna tilted towards the sky.', 'Not a station location or verified installation.'),
   brief('mission-review-reading.webp', 'Explain accountable review.', 'Hand reviewing a plan', 'Wide detail next to safety or qualification prose.', ['hand', 'pencil', 'paper plan'], '3:2', 'Conceptual human review of a mission plan.', 'Graphite hand and pencil reviewing a fictional plan.', 'No actual approval or command evidence.'),

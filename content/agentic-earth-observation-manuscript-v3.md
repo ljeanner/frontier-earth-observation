@@ -25,17 +25,35 @@ Before looking at an operator's business challenges, let us explore how satellit
 
 *Interactive guide — Select a satellite to follow its orbit, rotate the Earth to explore its coverage, or display the ground stations to understand when communications become possible. The simulation runs at 60× speed and illustrates orbital behaviour rather than live satellite positions.*
 
-### Observation and Ground Contact
+### What Satellites Do
+
+A satellite's mission describes the service it provides, not the height at which it flies. Earth-observation satellites measure our planet's surface, atmosphere or oceans. Communications satellites relay information between users and networks. Navigation satellites broadcast precise timing and orbital information, allowing receivers to combine signals from several spacecraft to determine position and time.
 
 Behind these numbers lies an industry that has transformed the way we understand our planet. By combining satellite observations with geographic information and measurements collected on the ground, scientists, governments and businesses can monitor agricultural land, study environmental changes and assess the consequences of natural disasters with a level of geographical coverage that would otherwise be difficult to achieve.
 
 Yet collecting information from space is far more complicated than simply pointing a camera towards Earth.
 
+### Where Satellites Fly
+
 Earth-observation satellites generally travel along orbits that carry them over different regions as the planet rotates beneath them. Their instruments are designed for different purposes: some capture light reflected by the surface, while others use radar to collect measurements independently of sunlight. And because satellites are constantly moving, the opportunity to observe a particular location may last only a short time.
+
+Many imaging satellites use **low Earth orbit (LEO)**, below about 2,000 kilometres in altitude. Being closer can support detailed observations, but a spacecraft does not remain above one location. Its opportunities to revisit a place depend on the orbit, the instrument's viewing capabilities and the rest of the constellation. Communications satellites can also use LEO; mission and orbit are separate choices.
+
+**Medium Earth orbit (MEO)** lies between LEO and geostationary altitude and is widely used by navigation constellations such as Galileo. In **geostationary orbit (GEO)**, about 35,786 kilometres above the equator, a satellite follows a circular orbit in the same direction and at the same angular rate as Earth's rotation. It therefore appears fixed in the sky to a ground observer. Communications and weather satellites often use this view to serve or monitor a broad region.
+
+Altitude is only one part of the description. A **polar orbit** passes over or close to the poles as Earth rotates beneath it. A **sun-synchronous orbit** is a near-polar orbit whose plane gradually turns so that passes occur at approximately the same local solar time. This helps compare observations under similar illumination, but does not guarantee a daily image of every location or identical weather. These describe orbital geometry, not additional altitude bands.
+
+### Bringing Data Back to Earth
 
 There is another constraint. Once a satellite has collected an observation, that information still needs to reach Earth. In a conventional ground-station network, the spacecraft must establish a compatible communication link with a receiving station, which is only possible during certain contact windows. A satellite may therefore have completed its observation long before the data can be received and processed on the ground.
 
-**Interaction:** Keep the existing explorer and its exact italic instruction. Place optional exploration and simulation/accessibility information next to that instruction, before the observation and contact explanation. Preserve the teaching dataset and simulator functionality.
+This spacecraft-to-ground transfer is called the **downlink**. During a low-orbit pass, a receiving antenna tracks the moving spacecraft while it remains in view. The contact must provide enough time and link capacity, use compatible communications equipment and have an available antenna slot. Data can wait in on-board storage between acquisition and reception; receiving it is not the same as processing it into a product that passes the customer's quality checks.
+
+Data-relay satellites can provide another route to the ground and reduce dependence on direct station passes. That requires suitable equipment and an available relay service; it is not an automatic capability of every observation satellite. Here, we begin with the simpler direct-to-ground case.
+
+**Visual direction:** Distinguish observation, communications and navigation with a graphite mission sketch. Follow the orbit explanation with labelled LEO, MEO and GEO schematics, clearly not to scale; do not imply that polar and sun-synchronous are altitude categories. Illustrate acquisition/on-board storage separately from downlink/ground reception using the existing approved process drawings. Keep explanatory figures beside their corresponding prose, before Seeing Earth Through Different Eyes, with scientific sources and accessible descriptions.
+
+**Interaction:** Keep the existing explorer and its exact italic instruction. Place optional exploration and simulation/accessibility information next to that instruction, before the mission, orbit and downlink explanation. Preserve the teaching dataset and simulator functionality.
 
 ## 04 — Seeing Earth Through Different Eyes
 

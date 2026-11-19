@@ -2,11 +2,13 @@ import { bookTitle, publication, definitions, definitionList, systems, scenarioO
 import { createEditorialContent } from './editorial-content.js';
 import { assetBriefs } from './editorial-assets.js';
 import { createExplorerPreview } from './explorer-preview.js';
-import { legacyAnchors } from './manuscript-content.js';
+import { legacyAnchors, orbitTypeDrawing } from './manuscript-content.js';
 import { createMissionInteractions } from './mission-interactions.js';
 import { enhanceProcessIllustrations } from './process-illustrations.js';
+import { enhanceAtticaTimeline } from './attica-timeline.js';
 
 const root = document.querySelector('#reading-content');
+enhanceAtticaTimeline(root);
 const notice = document.querySelector('#storage-notice');
 const drawer = document.querySelector('#contents-drawer');
 const navigation = document.querySelector('#navigation');
@@ -136,7 +138,7 @@ function renderSection(section) {
     hero.setAttribute('aria-labelledby', 'hero-title');
     const paragraph = source.querySelector('p');
     const image = source.querySelector('img');
-    hero.innerHTML = `<div class="hero-copy"><span class="eyebrow">${escape(publication.eyebrow)}</span><h1 id="hero-title">${escape(publication.title)}<em>${escape(publication.subtitle)}</em></h1><p class="publication-byline">${escape(publication.author)}</p><a class="begin-reading" href="#part-1">Begin reading <span aria-hidden="true">→</span></a></div><div class="hero-art"></div>`;
+    hero.innerHTML = `<div class="hero-copy"><span class="eyebrow">${escape(publication.eyebrow)}</span><h1 id="hero-title">${escape(publication.title)}<em>${escape(publication.subtitle)}</em></h1><p class="publication-byline">${escape(publication.author)}</p></div><div class="hero-art print-only"></div>`;
     hero.querySelector('.publication-byline').before(paragraph);
     hero.querySelector('.hero-art').append(image);
     enhanceImages(hero, true);
@@ -151,9 +153,9 @@ function renderSection(section) {
   const page = model.readingPages[section.part];
   const isPartBody = page?.sectionIds.length === 1 && page.title === section.title;
   article.setAttribute('aria-labelledby', `heading-${isPartBody ? page.id : section.id}`);
-  const kicker = page ? '' : '<span class="sequence-kicker">REFERENCE MATERIAL</span>';
+  const kicker = page || section.type === 'front' ? '' : '<span class="sequence-kicker">REFERENCE MATERIAL</span>';
   const headingLevel = page ? 'h3' : 'h2';
-  const header = isPartBody ? '' : `<header class="sequence-header">${kicker}<${headingLevel} class="sequence-heading" id="heading-${section.id}">${escape(section.title)}</${headingLevel}></header>`;
+  const header = isPartBody ? '' : `<header class="${section.id === 'trailer' ? 'sr-only' : 'sequence-header'}">${kicker}<${headingLevel} class="sequence-heading" id="heading-${section.id}">${escape(section.title)}</${headingLevel}></header>`;
   article.innerHTML = `${header}<div class="sequence-body"><div class="sequence-prose"></div></div>`;
   const prose = article.querySelector('.sequence-prose');
   prose.append(fragment(section.left + section.right));
@@ -184,7 +186,8 @@ function renderSection(section) {
     if (heading.classList.contains('technical-heading')) continue;
     const level = heading.tagName === 'H2' ? (page ? 'h4' : 'h3') : (page ? 'h5' : 'h4');
     const replacement = document.createElement(level);
-    replacement.className = 'prose-heading';
+    for (const { name, value } of heading.attributes) replacement.setAttribute(name, value);
+    replacement.classList.add('prose-heading');
     replacement.innerHTML = heading.innerHTML;
     heading.replaceWith(replacement);
   }
@@ -197,10 +200,44 @@ function renderSection(section) {
     table.replaceWith(scroll);
     scroll.append(table);
   }
+  for (const copy of [...prose.querySelectorAll('.explorer-explanation>.manuscript-prose')]) {
+    const visual = copy.nextElementSibling;
+    if (!visual?.matches('.orbital-concept-figure,.orbital-data-journey')) throw new Error('Each orbital explanation requires its matching illustration.');
+    const row = document.createElement('div');
+    row.className = 'orbital-explanation-row';
+    copy.before(row);
+    row.append(copy, visual);
+    if (visual.dataset.orbitalConcept === 'orbits') {
+      const paragraphs = [...copy.querySelectorAll(':scope>p')];
+      const geoLabel = paragraphs[2]?.querySelectorAll('strong')[1];
+      const lead = geoLabel?.previousSibling;
+      if (paragraphs.length !== 4 || lead?.nodeType !== Node.TEXT_NODE || !lead.textContent.endsWith(' In ')) throw new Error('The orbit layout requires the original LEO, MEO and GEO passages.');
+      const boundary = lead.splitText(lead.textContent.lastIndexOf('In '));
+      const nodes = [...paragraphs[2].childNodes];
+      const offset = nodes.indexOf(boundary);
+      const meo = document.createElement('span');
+      meo.dataset.orbitCopy = 'meo';
+      meo.append(...nodes.slice(0, offset));
+      const geo = document.createElement('span');
+      geo.dataset.orbitCopy = 'geo';
+      geo.append(...nodes.slice(offset));
+      paragraphs[2].replaceChildren(meo, geo);
+      paragraphs[2].classList.add('orbit-shared-copy');
+      paragraphs[0].classList.add('orbit-introduction');
+      paragraphs[1].dataset.orbitCopy = 'leo';
+      paragraphs[3].classList.add('orbit-geometry');
+      row.classList.add('orbital-altitude-row');
+      visual.querySelector('svg').classList.add('orbit-print-overview');
+      const panels = document.createElement('div');
+      panels.className = 'orbit-panel-stack';
+      panels.innerHTML = ['leo', 'meo', 'geo'].map(kind => `<div class="orbit-panel" data-orbit="${kind}">${orbitTypeDrawing(kind)}</div>`).join('');
+      visual.prepend(panels);
+    }
+  }
   const company = prose.querySelector(':scope>.meridian-company-plate');
   if (company) prose.before(company);
   if (section.template === 'split-screen') {
-    const visual = prose.querySelector(':scope>figure:not(.si-diagram)');
+    const visual = prose.querySelector(':scope>figure:not(.si-diagram):not(.foundry-deployment)');
     if (visual) {
       const composition = document.createElement('div');
       composition.className = 'split-composition';
@@ -229,7 +266,7 @@ function renderSection(section) {
     prose.append(print);
   }
   const wideElements = section.template === 'split-screen'
-    ? [...prose.children].filter(element => element.matches('.mission-widget,.si-diagram,.customer-uses,.business-choices,.process-list,.supporting-links'))
+    ? [...prose.children].filter(element => element.matches('.mission-widget,.si-diagram,.customer-uses,.business-choices,.process-list,.supporting-links,.foundry-deployment'))
     : [];
   if (wideElements.length) {
     const body = article.querySelector('.sequence-body');
@@ -260,8 +297,8 @@ function renderReadingPages() {
   contents.className = 'part-switcher';
   contents.setAttribute('aria-label', 'Reading parts');
   contents.innerHTML = model.readingPages.map(part => `<a href="#${part.id}" data-part-page="${part.id}">${String(part.number).padStart(2, '0')} · ${escape(part.title)}</a>`).join('');
-  root.replaceChildren(sections.get('cover'), contents, ...parts,
-    ...model.sections.filter(section => section.part < 0 && section.id !== 'cover').map(section => sections.get(section.id)));
+  root.replaceChildren(sections.get('cover'), sections.get('trailer'), contents, ...parts,
+    ...model.sections.filter(section => section.part < 0 && !['cover', 'trailer'].includes(section.id)).map(section => sections.get(section.id)));
   root.dataset.layout = 'continuous';
 }
 

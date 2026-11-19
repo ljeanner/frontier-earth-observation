@@ -155,7 +155,9 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
   function renderInto(container) {
     for (const slot of container.querySelectorAll('[data-mission-widget]')) {
       const currentMessage = slot.dataset.missionWidget === messageWidget ? message : '';
-      slot.innerHTML = `${render(slot)}<p class="widget-notice" tabindex="-1" role="${error && currentMessage ? 'alert' : 'status'}">${escape(currentMessage)}</p>`;
+      const synthetic = ['wildfire', 'decisions', 'revisit'].includes(slot.dataset.missionWidget)
+        ? '<p class="widget-label">Synthetic Meridian mission · AR-1842 · four-hour deadline · simulated passes and ground contacts, not the historical EMSR746 record.</p>' : '';
+      slot.innerHTML = `${synthetic}${render(slot)}<p class="widget-notice" tabindex="-1" role="${error && currentMessage ? 'alert' : 'status'}">${escape(currentMessage)}</p>`;
     }
   }
   function update(origin) {

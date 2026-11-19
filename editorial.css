@@ -1,4 +1,5 @@
 @import url('./tokens.css');
+@import url('./attica-timeline.css');
 
 *{box-sizing:border-box}
 html{scroll-padding-top:0}
@@ -15,6 +16,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[
 .editorial-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:76px;padding:12px clamp(20px,4vw,64px);background:var(--paper);border-bottom:1px solid var(--line)}
 .publication-home{display:block;min-width:0;color:var(--ink);text-decoration:none;font:20px/1.2 var(--serif)}
 .publication-home small{display:block;margin-top:5px;font:10px/1.5 Consolas,monospace;letter-spacing:.8px;color:var(--green)}
+@media(max-width:620px){.publication-home small{display:none}}
 .publication-short{display:none}
 .header-actions,.action-list{display:flex;align-items:center;gap:18px}
 .header-actions button,.action-list a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;padding:10px 0;border:0;text-decoration:none;color:var(--ink);white-space:nowrap}
@@ -38,6 +40,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[
 .sequence-body .publication-byline{font:18px/1.6 "Segoe UI",Arial,sans-serif;color:var(--ink)}
 .begin-reading{display:inline-flex;gap:24px;background:var(--green);color:var(--paper);padding:16px 24px;text-decoration:none;font-size:15px;margin-top:12px}
 .begin-reading:hover{background:#264839}
+.start-reading{display:inline-flex;align-items:center;gap:12px;min-height:44px;font:15px/1.5 "Segoe UI",Arial,sans-serif}
+#trailer{padding-top:12px;border-top:0}
+#trailer .mission-intro-slot{scroll-margin-top:128px}
+#trailer .mission-intro>p{max-width:var(--prose-width)}
 .hero-art img{display:block;width:100%;height:auto;max-height:76svh;object-fit:contain;mix-blend-mode:multiply}
 .sequence{max-width:1280px;margin:auto;padding:96px 32px 80px;border-top:1px solid var(--line);scroll-margin-top:122px}
 .part-page{scroll-margin-top:112px}
@@ -72,16 +78,80 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[
 .technical-copy>.diagram-shell,.technical-copy>.table-scroll{clear:both}
 .section-label,.eyebrow{display:block;font:11px/1.6 Consolas,monospace;letter-spacing:1.1px;text-transform:uppercase;color:var(--green);margin:28px 0 12px}
 .sequence-body figure{margin:40px 0}
+.mission-intro-slot{position:relative;width:100%;margin:24px 0}
+.mission-intro-slot iframe{display:block;width:100%;height:clamp(420px,70svh,800px);border:1px solid var(--line);background:var(--paper)}
+.mission-intro-slot [data-mission-intro-start]{min-height:44px;padding:12px 20px}
+.mission-intro-slot [data-mission-intro-status]{font:14px/1.7 "Segoe UI",Arial,sans-serif}
+.mission-intro-slot[data-mission-intro-featured]{min-height:clamp(420px,70svh,800px);margin-top:0}
+.mission-intro-slot[data-mission-intro-featured] iframe{height:clamp(420px,70svh,800px)}
+.mission-intro-slot[data-mission-intro-featured] [data-mission-intro-status]{margin:12px 0}
+.mission-intro-slot[data-state="loading"] [data-mission-intro-status]{position:absolute;inset:20px auto auto 20px;max-width:calc(100% - 40px);padding:10px 16px;background:var(--paper);pointer-events:none}
+@media print{.mission-intro-slot{display:none!important}}
 .sequence-body img{display:block;width:100%;height:auto;object-fit:contain}
 .sequence-body figure:not(.sensor-plate):not(.comparison-plate) img{mix-blend-mode:multiply}
 .sequence-body figcaption{font:12px/1.7 Consolas,monospace;letter-spacing:.1px;color:var(--muted);margin:16px 0 28px}
 .sequence-body figcaption strong,.sequence-body figcaption span{display:block;margin-top:7px}
+#wildfire .attica-map img{mix-blend-mode:normal}
+#wildfire .sequence-prose{max-width:none}
+#wildfire .manuscript-prose,.attica-copy,.attica-history>p{max-width:720px}
+.attica-timeline-chapter,.attica-what-if{margin-top:64px}
+.attica-history>.prose-heading,.attica-timeline-chapter>.prose-heading,.attica-what-if .prose-heading{font-size:clamp(26px,3vw,36px)}
+.sequence-body .attica-evidence-label{font:14px/1.8 "Segoe UI",Arial,sans-serif;color:var(--green);padding:16px 20px;border-left:3px solid var(--green)}
+.sequence-body .attica-chart figcaption{font:15px/1.8 "Segoe UI",Arial,sans-serif}
+.attica-map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.attica-map-grid figure{margin:24px 0}
+.attica-additional-maps{margin:24px 0 48px}
+.attica-additional-maps summary{cursor:pointer;color:var(--green);font:16px/1.8 "Segoe UI",Arial,sans-serif}
+@media(max-width:800px){.attica-map-grid{grid-template-columns:1fr;gap:0}}
 .sequence-body .opening-sources{display:block;margin-top:16px;font:13px/1.7 "Segoe UI",Arial,sans-serif;color:var(--muted)}
 #orbital-network .manuscript-prose{max-width:none}
 #orbital-network .manuscript-prose p{font-size:15px;line-height:1.75;margin:16px 0}
 #orbital-network .explorer-explanation{margin-top:40px}
 #orbital-network .explorer-explanation .manuscript-prose{max-width:720px}
 #orbital-network .explorer-explanation p{font:clamp(18px,1.5vw,20px)/1.8 var(--serif);margin:0 0 24px}
+#orbital-network .orbital-concept-figure{margin:32px 0 48px;break-inside:avoid}
+.web-reader .orbital-concept-figure>svg{max-height:420px}
+.orbital-concept-figure figcaption{font:15px/1.8 "Segoe UI",Arial,sans-serif;color:var(--muted);margin-top:16px}
+.orbital-data-journey{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;align-items:start}
+#orbital-network .explorer-explanation .orbital-sources{max-width:720px;margin:0 auto 32px;font:14px/1.8 "Segoe UI",Arial,sans-serif;color:var(--muted)}
+@media(max-width:800px){.orbital-data-journey{grid-template-columns:1fr;gap:0}}
+@media screen and (min-width:1000px){
+  .orbital-explanation-row{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:40px;align-items:start;margin-bottom:48px}
+  .orbital-explanation-row>*{min-width:0}
+  #orbital-network .orbital-explanation-row>.orbital-concept-figure,#orbital-network .orbital-explanation-row .orbital-data-journey .orbital-concept-figure{margin:0}
+  .orbital-explanation-row .orbital-data-journey{grid-template-columns:1fr;gap:24px}
+}
+@media screen and (min-width:1000px) and (prefers-reduced-motion:no-preference){
+  .orbital-explanation-row>.orbital-concept-figure{position:sticky;top:128px}
+}
+@media screen{
+  .orbital-altitude-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0 40px}
+  .orbital-altitude-row>.manuscript-prose,.orbital-altitude-row>.orbital-concept-figure,.orbital-altitude-row .orbit-panel-stack,.orbital-altitude-row .orbit-shared-copy{display:contents}
+  .orbital-altitude-row .orbit-print-overview{display:none}
+  .orbital-altitude-row .prose-heading{grid-column:1;grid-row:1}
+  .orbital-altitude-row .orbit-introduction{grid-column:1;grid-row:2}
+  .orbital-altitude-row [data-orbit-copy]{grid-column:1;display:block;margin-bottom:24px}
+  .orbital-altitude-row [data-orbit-copy="leo"]{grid-row:3}
+  .orbital-altitude-row [data-orbit-copy="meo"]{grid-row:5}
+  .orbital-altitude-row [data-orbit-copy="geo"]{grid-row:7}
+  .orbital-altitude-row [data-orbit="leo"]{grid-row:4}
+  .orbital-altitude-row [data-orbit="meo"]{grid-row:6}
+  .orbital-altitude-row [data-orbit="geo"]{grid-row:8}
+  .orbital-altitude-row .orbit-geometry{grid-column:1/-1;grid-row:9;max-width:720px}
+  .orbital-altitude-row figcaption{grid-column:1/-1;grid-row:10}
+  .orbit-panel{grid-column:1;align-self:start;margin:0 0 24px}
+  .orbit-panel>svg{display:block;width:210px;max-width:100%;height:auto;margin:auto}
+}
+@media screen and (min-width:1000px){
+  .orbital-altitude-row{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)}
+  .orbital-altitude-row [data-orbit-copy="meo"],.orbital-altitude-row [data-orbit="meo"]{grid-row:4}
+  .orbital-altitude-row [data-orbit-copy="geo"],.orbital-altitude-row [data-orbit="geo"]{grid-row:5}
+  .orbital-altitude-row [data-orbit="leo"]{grid-row:3}
+  .orbital-altitude-row .orbit-panel{grid-column:2}
+  .orbital-altitude-row .orbit-geometry{grid-row:6}
+  .orbital-altitude-row figcaption{grid-row:7}
+}
+@media print{.orbit-panel-stack{display:none!important}}
 .explorer-information{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 32px;border-top:1px solid var(--line);padding-top:16px;margin-top:20px}
 .explorer-information summary{cursor:pointer;font:14px/1.8 "Segoe UI",Arial,sans-serif;color:var(--green)}
 .sequence-body .explorer-information p,.sequence-body .explorer-information dd{font:14px/1.8 "Segoe UI",Arial,sans-serif;margin:16px 0;color:var(--muted)}
@@ -264,7 +334,12 @@ body:has(dialog[open]){overflow:hidden}
 @media screen{
   .web-reader .editorial-header{padding-inline:max(var(--article-gutter),calc((100% - var(--article-width))/2 + var(--article-gutter)))}
   .web-reader .reading-status{padding-inline:max(var(--article-gutter),calc((100% - var(--article-width))/2 + var(--article-gutter)))}
-  .web-reader .hero{max-width:var(--article-width);min-height:0;padding:48px var(--article-gutter);gap:40px}
+  .web-reader .hero{display:block;max-width:var(--article-width);min-height:0;padding:32px var(--article-gutter) 8px}
+  .web-reader .hero-copy{max-width:none}
+  .web-reader .hero h1{max-width:none;margin:18px 0;font-size:clamp(43px,5vw,68px)}
+  .web-reader .hero h1 em{font-size:.48em;margin-top:12px}
+  .web-reader .hero-copy>p{max-width:900px;margin-bottom:16px}
+  .web-reader .hero-copy>.publication-byline{margin:16px 0 0}
   .web-reader .reading-part-header{max-width:var(--article-width);margin:28px auto 0;padding:32px var(--article-gutter) 16px;border-top:1px solid var(--line)}
   .web-reader .sequence{max-width:var(--article-width);padding:24px var(--article-gutter) 28px;border-top:0}
   .web-reader .sequence-header,.web-reader .sequence-prose{max-width:none;margin-inline:0}
@@ -277,7 +352,8 @@ body:has(dialog[open]){overflow:hidden}
   #part-navigation{max-width:var(--article-width);margin:auto;padding:16px var(--article-gutter) 24px;border-bottom:0}
 }
 @media screen and (max-width:800px){
-  .web-reader .hero{padding-block:32px}
+  .web-reader .hero{padding-block:24px 8px}
+  .web-reader .hero h1 em{font-size:.55em}
   .web-reader .split-composition{gap:24px}
   .technical-copy .technical-art{float:none;position:static;width:100%;max-width:560px;margin:24px 0!important}
 }

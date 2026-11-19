@@ -1,4 +1,5 @@
 .manuscript-prose{max-width:720px;margin-inline:auto}
+.orbital-concept-figure>svg{display:block;width:100%;height:auto;color:var(--ink)}
 .web-reader .template-visual-comparison .sequence-prose{max-width:none}
 .restrained-art{max-width:240px;margin:32px auto!important}
 .restrained-art img{max-height:180px}

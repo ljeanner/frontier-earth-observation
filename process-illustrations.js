@@ -1,11 +1,11 @@
-function sketch(label, id, drawing) {
-  return `<svg viewBox="0 0 800 360" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">
+export function sketch(label, id, drawing, viewBox = '0 0 800 360') {
+  return `<svg viewBox="${viewBox}" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg">
     <defs><pattern id="${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(32)"><path d="M0 0V9" stroke="currentColor" stroke-width=".7" opacity=".22"/></pattern></defs>
     <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${drawing}</g>
   </svg>`;
 }
 
-function spacecraft(id, x, y) {
+export function spacecraft(id, x, y) {
   return `<g transform="translate(${x} ${y}) rotate(17)">
     <path d="M-15-13H15V13H-15Z" fill="url(#${id})"/>
     <path d="M-66-17H-25V17H-66ZM25-17H66V17H25Z"/>
@@ -46,7 +46,7 @@ function planningDrawing(id) {
     </g>`);
 }
 
-function acquisitionDrawing(id) {
+export function acquisitionDrawing(id) {
   return sketch('A satellite instrument observes an area on Earth and records its measurements in on-board storage, without yet transmitting them to a ground station.', id, `
     <path d="M83 146Q142 37 318 84" stroke-dasharray="5 6" opacity=".6"/>
     ${spacecraft(id, 203, 73)}
@@ -66,7 +66,7 @@ function acquisitionDrawing(id) {
     </g>`);
 }
 
-function downlinkDrawing(id) {
+export function downlinkDrawing(id) {
   return sketch('During a compatible contact window, stored spacecraft data is transmitted to a receiving dish and then into ground reception systems; this is separate from collecting the observation.', id, `
     <path d="M62 145Q116 39 288 82" stroke-dasharray="5 6" opacity=".6"/>
     ${spacecraft(id, 175, 79)}

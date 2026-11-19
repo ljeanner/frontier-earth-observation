@@ -2,8 +2,10 @@ import { bookTitle, createBook, definitionList, definitions, renderContents, sce
 import { createExplorerPreview } from './explorer-preview.js';
 import { legacyAnchors } from './manuscript-content.js';
 import { createMissionInteractions } from './mission-interactions.js';
+import { enhanceAtticaTimeline } from './attica-timeline.js';
 
 const book = document.querySelector('#book');
+enhanceAtticaTimeline(book);
 const explorerPreview = createExplorerPreview(book);
 const navigation = document.querySelector('#navigation');
 const chapterTabs = document.querySelector('#chapter-tabs');
@@ -45,7 +47,7 @@ function leaf(page, offset) {
   const layout = layouts.get(page.id);
   const exists = currentLeaf + offset < layout.count;
   const folio = exists && page.id !== 'cover' ? String(layout.start + currentLeaf + offset).padStart(2, '0') : '';
-  return `<div class="leaf" aria-hidden="true"><div class="leaf-header"><span>${exists ? chapter : 'EARTH OBSERVATION'}</span><span>${page.type === 'chapter' ? 'TASKING & DOWNLINK' : '2026'}</span></div><div class="leaf-footer"><span>AGENTIC TASKING & DOWNLINK</span><span>${folio}</span></div></div>`;
+  return `<div class="leaf" aria-hidden="true"><div class="leaf-header"><span>${exists ? chapter : 'EARTH OBSERVATION'}</span><span>${page.type === 'chapter' ? 'COORDINATING EARTH OBSERVATION' : '2026'}</span></div><div class="leaf-footer"><span>THE WORLD CAN’T WAIT</span><span>${folio}</span></div></div>`;
 }
 
 function contentsBody(page) {

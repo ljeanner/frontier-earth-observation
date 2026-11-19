@@ -1,0 +1,40 @@
+.attica-chart{margin:40px 0;max-width:100%;color:var(--ink)}
+.attica-chart h3,.attica-chart h4{font-family:var(--serif);font-weight:400}
+.attica-chart-group{margin:32px 0;break-inside:avoid}
+.attica-legend{display:flex;flex-wrap:wrap;gap:12px 28px;font:15px/1.7 "Segoe UI",Arial,sans-serif}
+.attica-legend>span{display:flex;align-items:center;gap:8px}
+.attica-legend i{width:24px;height:14px;border:1px solid #252c27;display:inline-block}
+.attica-blue{background:#17668b;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.attica-amber{background:#b56b09;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.attica-chart .attica-chart-instruction,.attica-chart .attica-scale-label,.attica-chart .attica-chart-sources{font:14px/1.8 "Segoe UI",Arial,sans-serif}
+.attica-axis{position:relative;height:24px;margin-right:90px;border-right:1px solid transparent;font:13px/1.8 Consolas,monospace}
+.attica-axis span{position:absolute;transform:translateX(-50%)}
+.attica-axis span:first-child{transform:none}
+.attica-axis span:last-child{transform:translateX(-100%)}
+.attica-chart-row{position:relative;margin:18px 0;break-inside:avoid}
+.attica-product{display:block;font:16px/1.6 "Segoe UI",Arial,sans-serif}
+.attica-bar{display:block;width:100%;min-height:48px;padding:8px 0;text-align:left;color:var(--ink);border:0;background:transparent}
+.attica-bar:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.attica-track{display:flex;align-items:center;width:calc(100% - 90px);height:32px;background:repeating-linear-gradient(to right,#87918055 0,#87918055 1px,transparent 1px,transparent 25%);border-right:1px solid #87918055}
+.attica-segment{display:block;flex-shrink:0;height:28px;border:1px solid #252c27}
+.attica-segment+.attica-segment{border-left:0}
+.attica-total{flex-shrink:0;margin-left:8px;font:600 14px/1.4 "Segoe UI",Arial,sans-serif;white-space:nowrap}
+.attica-tooltip{display:none;position:absolute;z-index:5;left:0;top:100%;max-width:100%;padding:12px 16px;background:#252c27;color:#fff;font:15px/1.7 "Segoe UI",Arial,sans-serif;box-shadow:0 4px 12px #252c2733}
+.attica-chart-row:not([data-dismissed]):focus-within .attica-tooltip,.attica-chart-row:not([data-dismissed]):hover .attica-tooltip{display:block}
+.attica-data-table>summary{cursor:pointer;font:16px/1.8 "Segoe UI",Arial,sans-serif;text-decoration:underline;text-underline-offset:4px}
+.attica-chart .matrix{font:14px/1.7 "Segoe UI",Arial,sans-serif}
+.attica-chart .matrix th[scope="row"]{font:14px/1.7 "Segoe UI",Arial,sans-serif;text-transform:none;letter-spacing:0}
+.attica-map{break-inside:avoid}
+.attica-map img{display:block;width:100%;height:auto;object-fit:contain}
+.page-flow .attica-chart{break-inside:auto}
+.page-flow .attica-data-table table,.page-flow .attica-data-table tbody,.page-flow .attica-data-table tr,.page-flow .attica-data-table th,.page-flow .attica-data-table td,.page-flow .attica-data-table caption{display:block}
+.page-flow .attica-data-table thead{display:none}
+.page-flow .attica-data-table td::before{content:attr(data-column) ": ";font-weight:600}
+.page-flow .attica-data-table .matrix td,.page-flow .attica-data-table .matrix th{padding:4px 0;border:0}
+.page-flow .attica-data-table tr{margin:16px 0}
+@media print{
+  .attica-tooltip{display:none!important}
+  .attica-chart-instruction{display:none}
+  .attica-map-grid{display:block}
+  .sequence-body .attica-chart button.attica-bar,.attica-chart button.attica-bar{display:block!important}
+}

@@ -1,2 +1,3 @@
 content/*.md text eol=lf
 manuscript-data.js text eol=lf
+attica-timeline-data.js text eol=lf

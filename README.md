@@ -1,4 +1,6 @@
-# Agentic Earth Observation — Tasking & Downlink
+# The World Can’t Wait
+
+*Coordinating Earth Observation with AI Agents*
 
 A personal illustrated white paper by **Lucile Jeanneret**, published as a static editorial reader.
 The web-first version starts at `index.html`; `book.html` preserves the paginated
@@ -8,9 +10,12 @@ reading and print layout. No backend, API keys or package installation is needed
 
 Responsive reading, contents, browser navigation, local bookmarks, a searchable
 glossary, illustration zoom, seven clickable process drawings, synthetic cloud comparison, architecture highlights,
-an embedded orbital Explorer and printing.
+an embedded orbital Explorer and printing. The existing illustrated film opens
+the article in a large embedded panel directly beneath the title and hook. It
+loads when visible, with its own playback and sound controls, rather than being
+offered as an optional link beside a reading shortcut.
 
-The approved English manuscript contains three narrative parts and 17 subsections:
+The reading edition contains three narrative parts and 16 subsections:
 a short industry introduction, the full-width orbital Explorer and general
 physical and instrument constraints in Part I; Meridian's illustrated introduction,
 customer and operational challenges in Part II; agents, architecture, Foundry and operations
@@ -20,7 +25,7 @@ supporting material.
 
 The Explorer is educational: 60x simulated playback, exaggerated spacecraft,
 not live telemetry or request-feasibility computation. The four application
-views and wildfire choices share a local teaching state, not connections to
+views and the mission debrief share a local teaching state, not connections to
 operational systems. Meridian is illustrative;
 commercial and performance figures are hypotheses rather than measured results.
 
@@ -46,6 +51,17 @@ extents; they are not a matched scientific comparison. The cloud overlay applies
 only to the explicitly synthetic terrain example. Original scientific images
 and their attributed, uncropped derivatives are retained.
 
+The historical Varnavas chapter includes nine official EMSR746 maps with their
+original credits, complete originals and uncropped reading copies. The
+[CEMS On-Demand Mapping terms](https://mapping.emergency.copernicus.eu/terms-and-conditions/)
+permit reproduction, distribution and communication to the public with source
+attribution. These are published mapping products, not a licence to redistribute
+raw commercial satellite scenes. The chronology uses exact integer-minute
+intervals; acquisition-to-product is an aggregate, not a measured downlink or
+processing duration. The opening film is fictional, not a reconstruction of the
+2024 event. The Foundry roster drawing is an AI-assisted reconstruction, not
+proof of live agent status.
+
 The packaged Explorer retains its bundled third-party notices. Foundry
 capability and preview qualifications retain the 13 November 2026 snapshot.
 No scientific citations or image credits were removed when integrating the manuscript.
@@ -54,18 +70,19 @@ No scientific citations or image credits were removed when integrating the manus
 
 The author-led identity is shared by the two readers. The masthead links to the
 cover; the byline is an attribution, not an organizational logo. The graphite
-Earth remains intact beside the title, with no text over its detailed interior.
+Earth remains intact in the book and print cover; the film takes its place in
+the web opening, before Part I.
 The neutral orbit favicon is interface geometry, not a corporate mark.
 Historical art-direction names are retained only in provenance records.
 
 The contents drawer derives its counts and items from the current manuscript.
 The four parts form one continuous illustrated article. Navigation scrolls to
 anchors without hiding content or resetting the teaching state. One navigation
-strip follows the cover, rather than being repeated between parts.
+strip follows the opening film, rather than being repeated between parts.
 The masthead, cover and headings share one responsive width and gutter; text keeps
 a readable measure while illustrations, scientific plates, diagrams and interactive
 applications use the wider composition. The first three parts retain
-the approved revised manuscript (4, 7 and 6 subsections); Part IV is
+the approved revised manuscript (4, 6 and 6 subsections); Part IV is
 **Architecture and Foundry technical notes**, promoted from the supporting
 material before the remaining appendices. Its content and existing deep link
 are preserved, with no duplicate part/subsection title. Its technical subsections
@@ -84,8 +101,9 @@ There are no previous/next subsection footers. Printing opens remaining auxiliar
 disclosures, then restores their state, the scroll position and glossary filter.
 The paginated book remains available separately.
 
-The industry introduction, wildfire and Foundry guidance use side-by-side
-illustrations and prose on desktop. Mobile places prose before the illustration.
+The industry introduction uses a dedicated conceptual satellite-and-landscape
+drawing. Its prose remains beside the illustration on desktop and before it on
+mobile. Foundry includes the readable drawing of the five deployed demo agents.
 The opening retains the dated ESA/Copernicus figures and sources and reaches
 the full-width Explorer after 124 words. Its exact italic instruction and optional
 “How to explore” and simulation/accessibility panels precede the general
@@ -109,7 +127,7 @@ offscreen disposal, failure/retry and its educational limitations.
 | Optical/radar and clouds | Original image pairs, provenance, image zoom and synthetic-only opacity control |
 | Delivery process fresco | Seven keyboard-accessible stages with matching hatched drawings; original acquisition/downlink images retained for print |
 | Customer request | AR-1842 form with entitlement, export and product checks before planning |
-| 24-hour timeline | Source Attica timestamps, four-hour deadline, cloud failure and late optical retry |
+| Historical Varnavas chronology | Official CEMS products and timestamp intervals, distinct from the fictional mission |
 | Current systems | Four independent app/backlog/detail views over the same five source requests |
 | Agent anatomy / five agents | Model/tools/state boundaries, responsibility selection and keyboard scrubber |
 | Secure architecture / Foundry | Layered architecture, scoped permissions and retained technical notes |
@@ -123,6 +141,10 @@ Attica processing enters a quality hold; radar is not an equivalent optical
 product without customer acceptance. State resets on reload or edition switch.
 Moving between article parts preserves the shared teaching state.
 Other bookings and processing capacity are contextual, not a numerical solver.
+The old Planning Under Constraints sequence is omitted from the reading
+edition. Legacy `#challenges` links resolve to the historical wildfire chapter;
+the film is not duplicated in Part II. Original manuscript sections remain
+archived unchanged, including the omitted source passages.
 
 No scientific imagery was replaced, recoloured or cropped. The Earth illustration
 was completed on 15 November after the author identified its clipped spacecraft
