@@ -98,10 +98,32 @@ body:not(.web-reader) .mechanism-comparison dd{font-size:12px}
 .mission-history{padding-left:22px;font:14px/1.9 "Segoe UI",sans-serif}
 .mission-history li{margin:12px 0}
 .human-gate{border-left:3px solid var(--green);padding:12px 18px;background:#dfe4d780}
-.orchestrator-state{padding:24px;border:1px solid var(--line);text-align:center}
+.orchestrator-state{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;border:1px solid var(--line)}
+.orchestrator-state h3{margin:0;font:24px/1.4 var(--serif)}
+.orchestrator-state p{margin:0;color:var(--muted)}
 .agent-flow{list-style:none;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:24px 0}
 .agent-flow button{height:100%;width:100%;text-align:left;font:17px/1.5 var(--serif)}
-.agent-explanation{min-height:60px}
+.agent-access-panel{margin-top:24px;min-width:0;padding:28px;border:1px solid var(--line);border-top:4px solid var(--green);background:#dfe4d72b}
+.agent-access-panel[hidden]{display:none}
+.agent-profile-header{display:flex;justify-content:space-between;align-items:flex-start;gap:28px;margin-bottom:28px}
+.agent-profile-header>div{min-width:0}
+.mission-widget .agent-profile-header h4{margin:10px 0 0;font:32px/1.3 var(--serif)}
+.agent-autonomy-badge{flex:0 0 210px;border-left:2px solid var(--green);padding-left:18px;color:var(--green)}
+.agent-autonomy-badge span{display:block;font:12px/1.6 "Segoe UI",sans-serif}
+.agent-autonomy-badge strong{display:block;font:30px/1.3 var(--serif);margin:4px 0}
+.agent-brief{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;padding-block:24px;border-block:1px solid var(--line)}
+.agent-brief>section{min-width:0}
+.agent-access-panel h5{font:20px/1.4 var(--serif);margin:0 0 12px;color:var(--green)}
+.mission-widget .agent-brief p,.agent-brief ul{font:15px/1.7 "Segoe UI",sans-serif;margin:0}
+.agent-brief ul{padding-left:18px}
+.agent-brief li+li{margin-top:8px}
+.agent-data-section{margin-top:28px}
+.agent-connections{list-style:none;padding:0;margin:18px 0 24px}
+.agent-connections>li{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,4fr);gap:24px;padding:20px 0;border-top:1px solid var(--line);break-inside:avoid}
+.agent-connections h6{margin:6px 0 0;font:19px/1.5 var(--serif);overflow-wrap:anywhere}
+.agent-connections dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:0}
+.agent-connections dt,.agent-application>span{display:block;font:12px/1.7 Consolas,monospace;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px}
+.agent-connections dd{margin:0;font:15px/1.7 "Segoe UI",sans-serif;overflow-wrap:anywhere}
 .mission-widget input[type="range"]{display:block;width:min(460px,100%);accent-color:var(--green);margin:18px 0}
 .timeline-ruler{display:flex;flex-wrap:wrap;gap:8px 12px;justify-content:space-between;font:11px/1.6 Consolas,monospace;padding:12px 0;border-bottom:1px solid var(--line)}
 .timeline-events{list-style:none;padding:0;margin:24px 0}
@@ -128,13 +150,25 @@ body:not(.web-reader) .application-panel{padding:12px}
 body:not(.web-reader) .customer-uses,body:not(.web-reader) .meridian-portrait,body:not(.web-reader) .explorer-cues,body:not(.web-reader) .agent-flow,body:not(.web-reader) .timeline-capacity,body:not(.web-reader) .business-choices,body:not(.web-reader) .coordination-comparison,body:not(.web-reader) .request-form{display:block}
 body:not(.web-reader) .agent-flow li,body:not(.web-reader) .meridian-portrait>div,body:not(.web-reader) .customer-uses>section,body:not(.web-reader) .ticket-facts>div{break-inside:avoid;margin-bottom:12px}
 body:not(.web-reader) .agent-flow button{width:100%}
+body:not(.web-reader) .agent-access-panel{padding:14px}
+body:not(.web-reader) .agent-profile-header,body:not(.web-reader) .agent-brief{display:block}
+body:not(.web-reader) .agent-autonomy-badge{margin-top:14px}
+body:not(.web-reader) .agent-brief>section{margin-bottom:16px;break-inside:avoid}
+body:not(.web-reader) .agent-access-panel h5{font-size:17px}
+body:not(.web-reader) .agent-profile-header h4{font-size:24px}
+body:not(.web-reader) .agent-brief p,body:not(.web-reader) .agent-brief ul{font-size:12px}
+body:not(.web-reader) .agent-connections>li,body:not(.web-reader) .agent-connections dl{display:block}
+body:not(.web-reader) .agent-connections>li{padding:10px 0}
+body:not(.web-reader) .agent-connections h6{font-size:15px;margin-bottom:8px}
+body:not(.web-reader) .agent-connections dd{font-size:11px}
+body:not(.web-reader) .agent-connections dl>div{margin-bottom:8px;break-inside:avoid}
 body:not(.web-reader) .meridian-portrait dt,body:not(.web-reader) .meridian-portrait dd{display:inline;margin-right:10px}
 body:not(.web-reader) .manuscript-sequence .process-plate{height:auto;break-before:auto;break-after:auto;break-inside:auto}
 body:not(.web-reader) .manuscript-sequence .journey-drawings{display:block}
 body:not(.web-reader) .manuscript-sequence .process-map{display:block}
 body:not(.web-reader) .manuscript-sequence .process-map li{margin:12px 0}
 body:not(.web-reader) .supporting-note>summary{font-size:20px;break-after:avoid}
-@media(max-width:800px){.explorer-cues{grid-template-columns:repeat(2,minmax(0,1fr))}.web-reader .process-map{grid-template-columns:repeat(3,minmax(0,1fr))}.agent-flow{grid-template-columns:1fr}.agent-explanation{min-height:0}}
+@media(max-width:800px){.explorer-cues{grid-template-columns:repeat(2,minmax(0,1fr))}.web-reader .process-map{grid-template-columns:repeat(3,minmax(0,1fr))}.agent-flow{grid-template-columns:1fr}.agent-connections>li,.agent-connections dl{grid-template-columns:1fr;gap:14px}.agent-access-panel{padding:20px}.agent-profile-header{display:block}.agent-autonomy-badge{margin-top:20px}.agent-brief{grid-template-columns:1fr;gap:24px}.orchestrator-state{display:block}.orchestrator-state p{margin-top:10px}}
 @media(max-width:620px){.meridian-portrait{grid-template-columns:repeat(2,1fr)}.customer-uses,.business-choices,.coordination-comparison,.timeline-capacity,.request-form,.mechanism-comparison{grid-template-columns:1fr}.explorer-cues{gap:20px}.explorer-cues dt{font-size:18px}.explorer-cues dd{font-size:13px}.journey-drawings{gap:20px}.web-reader .process-map{grid-template-columns:repeat(2,minmax(0,1fr))}.application-map>button{flex-basis:40%}.application-panel{padding:18px}.ticket-facts>div{grid-template-columns:90px minmax(0,1fr);gap:12px}.mission-widget button{font-size:14px}.permission-levels,.agent-ingredients{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:no-preference){.agent-flow button,.timeline-events li{transition:background-color .2s,border-color .2s}}
 @media screen and (max-height:600px){
@@ -162,6 +196,14 @@ body:not(.web-reader) .supporting-note>summary{font-size:20px;break-after:avoid}
   .ticket-list button{display:block!important}
   .timeline-events li,.ticket-facts>div,.customer-uses>section{break-inside:avoid}
   .agent-flow,.request-form,.timeline-capacity{display:block}
+  .mission-widget .agent-flow{display:none}
+  .agent-access-panel[hidden]{display:block!important}
+  .agent-access-panel{margin-block:8mm}
+  .agent-profile-header,.agent-brief{display:block}
+  .agent-autonomy-badge{margin-top:4mm}
+  .agent-brief>section{margin-bottom:4mm;break-inside:avoid}
+  .agent-connections>li,.agent-connections dl{display:block}
+  .agent-connections dl>div{margin-block:3mm}
   .mission-widget .application-map button{display:block!important}
   .supporting-note{padding:6mm 0}
   .supporting-note>summary{font-size:16pt}

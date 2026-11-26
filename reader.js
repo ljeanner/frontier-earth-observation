@@ -47,7 +47,7 @@ function leaf(page, offset) {
   const layout = layouts.get(page.id);
   const exists = currentLeaf + offset < layout.count;
   const folio = exists && page.id !== 'cover' ? String(layout.start + currentLeaf + offset).padStart(2, '0') : '';
-  return `<div class="leaf" aria-hidden="true"><div class="leaf-header"><span>${exists ? chapter : 'EARTH OBSERVATION'}</span><span>${page.type === 'chapter' ? 'COORDINATING EARTH OBSERVATION' : '2026'}</span></div><div class="leaf-footer"><span>THE WORLD CAN’T WAIT</span><span>${folio}</span></div></div>`;
+  return `<div class="leaf" aria-hidden="true"><div class="leaf-header"><span>${exists ? chapter : 'EARTH OBSERVATION'}</span><span>${page.type === 'chapter' ? 'COORDINATING EARTH OBSERVATION' : '2026'}</span></div><div class="leaf-footer"><span>THE DOE PROJECT</span><span>${folio}</span></div></div>`;
 }
 
 function contentsBody(page) {

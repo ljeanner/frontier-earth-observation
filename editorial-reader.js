@@ -258,13 +258,6 @@ function renderSection(section) {
     prose.querySelector('#definition-results').innerHTML = definitionList(definitions);
     prose.querySelector('#definition-count').textContent = `Showing all ${definitions.length} terms.`;
   }
-  if (section.id === 'accelerator') {
-    const print = document.createElement('div');
-    print.className = 'print-only';
-    const entries = section.id === 'accelerator' ? systems.map(([title, , description]) => [title, description]) : scenarioOptions.map(([, title, , outcome]) => [title, outcome]);
-    print.innerHTML = entries.map(([title, description]) => `<h4>${escape(title)}</h4><p>${escape(description)}</p>`).join('');
-    prose.append(print);
-  }
   const wideElements = section.template === 'split-screen'
     ? [...prose.children].filter(element => element.matches('.mission-widget,.si-diagram,.customer-uses,.business-choices,.process-list,.supporting-links,.foundry-deployment'))
     : [];
@@ -273,6 +266,7 @@ function renderSection(section) {
     body.append(...wideElements);
     body.append(...prose.querySelectorAll(':scope>.support-link,:scope>.note-foot'));
   }
+  for (const vignette of prose.querySelectorAll(':scope>.doe-vignette')) article.querySelector('.sequence-body').append(vignette);
   enhanceProcessIllustrations(article);
   enhanceImages(article);
   enhanceDiagrams(article);

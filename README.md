@@ -1,4 +1,4 @@
-# The World Can’t Wait
+# The Doe Project
 
 *Coordinating Earth Observation with AI Agents*
 
@@ -14,6 +14,20 @@ an embedded orbital Explorer and printing. The existing illustrated film opens
 the article in a large embedded panel directly beneath the title and hook. It
 loads when visible, with its own playback and sound controls, rather than being
 offered as an optional link beside a reading shortcut.
+
+The title refers to the doe in the fictional opening film. Three related
+graphite drawings close Parts I, II and III: the doe in a clearing, listening
+toward distant smoke and taking a step onward. Complete originals, uncropped
+reading copies and reference lineage are retained. They do not illustrate the
+historical Varnavas landscape or establish a rescue. The externally hosted
+film itself remains unchanged, including its internal title.
+
+Selecting one of the five agents opens a bordered profile with its role,
+responsibilities, project-specific L3/L4 autonomy, connected applications,
+data and access rights. Human approval boundaries remain explicit. The
+responsibility slider, separate integration diagram and gateway callout
+are removed; printing includes all five profiles. These profiles describe
+the proposed access model, not live application permissions.
 
 The reading edition contains three narrative parts and 16 subsections:
 a short industry introduction, the full-width orbital Explorer and general
@@ -129,8 +143,8 @@ offscreen disposal, failure/retry and its educational limitations.
 | Customer request | AR-1842 form with entitlement, export and product checks before planning |
 | Historical Varnavas chronology | Official CEMS products and timestamp intervals, distinct from the fictional mission |
 | Current systems | Four independent app/backlog/detail views over the same five source requests |
-| Agent anatomy / five agents | Model/tools/state boundaries, responsibility selection and keyboard scrubber |
-| Secure architecture / Foundry | Layered architecture, scoped permissions and retained technical notes |
+| Agent anatomy / five agents | Model/tools/state boundaries and keyboard-accessible profiles covering role, responsibilities, autonomy, applications, data and rights |
+| Secure architecture / Foundry | Per-agent access and human-approval boundaries, retained technical notes and Foundry engineering guidance |
 | Wildfire replay | Same-state revisit and coordination trace without advancing approvals or claiming savings |
 
 OrbitPlanner accepts approved intake; GroundLink accepts scheduled acquisitions.

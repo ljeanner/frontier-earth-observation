@@ -9,17 +9,17 @@ import { createEditorialContent } from './editorial-content.js';
 test('both editions identify the personal publication without incidental branding', async () => {
   const data = JSON.parse(await readFile(new URL('./data/meridian.json', import.meta.url), 'utf8'));
   const { pages } = createBook(data);
-  assert.equal(bookTitle, 'The World Can’t Wait — Coordinating Earth Observation with AI Agents');
+  assert.equal(bookTitle, 'The Doe Project — Coordinating Earth Observation with AI Agents');
   for (const id of ['cover', 'back-cover']) {
     const page = pages.find(entry => entry.id === id);
     assert.match(page.left + page.right, /Lucile Jeanneret/);
-    assert.match(page.left + page.right, /The World Can’t Wait/);
+    assert.match(page.left + page.right, /The Doe Project/);
   }
   assert.doesNotMatch(pages.map(page => (page.left ?? '') + (page.right ?? '')).join(''), /\bFrontier\b|MISSION ARCHITECTURE/i);
   for (const name of ['index.html', 'book.html']) {
     const html = await readFile(new URL(name, import.meta.url), 'utf8');
     assert.match(html, /name="author" content="Lucile Jeanneret"/);
-    assert.match(html, /<title>The World Can’t Wait — Coordinating Earth Observation with AI Agents<\/title>/);
+    assert.match(html, /<title>The Doe Project — Coordinating Earth Observation with AI Agents<\/title>/);
     assert.doesNotMatch(html, /\bFrontier\b|MISSION ARCHITECTURE/i);
   }
 });
@@ -85,4 +85,25 @@ test('static publication contains the runtime module and stylesheet dependency g
   }
   for (const required of ['manuscript-content.js', 'manuscript-data.js', 'mission-data.js', 'mission-workflow.js', 'mission-interactions.js', 'mission-widgets.css', 'process-illustrations.js', 'attica-timeline.js', 'attica-timeline-data.js', 'attica-timeline.css'])
     assert.ok(checked.has(required), `Missing runtime dependency: ${required}`);
+});
+
+test('the recurring doe drawings close the narrative parts, outside historical evidence', async () => {
+  const data = JSON.parse(await readFile(new URL('./data/meridian.json', import.meta.url), 'utf8'));
+  const { pages } = createBook(data);
+  for (const [id, drawing] of [
+    ['observation-lifecycle', 'clearing'],
+    ['business-case', 'listening'],
+    ['deployment-and-evaluation', 'onward'],
+  ]) {
+    const page = pages.find(page => page.id === id);
+    assert.match(page.right, /class="doe-vignette"/);
+    assert.ok(page.right.includes(`doe-${drawing}-reading.webp`));
+    assert.ok(page.right.includes(`doe-${drawing}.png`));
+    for (const file of [`doe-${drawing}.png`, `doe-${drawing}-reading.webp`])
+      assert.ok((await readFile(new URL(`./art/${file}`, import.meta.url))).length > 0);
+  }
+  const historical = pages.find(page => page.id === 'wildfire');
+  assert.doesNotMatch(historical.left + historical.right, /doe-vignette/);
+  const accelerator = pages.find(page => page.id === 'accelerator');
+  assert.doesNotMatch(accelerator.right, /data-system|Layered agent and mission-system architecture/);
 });

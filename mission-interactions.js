@@ -11,12 +11,95 @@ const status = record => record.processing === 'held' ? 'Quality hold' : record.
   record.contact ? 'Contact reserved' : record.acquisition !== 'none' ? `Acquisition ${record.acquisition}` : `Intake ${record.intake}`;
 const empty = text => `<p class="queue-empty">${text}</p>`;
 const agents = [
-  ['Tasking Intake Agent', 'L4', 'Request, entitlement and approved screening'],
-  ['Priority Negotiation Agent', 'L3', 'Competing commitments and SLA policy'],
-  ['Acquisition Planning Agent', 'L3', 'Solver-backed acquisition proposal'],
-  ['Downlink & Processing Agent', 'L4', 'Contact, reception and approved processing'],
-  ['Product Delivery Agent', 'L4', 'Quality, rights and authorized recipient'],
+  {
+    title: 'Tasking Intake Agent', level: 'L4', delegation: 'Qualify routine requests',
+    detail: 'Request, entitlement and approved screening',
+    role: 'Turn a customer request into a qualified observation task.',
+    responsibilities: ['Check the area, product and deadline.', 'Verify entitlement and approved screening results.', 'Gather missing context and record the qualified request.'],
+    autonomy: 'Qualifies complete requests within approved rules and records missing information without a separate approval for every routine step.',
+    connections: [
+      ['Tasking Desk', 'Customer request, area of interest, product, deadline and clarification history.', 'Read requests; record clarifications and the qualified intake.'],
+      ['CRM', 'Customer identity, entitlements and SLA terms.', 'Read the authorized customer record; no contract or entitlement changes.'],
+      ['SharePoint', 'Current intake procedures and controlled documentation.', 'Read only documents accessible to the delegated identity.'],
+      ['Approved screening service', 'End-user, intended-use and export-screening results.', 'Submit a screening request and read its result; no override of a restriction.'],
+    ],
+    gate: 'Uncertain or restricted screening results go to an accountable reviewer. Intake approval does not authorize acquisition or a spacecraft command.',
+  },
+  {
+    title: 'Priority Negotiation Agent', level: 'L3', delegation: 'Recommend within policy',
+    detail: 'Competing commitments and SLA policy',
+    role: 'Resolve priority questions without silently changing existing commitments.',
+    responsibilities: ['Compare requests against SLA and priority policy.', 'Explain options and affected commitments.', 'Route exceptions beyond delegated authority for approval.'],
+    autonomy: 'Compares competing commitments and prepares priority options within delegated policy. It cannot change a customer agreement.',
+    connections: [
+      ['OrbitPlanner', 'Competing requests, existing commitments and candidate priorities.', 'Read commitments; record a priority proposal, not an unauthorized schedule override.'],
+      ['CRM and analytics', 'SLA terms, commercial priorities and measured service history.', 'Read authorized business context; no price, SLA or contract changes.'],
+      ['Customer-agent APIs', 'Permitted priority options and negotiation responses.', 'Exchange options within delegated scope; request acceptance when commitments would change.'],
+      ['SharePoint', 'Approved priority and exception-handling policies.', 'Permission-aware, read-only retrieval with document versions.'],
+    ],
+    gate: 'Priority or commercial changes beyond delegated authority require the responsible operator or customer to approve them.',
+  },
+  {
+    title: 'Acquisition Planning Agent', level: 'L3', delegation: 'Propose a feasible plan',
+    detail: 'Solver-backed acquisition proposal',
+    role: 'Prepare an acquisition plan that can be reviewed and validated.',
+    responsibilities: ['Retrieve orbital, weather and instrument constraints.', 'Use deterministic solvers to compare candidate plans.', 'Submit a versioned proposal with downstream resource requirements.'],
+    autonomy: 'Builds candidate plans with deterministic planning tools. A computed proposal is not permission to execute it.',
+    connections: [
+      ['OrbitPlanner and solver tools', 'Orbital windows, weather, instrument constraints and solver results.', 'Search opportunities, simulate candidates, record a versioned proposal and request an approved reservation.'],
+      ['GroundLink', 'Compatible contacts, station availability and existing reservations.', 'Read availability and reservation status to check the proposed acquisition-to-downlink chain.'],
+      ['GeoFactory', 'Processing prerequisites, queue and capacity metadata.', 'Read planning metadata; no unrestricted raw-imagery access or job launch.'],
+      ['MissionControl', 'Submitted plan version, validation results and approval status.', 'Submit a plan for review and read status; no self-approval or command release.'],
+      ['SharePoint', 'Current planning procedures and spacecraft constraints documentation.', 'Read only authorized, versioned technical context.'],
+    ],
+    gate: 'MissionControl reviews the exact plan version, applies deterministic safety checks and retains human command authorization.',
+  },
+  {
+    title: 'Downlink & Processing Agent', level: 'L4', delegation: 'Run approved resource actions',
+    detail: 'Contact, reception and approved processing',
+    role: 'Coordinate the path from an approved acquisition to a processed product.',
+    responsibilities: ['Reserve compatible, approved ground contacts.', 'Follow reception and reconcile transfer results.', 'Launch approved processing jobs and track completion or failure.'],
+    autonomy: 'Reserves compatible contacts and starts approved processing jobs within the released plan and delegated resource limits.',
+    connections: [
+      ['GroundLink', 'Contact windows, antenna reservations, transfer receipts and reception status.', 'Reserve approved contacts and reconcile transfer results; no displacement outside policy.'],
+      ['GeoFactory', 'Received-dataset references, job prerequisites, processing status and quality metadata.', 'Launch approved jobs and follow completion or failure. Imagery stays in the permitted processing environment.'],
+      ['MissionControl', 'Released plan version and command-authorization status.', 'Read authorization and submit gated execution requests; never release a spacecraft command.'],
+      ['SharePoint', 'Approved reception, processing and recovery procedures.', 'Read authorized procedures; retrieved text cannot expand tool permissions.'],
+    ],
+    gate: 'A reservation is not command authority. Safety-critical commands require MissionControl release; unresolved reception or quality failures remain blocked.',
+  },
+  {
+    title: 'Product Delivery Agent', level: 'L4', delegation: 'Deliver within accepted rights',
+    detail: 'Quality, rights and authorized recipient',
+    role: 'Get an accepted product to the recipient authorized to receive it.',
+    responsibilities: ['Review product quality and provenance.', 'Check the recipient, entitlement and product license.', 'Coordinate authorized publication and record delivery status.'],
+    autonomy: 'Coordinates publication and delivery of an accepted product to an authorized recipient within the existing request and license.',
+    connections: [
+      ['GeoFactory and product catalogue', 'Product references, quality reports, provenance and publication status.', 'Read quality and lineage; request authorized publication and delivery only after acceptance.'],
+      ['CRM', 'Recipient identity, current entitlement, product license and accepted service terms.', 'Read rights and recipient information; no entitlement or license changes.'],
+      ['Tasking Desk / customer portal', 'Accepted product requirement and delivery acknowledgements.', 'Record delivery status and notify the authorized recipient; no unilateral product substitution.'],
+      ['SharePoint', 'Current quality-acceptance and delivery procedures.', 'Read only documentation available to the delegated identity.'],
+    ],
+    gate: 'Failed quality or missing rights block delivery. A different product or recipient requires the appropriate acceptance and authorization.',
+  },
 ];
+
+function agentAccessPanels(selected) {
+  return agents.map((agent, index) => `<section class="agent-access-panel" id="agent-access-${index}" aria-labelledby="agent-profile-name-${index}" ${index === selected ? '' : 'hidden'}>
+    <header class="agent-profile-header"><div><span class="eyebrow">Agent profile · ${String(index + 1).padStart(2, '0')} / 05</span><h4 id="agent-profile-name-${index}">${agent.title}</h4></div>
+      <div class="agent-autonomy-badge"><span>Autonomy level</span><strong>${agent.level}</strong><span>${agent.delegation}</span></div></header>
+    <div class="agent-brief">
+      <section><h5>Role</h5><p>${agent.role}</p></section>
+      <section><h5>Responsibilities</h5><ul>${agent.responsibilities.map(responsibility => `<li>${responsibility}</li>`).join('')}</ul></section>
+      <section><h5>Autonomy</h5><p>${agent.autonomy}</p></section>
+    </div>
+    <section class="agent-data-section" aria-labelledby="agent-data-heading-${index}"><h5 id="agent-data-heading-${index}">Applications, data &amp; rights</h5>
+      <ul class="agent-connections">${agent.connections.map(([application, data, access]) => `<li>
+        <div class="agent-application"><span>Application / service</span><h6>${application}</h6></div><dl><div><dt>Data</dt><dd>${data}</dd></div><div><dt>Rights</dt><dd>${access}</dd></div></dl>
+      </li>`).join('')}</ul></section>
+    <p class="human-gate"><strong>Human approval &amp; limits.</strong> ${agent.gate}</p>
+  </section>`).join('');
+}
 const branchDetails = {
   optical: 'Check the original optical requirement against observed suitability and the remaining windows. The next source optical opportunity is after the four-hour deadline.',
   radar: 'A radar alternative changes the product. Availability and suitability remain to be established, and the customer must accept the change. No radar opportunity or equivalent optical output is asserted.',
@@ -139,15 +222,15 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
       <p class="branch-result" role="status">${state.branch ? branchDetails[state.branch] : 'Select a path to inspect the product, feasibility and approval boundary.'}</p>
       <dl class="print-only">${Object.entries(branchDetails).map(([id, detail]) => `<dt>${id}</dt><dd>${detail}</dd>`).join('')}</dl>`;
     if (name === 'agents') return `<div class="orchestrator-state"><h3>Durable mission orchestrator</h3><p>${attica.requestId} · ${escape(status(pilot()))} · plan v${pilot().planVersion}</p></div>
-      <ol class="agent-flow">${agents.map(([title, level], index) => `<li class="${index === state.agentStep ? 'is-current' : ''}"><button type="button" data-agent-step="${index}" aria-pressed="${index === state.agentStep}">${title}<small>${level}</small></button></li>`).join('')}</ol>
-      <p class="agent-explanation" role="status">${agents[state.agentStep][2]}</p><p class="human-gate">Human gates: plan review · safety validation · command authorization · contract-changing decisions</p>
-      <label>Explore the five responsibilities <input type="range" min="0" max="4" step="1" value="${state.agentStep}" data-agent-scrubber></label>
-      <p class="widget-label">Project-specific delegation: L3 acts within policy; L4 owns routine work within approved limits. Both retain safety-critical approval.</p>`;
+      <p class="widget-label">Select an agent to open its profile: role, responsibilities, autonomy, applications, data and rights. Proposed Meridian access model, not a live permissions report.</p>
+      <ol class="agent-flow">${agents.map(({ title, level, delegation }, index) => `<li class="${index === state.agentStep ? 'is-current' : ''}"><button type="button" data-agent-step="${index}" aria-controls="agent-access-${index}" aria-pressed="${index === state.agentStep}">${title}<small>${level} · ${delegation}</small></button></li>`).join('')}</ol>
+      ${agentAccessPanels(state.agentStep)}
+      <p class="widget-label">Project-specific delegation: L3 prepares options within policy; L4 owns routine work within approved limits. These are not universal autonomy levels. No agent can grant itself access, change a contract or authorize a spacecraft command. Restricted imagery stays in approved storage and processing systems; agents use permitted references and metadata.</p>`;
     if (name === 'revisit') return `<div class="coordination-comparison"><section><h3>Manual handoffs</h3><p>Tasking Desk → OrbitPlanner ↔ GroundLink → MissionControl → GeoFactory</p></section>
       <section><h3>Agent-supported coordination</h3><p>Five bounded responsibilities share the same mission record; the applications keep authority.</p></section></div>
       ${facts(pilot())}<p class="human-gate">No command authority is delegated. No time saving has been measured.</p>
       <button type="button" data-coordinate>Prepare a coordination trace</button>
-      ${state.coordination ? `<ol class="mission-history">${agents.map(([title, , detail]) => `<li><strong>${title}</strong> · ${detail}</li>`).join('')}</ol>` : ''}
+      ${state.coordination ? `<ol class="mission-history">${agents.map(({ title, detail }) => `<li><strong>${title}</strong> · ${detail}</li>`).join('')}</ol>` : ''}
       ${timeline(state)}<p class="branch-result">${state.branch ? branchDetails[state.branch] : 'No alternative has been accepted.'}</p>
       ${history(pilot())}<a href="#existing-architecture">Return to the same application backlogs →</a>`;
     throw new Error(`Unknown mission widget: ${name}`);
@@ -166,7 +249,7 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
     renderInto(root);
     if (slot && focus) {
       const candidates = [...slot.querySelectorAll('button,input')];
-      const target = candidates.find(button => ['app', 'queue', 'openTicket', 'missionBranch', 'timelineEvent', 'agentStep', 'intakeCheck', 'agentScrubber'].some(key => focus[key] !== undefined && button.dataset[key] === focus[key]));
+      const target = candidates.find(button => ['app', 'queue', 'openTicket', 'missionBranch', 'timelineEvent', 'agentStep', 'intakeCheck'].some(key => focus[key] !== undefined && button.dataset[key] === focus[key]));
       (target ?? slot.querySelector('.widget-notice')).focus?.({ preventScroll: true });
     }
     onChange();
@@ -207,7 +290,6 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
     const input = event.target;
     if (!(input instanceof HTMLInputElement)) return;
     if (input.dataset.intakeCheck) checks[input.dataset.intakeCheck] = input.checked;
-    if (input.hasAttribute('data-agent-scrubber')) { state.agentStep = Number(input.value); update(input); }
   });
   return { renderInto, snapshot: () => structuredClone(state) };
 }

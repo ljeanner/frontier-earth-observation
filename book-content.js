@@ -2,7 +2,7 @@ import { createManuscriptBook, manuscriptChapters } from './manuscript-content.j
 
 export const publication = Object.freeze({
   eyebrow: 'ILLUSTRATED WHITE PAPER · 2026',
-  title: 'The World Can’t Wait',
+  title: 'The Doe Project',
   subtitle: 'Coordinating Earth Observation with AI Agents',
   author: 'Lucile Jeanneret',
   description: 'When a wildfire spreads or a river floods, satellite images can help emergency teams see what is happening and decide where to act. But getting those images to the people who need them takes time—while the situation on the ground keeps changing.',

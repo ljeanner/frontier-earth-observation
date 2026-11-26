@@ -6,6 +6,9 @@
 .mission-intro-slot [data-mission-intro-start]{position:absolute;bottom:12px;left:12px;min-height:44px;padding:10px 16px}
 .mission-intro-slot [data-mission-intro-status]{position:absolute;inset:12px 12px auto;font:11px/1.5 "Segoe UI",Arial,sans-serif}
 .mission-intro-slot[data-state="ready"] [data-mission-intro-status]{visibility:hidden}
+.doe-vignette{width:100%;margin:20px 0;break-inside:avoid}
+.doe-vignette img{display:block;width:100%;height:auto;object-fit:contain}
+.doe-vignette figcaption{font:11px/1.6 "Segoe UI",Arial,sans-serif;color:var(--muted);margin-top:8px}
 @media print{.mission-intro-slot{display:none!important}}
 *{box-sizing:border-box}
 body{margin:0}
@@ -282,6 +285,7 @@ figcaption{font:8px/1.7 Consolas,monospace;letter-spacing:.3px;color:#697660;mar
   .column-start{break-before:column;height:0}
   .page-flow figure,.page-flow .metric-strip,.page-flow .agent-card,.page-flow .domain,.page-flow .gateway,.page-flow .system-buttons,.page-flow .scenario-choices button,.page-flow .concept-list>div,.page-flow .colophon>div,.page-flow .process-list li,.page-flow .toc-entry,.page-flow .toc-sections li,.page-flow .matrix tr{break-inside:avoid}
   .page-flow .editorial-image{height:clamp(90px,22dvh,190px);width:100%;margin:16px 0 0}
+  .page-flow .doe-vignette img{max-height:clamp(90px,24dvh,210px)}
   .page-flow .full-art{height:clamp(100px,28dvh,240px)}
   .page-flow .definition-note{display:none!important}
   .page-flow .toc-chapter{margin:10px 0 18px}

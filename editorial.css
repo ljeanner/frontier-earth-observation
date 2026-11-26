@@ -78,6 +78,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[
 .technical-copy>.diagram-shell,.technical-copy>.table-scroll{clear:both}
 .section-label,.eyebrow{display:block;font:11px/1.6 Consolas,monospace;letter-spacing:1.1px;text-transform:uppercase;color:var(--green);margin:28px 0 12px}
 .sequence-body figure{margin:40px 0}
+.sequence-body .doe-vignette{width:100%;max-width:720px;margin:40px auto 16px;break-inside:avoid}
+.sequence-body .doe-vignette img{width:100%;height:auto;max-height:none;object-fit:contain}
+.sequence-body .doe-vignette figcaption{text-align:center}
 .mission-intro-slot{position:relative;width:100%;margin:24px 0}
 .mission-intro-slot iframe{display:block;width:100%;height:clamp(420px,70svh,800px);border:1px solid var(--line);background:var(--paper)}
 .mission-intro-slot [data-mission-intro-start]{min-height:44px;padding:12px 20px}

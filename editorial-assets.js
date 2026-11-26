@@ -8,6 +8,17 @@ const brief = (file, objective, subject, composition, elements, ratio, caption, 
 });
 
 export const assetBriefs = [
+  ...[
+    ['clearing', 'Give the observation lifecycle a living subject.', 'Doe standing in a pine clearing', ['one adult doe', 'four grounded hooves', 'upright ears', 'pale rump patch', 'pine and ferns'], 'A life beneath the orbit. Fictional graphite study.', 'Graphite doe standing in a pine clearing.', 'first character reference: the approved doe-standing sprite from the opening film'],
+    ['listening', 'Reconnect response delays with conditions on the ground.', 'The same doe listening toward distant smoke', ['same doe morphology', 'head turned back', 'four grounded hooves', 'distant light smoke', 'matching pine clearing'], 'While plans change, life on the ground continues. Fictional study, not the Varnavas landscape.', 'Graphite doe listening, with faint smoke beyond the distant treeline.', 'reference: the first clearing drawing'],
+    ['onward', 'Close the technical narrative on its purpose without inventing a rescue.', 'The same doe walking through the clearing', ['same doe morphology', 'one front hoof lifted', 'three supporting legs', 'matching pine and ferns', 'open space ahead'], 'Keep the purpose in view. Fictional study, not evidence of a rescue.', 'Graphite doe taking a careful step through the same pine clearing.', 'reference: the first clearing drawing'],
+  ].map(([name, objective, subject, elements, caption, alt, reference]) => ({
+    ...brief(`doe-${name}-reading.webp`, objective, subject, 'Complete landscape vignette at the end of one narrative part; preserve ears, hooves and paper margins. Uncropped 1400 × 933 reading copy.', elements, '1400:933', caption, alt, 'AI-generated fictional illustration, not observed wildlife, historical Varnavas geography or evidence of an animal rescue. Related drawings, not pixel-identical animation frames.'),
+    provenance: `./art/provenance.json; ${reference}.`,
+    decision: 'create',
+    inspected: '26 November 2026',
+    rationale: 'Generated at the user’s request as a recurring character across the article. The approved film doe anchors morphology; the first generated clearing anchors the two related variations.',
+  })),
   {
     ...brief('changing-planet-observation-reading.webp', 'Introduce Earth observation through land, water and human activity.', 'Satellite observing a changing planet', 'Complete portrait graphite scene beside the opening paragraphs; intact solar wings and coastline, no crop.', ['Earth-observation satellite', 'complete solar panels', 'coastline', 'fields', 'river', 'city', 'sage observation outline'], '933:1400', 'Observing land, water and human activity on a changing planet. Conceptual drawing, not a satellite image or a verified sensor footprint.', 'Graphite satellite above a conceptual coast, fields, river and city.', 'AI-generated illustrative geography and observation geometry, not a named place, real satellite scene, verified footprint or measured change.'),
     inspected: '19 November 2026',

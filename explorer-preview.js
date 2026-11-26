@@ -67,7 +67,7 @@ export function createExplorerPreview(book, { editorial = false } = {}) {
     if (!isVisible(slot) || intro?.slot === slot) return;
     stopIntro();
     const frame = document.createElement('iframe');
-    frame.title = 'The World Can’t Wait — illustrated wildfire mission with the doe';
+    frame.title = 'The Doe Project — illustrated wildfire mission with the doe';
     frame.src = 'https://polite-tree-06ae32c10.3.azurestaticapps.net/intro/';
     frame.allow = 'fullscreen';
     frame.allowFullscreen = true;

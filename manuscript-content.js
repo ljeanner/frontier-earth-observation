@@ -47,6 +47,7 @@ const prose = (section, blocks = section.blocks) => `<div class="manuscript-pros
 const plate = html => html.replace(/<span class="section-label">[\s\S]*?<\/span>/, '').replace(/<h2>[\s\S]*?<\/h2>/, '');
 const widget = (name, variant = '') => `<section class="mission-widget" data-mission-widget="${name}"${variant ? ` data-variant="${variant}"` : ''} aria-label="${escape(name.replace(/-/g, ' '))}"><p>Preparing the shared teaching scenario…</p></section>`;
 const image = (file, alt, caption, extra = '') => `<figure class="manuscript-illustration ${extra}"><img src="./art/${file}" alt="${escape(alt)}"><figcaption>${caption}</figcaption></figure>`;
+const doeVignette = (name, alt, caption) => `<figure class="doe-vignette"><a href="./art/doe-${name}.png" target="_blank" rel="noopener noreferrer"><img src="./art/doe-${name}-reading.webp" alt="${escape(alt)}"></a><figcaption>${caption}</figcaption></figure>`;
 const noteLink = (id, label) => `<p class="support-link"><a href="#${id}">${label} →</a></p>`;
 
 const orbitSource = 'https://www.esa.int/Enabling_Support/Space_Transportation/Types_of_orbits';
@@ -176,20 +177,6 @@ function agentConcept() {
   <dl class="mechanism-comparison" aria-label="Choose the mechanism for the responsibility"><div><dt>Agent</dt><dd>Context gathering and bounded option selection</dd></div><div><dt>Workflow</dt><dd>Known states, approvals, retries and routing</dd></div><div><dt>Deterministic solver</dt><dd>Resource conflicts, windows and feasibility</dd></div></dl>
   <figcaption>Mission systems validate and authorize execution; none of these mechanisms removes that boundary.</figcaption></figure>`;
 }
-function integration(helpers) {
-  return `<figure class="si-diagram" aria-label="Layered agent and mission-system architecture">
-    <div class="domain"><strong>Five agents + durable orchestrator</strong><span>Versioned mission state</span></div>
-    <div class="system-link"></div><div class="gateway"><strong>Authenticated adapters / self-hosted MCP gateway</strong><p>Identity · scoped tools · audit</p></div>
-    <div class="permission-levels">${[
-      ['Read', 'Availability, entitlements, procedures'], ['Propose', 'Versioned candidate plan'],
-      ['Reserve', 'Approved resource action'], ['Authorize', 'MissionControl only'],
-    ].map(([title, detail]) => `<div class="domain"><strong>${title}</strong><span>${detail}</span></div>`).join('')}</div>
-    <div class="si-app-grid">${['OrbitPlanner', 'GroundLink', 'GeoFactory', 'MissionControl'].map(name => `<div class="domain"><strong>${name}</strong></div>`).join('')}</div>
-    <div class="si-boundary"><strong>Physical systems</strong><p>Spacecraft · ground stations · imagery storage and processing</p></div>
-    <div class="system-buttons">${helpers.systems.map(([title, subtitle], index) => `<button type="button" data-system="${index}" aria-pressed="${index === 0}" aria-controls="system-detail">${title}<small>${subtitle}</small></button>`).join('')}</div>
-    <div class="system-detail detail-panel" id="system-detail" aria-live="polite"><h3>${helpers.systems[0][0]}</h3><p>${helpers.systems[0][2]}</p></div>
-    <figcaption>CRM and permission-aware SharePoint retrieval supply context. Read, propose, reserve and authorize are separate authorities.</figcaption></figure>`;
-}
 function foundryJourney() {
   return `<ol class="process-list" aria-label="Foundry engineering lifecycle">${[
     ['Responsibility', 'Define each agent’s work and authority.'],
@@ -242,7 +229,7 @@ export function createManuscriptBook(data, supporting, helpers) {
     <p>The teaching constellation has 30 satellites in five orbital planes, with 15 optical and 15 radar instruments, and three ground stations with four antennas in Norway, Spain and Kenya. Observation opportunities and compatible station contacts are separate constraints.</p>
     <p>Reduced-motion preferences require an explicit start. The globe has labelled controls, a fullscreen option and a separate full-Explorer link. If the visualization is unavailable, the static poster and this description remain available. Interactive geometry is a teaching aid, not a calculation of visibility, radio compatibility, weather or an approved mission plan.</p>
     </details></div>`;
-  art[5] = fresco();
+  art[5] = fresco() + doeVignette('clearing', 'Graphite doe standing in a pine clearing, with upright ears, a pale rump patch and all four hooves on the ground.', 'A life beneath the orbit. Fictional graphite study.');
   art[6] = customers();
   art[7] = widget('intake');
   art[8] = widget('applications') + noteLink('architecture-notes', 'Current hosting, operator responsibilities and manual handoffs');
@@ -251,14 +238,16 @@ export function createManuscriptBook(data, supporting, helpers) {
       <button type="button" data-mission-intro-start hidden>Reload the film</button>
       <p data-mission-intro-status role="status">Loading the opening film. Use its play, pause and timeline controls; sound is off unless you enable it.</p>
     </div>
-    <p>From orbit to a forest threatened by fire, follow a doe and the operators asked to provide an observation. This fictional story opens the article. It is not a reconstruction of the 2024 Varnavas fire.</p>
+    <p>From orbit to a forest threatened by fire, follow a doe and the operators asked to provide an observation. The Doe Project takes its name from the animal at the heart of this fictional story. It is not a reconstruction of the 2024 Varnavas fire.</p>
     <p><a href="https://polite-tree-06ae32c10.3.azurestaticapps.net/intro/" target="_blank" rel="noopener noreferrer">Open the film in a separate tab</a> · <a class="start-reading" href="#industry">Continue the article →</a></p>
     </section>` };
   art[11] = `<div class="business-choices"><section><h3>Expand physical capacity</h3><p>Satellites · antennas · processing infrastructure</p></section><section><h3>Improve coordination</h3><p>Planning time · contact utilization · manual reconciliation</p></section></div>` +
-    noteLink('methodology', 'Financial assumptions, latency definitions and KPI methodology');
+    noteLink('methodology', 'Financial assumptions, latency definitions and KPI methodology') +
+    doeVignette('listening', 'The same graphite doe raises her head and turns to listen; a faint plume of smoke rises beyond the distant treeline.', 'While plans change, life on the ground continues. Fictional study, not the Varnavas landscape.');
   art[12] = agentConcept();
   art[13] = widget('agents') + noteLink('technical-notes', 'Delegation levels, durable state and release gates');
-  art[14] = integration(helpers) + noteLink('regulatory-notes', 'Legal, data and command-authorization qualifications');
+  art[14] = '<p class="support-link"><a href="#agent-responsibilities">Explore each agent’s autonomy, applications, data and rights</a></p>' +
+    noteLink('regulatory-notes', 'Legal, data and command-authorization qualifications');
   art[15] = `<figure class="manuscript-illustration foundry-deployment wide-block">
     <a href="./art/foundry-agents-graphite.png" target="_blank" rel="noopener noreferrer"><img src="./art/foundry-agents-graphite-reading.webp" alt="Microsoft Foundry Agents view showing meridian-product-delivery, meridian-downlink-processing, meridian-acquisition-planning, meridian-priority-negotiation and meridian-tasking-intake."></a>
     <figcaption>Meridian’s five demo agents in Microsoft Foundry. AI-generated illustrated reconstruction of the supplied deployment screenshot, not a live status view.</figcaption>
@@ -275,6 +264,7 @@ export function createManuscriptBook(data, supporting, helpers) {
   ].map(([title, detail]) => `<li><strong>${title}</strong><span>${detail}</span></li>`).join('')}</ol>` +
     noteLink('methodology', 'Rollout, baseline and evaluation methodology') +
     image('earth-sketch-complete-reading.webp', 'Earth and its orbiting constellation.', 'The same constellation, with accountable coordination around it.') +
+    doeVignette('onward', 'The same graphite doe takes a careful step through the pine clearing, one front hoof lifted and the other legs supporting her weight.', 'Keep the purpose in view. Fictional study, not evidence of a rescue.') +
     `<nav class="supporting-links" aria-label="Supporting publication material">${[
       ['references', 'References'], ['image-credits', 'Scientific image credits'],
       ['glossary', 'Glossary'], ['methodology', 'Methodology'], ['regulatory-notes', 'Regulatory notes'],
@@ -331,6 +321,7 @@ export function createManuscriptBook(data, supporting, helpers) {
   references.right += `<section class="opening-reference-notes"><h3>Opening statistics</h3>${openingSources}</section>`;
   references.right += `<section><h3>Satellite missions, orbits and downlink</h3>${orbitReferences}</section>`;
   const imageCredits = { ...old('image-credits') };
+  imageCredits.right += `<section><h3>The Doe Project — recurring doe drawings</h3><p>Three AI-assisted graphite studies were generated on 26 November 2026 for this article: <a href="./art/doe-clearing.png">the clearing</a>, <a href="./art/doe-listening.png">listening</a> and <a href="./art/doe-onward.png">onward</a>. The opening film’s approved doe sprite was the character reference for the first drawing, which then served as the reference for the two variations. The slender build, long ears, pale rump patch and pine-clearing setting form a recurring visual motif; the drawings are not pixel-identical animation frames. Complete originals and uncropped proportional reading copies are retained, with generation and reference hashes in <a href="./art/provenance.json">image provenance</a>. These are fictional illustrations, not wildlife observations, a reconstruction of Varnavas, or evidence that an animal was rescued.</p></section>`;
   imageCredits.right += `<section><h3>Observing a changing planet</h3><p>The <a href="./art/changing-planet-observation.png">opening satellite-and-landscape drawing</a> was generated with AI on 19 November 2026 for the industry introduction. Graphite coastline, fields, river and city illustrate the subjects of Earth observation; the sage outline is conceptual. This is not a real satellite scene, named location, verified orbit, sensor footprint or measured change. The full original and an uncropped proportional reading copy are retained in <a href="./art/provenance.json">image provenance</a>. The earlier globe drawing remains unchanged on the cover and elsewhere.</p></section>`;
   imageCredits.right += `<section><h3>Microsoft Foundry agent deployment illustration</h3><p>The <a href="./art/foundry-agents-graphite.png">Foundry agent roster drawing</a> was generated with AI on 17 November 2026 from the supplied Microsoft Foundry screenshot, then revised to retain the product name and five exact agent names. It is an illustrated reconstruction, not an unaltered screenshot or evidence of current agent health, production readiness or mission execution. Incidental account and subscription identifiers are omitted. The complete generated PNG and an uncropped, same-resolution lossless WebP reading copy are retained; see <a href="./art/provenance.json">image provenance</a>.</p></section>`;
   imageCredits.right += `<section><h3>Historical Attica maps</h3><p>Copernicus Emergency Management Service, EMSR746, © 2024 European Union. Nine complete map images were retrieved from the official CEMS StoryMap on 16 November 2026: four published product maps, one fire-evolution illustration and four grading overview/detail images. Details and evolution views are not additional acquisitions. Original files, legends, embedded third-party imagery credits and source identifiers are retained in <a href="./art/provenance.json">image provenance</a>. Reading copies are proportionally resized without cropping, recolouring or compositing. No raw commercial satellite scene is redistributed. The source maps identify European Union, ESA and commercial imagery rights; the ArcGIS item does not specify a separate licence. Confirm the applicable CEMS product reuse terms before external republication.</p></section>` + atticaEvidenceNotes();
