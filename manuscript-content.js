@@ -13,7 +13,9 @@ const ids = [
 const partTitles = [
   'Understanding Earth Observation', "Meridian's Operational Challenge", 'Engineering Agentic Operations',
 ];
-const publishedSections = manuscriptSections.filter(section => section.number !== 9);
+const conciseReadingCopy = {"1":["Thousands of satellites orbit Earth. Some connect people, others help us navigate. Earth-observation satellites measure our planet.","Governments and businesses use these observations to monitor crops, protect infrastructure and respond to disasters. Some commission new observations from commercial operators."],"2":["Meridian is a fictional Earth-observation operator based in Rome, with 30 satellites (15 optical and 15 radar) and three ground stations in Norway, Spain and Kenya."],"6":["Farmers need comparable observations over time. Emergency services need recent maps within hours. Defence customers need controlled access and delivery."],"7":["A fictional mission inspired by the Varnavas fire: Greek Civil Protection requests an optical fire-impact map of Attica within four hours."],"8":["Four existing applications support the mission. Explore what each team knows and how the request moves between them."],"11":["The simulated mission took 24 hours against a four-hour target. More people, satellites or antennas could help. This project tests another option: better coordination of the resources Meridian already has."],"12":["An AI agent uses a model to interpret context and call approved tools. It can gather information, prepare a plan or recommend a change. Solvers still calculate feasible windows, and mission systems enforce safety rules."],"13":["Five agents support the five operational responsibilities. A durable workflow records handoffs and waits for human approval when required."],"14":["Agents connect to existing systems through narrow authenticated tools. Reading, proposing, reserving and authorising are separate permissions. MissionControl retains command authority."],"15":["Foundry provides a platform to build, test, run and monitor the agents. Meridian selects models and tools per responsibility, evaluates realistic failures and enforces data boundaries."],"16":["Revisit the same mission with coordinated planning. Agents can assemble alternatives faster, but cannot change an orbit, remove clouds or approve spacecraft commands."],"17":["Start with read-only recommendations, then introduce bounded actions after validation. Measure request-to-product time, missed opportunities, product acceptance and policy compliance."]};
+const readingOrder = [1,3,4,5,2,6,10,7,8,11,12,13,14,15,16,17];
+const publishedSections = readingOrder.map(number => manuscriptSections.find(section => section.number === number)).filter(Boolean).map(section => ({...section, blocks: conciseReadingCopy[section.number] ?? section.blocks}));
 export const manuscriptChapters = partTitles.map((title, part) => {
   const sections = publishedSections.filter(section => section.part === part);
   return {
@@ -164,6 +166,17 @@ function fresco() {
     <ol class="process-map">${processStages.map(([title, detail], index) => `<li tabindex="0"><span class="process-map-number">${String(index + 1).padStart(2, '0')}</span><div><strong>${title}</strong><span>${detail}</span></div></li>`).join('')}</ol>
   </section>`;
 }
+function missionJourney() {
+  const stages = [
+    ['01 · Request', '14:00 UTC', 'Greek Civil Protection requests an optical fire-impact map within four hours.', 'mission-control.webp'],
+    ['02 · Plan & acquire', '14:12 UTC · OPT-02', 'The first satellite collects data over Attica. Cloud forecast: 12%.', 'orbital-observation-reading.webp'],
+    ['03 · Downlink', '14:18:42 UTC · Norway', 'The satellite transfers its stored data during a three-minute contact.', 'satellite-downlink-reading.webp'],
+    ['04 · Process & check', '14:55 UTC', 'Measured cloud: 82%. Only 18% of the required coverage is usable. The product fails quality review.', 'synthetic-optical-terrain-reading.webp'],
+    ['05 · Retry & deliver', 'Next day · 14:00 UTC', 'OPT-04 collects a new observation at 12:50 UTC. Usable coverage: 97%. Delivery takes 24 hours, against a four-hour target.', 'cems-emsr746-del-reading.webp'],
+  ];
+  return `<section class="mission-journey wide-block" aria-label="Follow the simulated mission" style="margin:2rem 0"><h3>Follow mission AR-1842</h3><p class="plate-note">Fictional mission · UTC · select a stage to inspect it.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.6rem">${stages.map(([title,time,description,file],i)=>`<details style="border:1px solid #a5ada3;padding:.75rem;border-radius:4px" ${i===0?'open':''}><summary style="cursor:pointer"><strong>${title}</strong><br><small>${time}</small></summary><p>${description}</p><figure><img loading="lazy" src="./art/${file}" alt="${i===4?'Historical Copernicus map, not a Meridian acquisition':'Illustration of the simulated mission stage'}" style="width:100%;height:auto"><figcaption>${i===4?'Historical example: © 2024 European Union, Copernicus EMS, EMSR746. Not a Meridian product.':'Conceptual illustration, not mission evidence.'}</figcaption></figure></details>`).join('')}</div><p><a href="./operator-explorer/index.html" target="_blank" rel="noopener noreferrer">Explore the simulated constellation ↗</a></p><p class="plate-note">The globe and mission timeline are separate simulations; the globe does not reproduce these acquisition or contact times.</p></section>`;
+}
+
 function customers() {
   return `<div class="customer-uses" aria-label="Three customer needs">${[
     ['Agriculture', 'Comparable observations across a growing season', 'Seasonal consistency'],
@@ -276,7 +289,7 @@ export function createManuscriptBook(data, supporting, helpers) {
   art[3] = plate(helpers.explorerPlate()) + `<div class="explorer-information"><details class="explorer-limitations"><summary>About this simulation</summary><p>The teaching constellation has 30 satellites in five orbital planes (15 optical, 15 radar) and three ground stations with four antennas in Norway, Spain and Kenya. Spacecraft sizes are exaggerated. An observation opportunity and a station contact are two separate constraints.</p></details></div>`;
   art[5] = fresco() + doeVignette('clearing', 'Graphite doe standing in a pine clearing, with upright ears, a pale rump patch and all four hooves on the ground.', 'A life beneath the orbit. Fictional graphite study.');
   art[6] = customers();
-  art[7] = noteLink('existing-architecture', 'Follow AR-1842 through Meridian’s applications');
+  art[7] = missionJourney() + noteLink('existing-architecture', 'Explore the applications behind this mission');
   art[8] = widget('applications') + noteLink('architecture-notes', 'Current hosting, operator responsibilities and manual handoffs');
   const trailer = { id: 'trailer', title: 'The opening story', type: 'front', label: '—', left: '', right: `<section class="mission-intro" aria-label="The illustrated opening story">
     <div class="mission-intro-slot" data-mission-intro-featured data-state="idle">
@@ -286,7 +299,7 @@ export function createManuscriptBook(data, supporting, helpers) {
     <p>A fictional story: a doe, a forest threatened by fire, and the operators asked to observe it. Not a reconstruction of the 2024 Varnavas fire.</p>
     <p><a href="https://polite-tree-06ae32c10.3.azurestaticapps.net/intro/" target="_blank" rel="noopener noreferrer">Open the film in a separate tab</a> · <a class="start-reading" href="#industry">Continue the article →</a></p>
     </section>` };
-  art[11] = `<div class="business-choices"><section><h3>Expand physical capacity</h3><p>Satellites · antennas · processing infrastructure</p></section><section><h3>Improve coordination</h3><p>Planning time · contact utilization · manual reconciliation</p></section></div>` +
+  art[11] = `<h3>The Doe Project</h3><p>Coordinate the mission without replacing Meridian’s existing systems.</p><div class="business-choices"><section><h3>Hire more operators</h3><p>Increase manual processing capacity.</p></section><section><h3>Launch more satellites</h3><p>Increase acquisition opportunities.</p></section><section><h3>Add ground stations</h3><p>Increase contact opportunities.</p></section><section><h3>Improve coordination</h3><p>Make better use of existing systems and assets.</p></section></div>` +
     noteLink('methodology', 'Financial assumptions, latency definitions and KPI methodology') +
     doeVignette('listening', 'The same graphite doe raises her head and turns to listen; a faint plume of smoke rises beyond the distant treeline.', 'While plans change, life on the ground continues. Fictional study, not the Varnavas landscape.');
   art[12] = agentConcept();
@@ -337,7 +350,7 @@ export function createManuscriptBook(data, supporting, helpers) {
       right = prose(section, section.blocks.slice(split)) + plate(helpers.comparisonPlate());
     }
     if (section.number === 10) {
-      left = atticaHistoricalChapter();
+      left = '<p>In August 2024, a wildfire near Varnavas, north-east of Athens, forced evacuations. Copernicus EMS was activated on 12 August at 06:56 UTC. The first satellite observation followed at 09:05 UTC; the first published map arrived at 19:01 UTC.</p><p><strong>2 h 09 to acquisition · 12 h 05 to publication.</strong></p><figure class="manuscript-illustration"><a href="./art/cems-emsr746-del-original.jpg" target="_blank" rel="noopener noreferrer"><img src="./art/cems-emsr746-del-reading.webp" alt="Official map of the burned area near Varnavas"></a><figcaption>8,594.2 hectares mapped in the initial delineation. © 2024 European Union, Copernicus EMS, EMSR746.</figcaption></figure><p>How would Meridian handle a similar request? Follow a fictional mission next.</p><details class="supporting-note"><summary>Explore the historical maps, sources and timing comparison</summary>' + atticaHistoricalChapter() + '</details>';
       right = '';
     }
     pages.push({
