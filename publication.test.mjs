@@ -56,7 +56,7 @@ test('the opening film is featured once before Part I and historical evidence re
   const film = pages.find(page => page.id === 'trailer');
   assert.equal(pages.indexOf(film), 1);
   assert.match(film.right, /data-mission-intro-featured/);
-  assert.match(film.right, /not a reconstruction of the 2024 Varnavas fire/);
+  assert.match(film.right, /not a reconstruction of the 2024 Varnavas fire/i);
   assert.doesNotMatch(film.right, /optional|only when requested/i);
   assert.equal(pages.map(page => page.left + page.right).join('').match(/class="mission-intro-slot"/g).length, 1);
   const historical = pages.find(page => page.id === 'wildfire');

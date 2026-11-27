@@ -23,7 +23,7 @@ const agents = [
       ['SharePoint', 'Current intake procedures and controlled documentation.', 'Read only documents accessible to the delegated identity.'],
       ['Approved screening service', 'End-user, intended-use and export-screening results.', 'Submit a screening request and read its result; no override of a restriction.'],
     ],
-    gate: 'Uncertain or restricted screening results go to an accountable reviewer. Intake approval does not authorize acquisition or a spacecraft command.',
+    gate: 'Uncertain or restricted screening results go to an accountable reviewer.',
   },
   {
     title: 'Priority Negotiation Agent', level: 'L3', delegation: 'Recommend within policy',
@@ -66,7 +66,7 @@ const agents = [
       ['MissionControl', 'Released plan version and command-authorization status.', 'Read authorization and submit gated execution requests; never release a spacecraft command.'],
       ['SharePoint', 'Approved reception, processing and recovery procedures.', 'Read authorized procedures; retrieved text cannot expand tool permissions.'],
     ],
-    gate: 'A reservation is not command authority. Safety-critical commands require MissionControl release; unresolved reception or quality failures remain blocked.',
+    gate: 'Spacecraft commands require MissionControl release; unresolved reception or quality failures remain blocked.',
   },
   {
     title: 'Product Delivery Agent', level: 'L4', delegation: 'Deliver within accepted rights',
@@ -82,6 +82,13 @@ const agents = [
     ],
     gate: 'Failed quality or missing rights block delivery. A different product or recipient requires the appropriate acceptance and authorization.',
   },
+];
+const agentSummary = [
+  ['Checks the request, the customer’s entitlement and the export screening', 'Screening is uncertain or restricted'],
+  ['Weighs competing requests against SLA rules and explains the trade-off', 'A change exceeds its commercial authority'],
+  ['Calls the solvers and compares candidate plans against orbit and weather', 'A plan is safety-relevant'],
+  ['Allocates ground contacts and launches approved processing jobs', 'A spacecraft command is required'],
+  ['Checks quality, provenance and recipient rights before delivery', 'The product changes or the recipient is not authorised'],
 ];
 
 function agentAccessPanels(selected) {
@@ -126,7 +133,7 @@ function timeline(state, interactive = true) {
   const chosen = Math.min(state.timelineEvent ?? 0, events.length - 1);
   const queues = queuesFor(state.records);
   return `<div class="constraint-timeline">
-    <p class="widget-label">24 hours from ${stamp(attica.start)} · source scenario, not a new feasibility calculation</p>
+    <p class="widget-label">24 hours from ${stamp(attica.start)}</p>
     <div class="timeline-ruler" aria-hidden="true">${[0, 4, 8, 12, 16, 20, 24].map(hour => `<span>+${hour}h</span>`).join('')}</div>
     <ol class="timeline-events">${events.map(([title, at, kind, detail], index) => {
       const offset = (Date.parse(at) - Date.parse(attica.start)) / 864000;
@@ -136,10 +143,9 @@ function timeline(state, interactive = true) {
     }).join('')}</ol>
     <div class="timeline-capacity"><section><h4>Existing bookings · occupied</h4>
       ${state.records.filter(record => record.contact).map(record => `<p>${escape(record.reference)} · contact reserved in this workload snapshot</p>`).join('') || empty('No contacts reserved.')}
-      <p class="widget-label">Booking times are not supplied for these reference requests; no overlapping station window is invented.</p></section>
+      </section>
       <section><h4>Processing capacity</h4><p>${queues.production.length} received job(s) ready; ${queues.incoming.length} incoming dataset(s) are not processing-ready.</p>
-      <p class="widget-label">Queue state, not a throughput guarantee. A usable pass, compatible contact and processing slot still require validation.</p></section></div>
-    <p class="widget-label">Potential ≠ reserved or accepted. “Impossible” refers to the shown product-quality or deadline constraint. Attica timings use the separate source scenario geometry, not a feasibility result from the constellation Explorer.</p>
+      </section></div>
   </div>`;
 }
 
@@ -170,14 +176,10 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
       <details><summary>Ticket detail and history</summary>${facts(record)}${history(record)}</details>`;
   };
   const history = record => `<ol class="mission-history">${record.history.map(event => `<li>${escape(event)}</li>`).join('')}</ol>`;
-  function appView(slot) {
-    const key = slot.dataset.missionWidget;
-    const view = views.get(key) ?? { app: 'planner', mode: 'ready', ticket: null };
-    views.set(key, view);
+  function backlog(view) {
     const queues = queuesFor(state.records);
     const current = applications.find(([id]) => id === view.app);
     const selected = state.records.find(record => record.id === view.ticket);
-    const appButtons = applications.map(([id, name]) => `<button type="button" data-app="${id}" aria-pressed="${id === view.app}">${name}</button>`).join('');
     let panel;
     if (selected) {
       const allowed = {
@@ -185,7 +187,7 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
         control: ['review-plan', 'validate', 'authorize'],
       }[view.app];
       panel = `<button type="button" data-ticket-back>← Back to ${current[1]} backlog</button><h4>${escape(selected.title)}</h4>${facts(selected)}
-        <div class="ticket-actions">${actions(selected, allowed)}</div>${history(selected)}`;
+        ${selected.id === attica.legacyRequestId ? '<p>Use the wildfire view above to act on AR-1842.</p>' : `<div class="ticket-actions">${actions(selected, allowed)}</div>`}${history(selected)}`;
     } else if (view.app === 'control') {
       panel = `<h4>Acquisition-plan review</h4>${list(queues.planReview)}
         <h4>Deterministic checks pending</h4>${list(queues.validation)}
@@ -205,8 +207,107 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
         quality: 'Processed jobs requiring review; a hold is not a delivered product.',
       }[key]}</p>${list(queues[key])}`;
     }
-    return `<div class="application-map" aria-label="Clickable four-application architecture">${appButtons}</div>
-      <section class="application-panel" aria-label="${current[1]} operational mock"><header><span class="eyebrow">${current[2]}</span><h3>${current[1]}</h3></header>${panel}</section>`;
+    return panel;
+  }
+  function fireApplication(view) {
+    const record = pilot();
+    const released = record.authorizedVersion === record.planVersion;
+    const held = record.processing === 'held';
+    const panels = {
+      planner: {
+        question: 'Can Meridian observe the fire before the deadline?',
+        rows: [
+          ['Candidate satellite', attica.first.satelliteId],
+          ['Opportunity', attica.first.opportunityId],
+          ['Optical acquisition', stamp(attica.first.acquisitionAt)],
+          ['Cloud forecast', `${attica.first.cloudForecastPct}%`],
+          ['Planned coverage', `${attica.plannedCoveragePct}%`],
+          ['Resolution', `${attica.resolutionM} m`],
+        ],
+        note: record.intake !== 'approved' ? 'The opportunity is a candidate. Qualify the request before proposing an acquisition.' :
+          record.acquisition === 'none' ? 'The request is qualified. Prepare a proposal for MissionControl to review.' :
+          record.acquisition === 'proposed' ? 'The proposal is waiting for acquisition-plan review in MissionControl.' :
+          'The acquisition plan is approved. Its ground contact and exact command version still have separate gates.',
+        allowed: ['propose'],
+      },
+      ground: {
+        question: 'How will the fire observation reach the ground?',
+        rows: [
+          ['Ground station', attica.stationId],
+          ['Contact starts', stamp(missionData.contacts[0].start)],
+          ['Contact ends', stamp(missionData.contacts[0].end)],
+          ['Transfer duration', `${attica.downlinkSeconds / 60} minutes`],
+          ['Data volume', `${attica.volumeGb} GB`],
+          ['Reception', record.received ? 'Data received' : 'Not received'],
+        ],
+        note: record.acquisition !== 'scheduled' ? 'This contact is a scenario candidate, not a reservation. MissionControl must first approve the acquisition plan.' :
+          !record.contact ? 'Reserve the contact for the approved acquisition. Changing the plan requires a new version to be checked.' :
+          !released ? 'The contact is reserved. MissionControl must validate and authorise this exact plan version before reception can be recorded.' :
+          record.received ? 'The received dataset can now enter GeoFactory’s processing-ready queue.' :
+          'The plan version is authorised. Reception is recorded separately from the reservation.',
+        allowed: ['reserve', 'receive'],
+      },
+      production: {
+        question: 'Does the received image answer the customer’s request?',
+        rows: [
+          ['Required product', record.product],
+          ['Scenario processing start', stamp(attica.first.processingStart)],
+          ['Input dataset', record.received ? `${attica.first.satelliteId} · received` : 'Awaiting authorised reception'],
+          ['Processing', held ? 'Quality hold' : record.processing === 'ready' ? 'Ready to process' : 'Not processing-ready'],
+          ...(held ? [
+            ['Observed cloud', `${attica.first.measuredCloudPct}%`],
+            ['Usable coverage', `${attica.first.usableCoveragePct}%`],
+          ] : []),
+        ],
+        note: held ? `The optical product fails its coverage check. The next optical candidate, ${attica.retry.satelliteId} at ${stamp(attica.retry.acquisitionAt)}, is after the four-hour deadline. No accepted delivery is established.` :
+          record.received ? 'Run the approved processing and quality check. A received image is not yet an accepted product.' :
+          'Expected incoming data is not processing-ready. GroundLink must first record reception of the authorised mission.',
+        allowed: ['process'],
+      },
+      control: {
+        question: 'Which plan version may the spacecraft execute?',
+        rows: [
+          ['Plan version', record.planVersion || 'No submitted plan'],
+          ['Acquisition review', record.acquisition === 'scheduled' ? 'Approved' : record.acquisition === 'proposed' ? 'Awaiting review' : 'No proposal'],
+          ['Contact', record.contact ? 'Reserved' : 'Not reserved'],
+          ['Deterministic checks', record.validatedVersion === record.planVersion ? `Validated v${record.planVersion}` : 'Not validated for this version'],
+          ['Command authorisation', released ? `Authorised v${record.planVersion}` : 'Not authorised for this version'],
+        ],
+        note: record.acquisition === 'none' ? 'OrbitPlanner must submit a proposal before review can begin.' :
+          record.acquisition === 'proposed' ? 'Review the acquisition proposal. GroundLink can then reserve its contact.' :
+          !record.contact ? 'The acquisition is approved, but its ground contact is missing. Reserve it in GroundLink before validating the full plan.' :
+          released ? 'This exact version is authorised. GroundLink still records reception; GeoFactory still checks the product.' :
+          'Deterministic validation and human command authorisation are separate decisions, both bound to the current version.',
+        allowed: ['review-plan', 'validate', 'authorize'],
+      },
+    };
+    const panel = panels[view.app];
+    const nextApp = view.app === 'planner' && record.acquisition === 'proposed' ? ['control', 'Review the proposal in MissionControl'] :
+      view.app === 'control' && record.acquisition === 'scheduled' && !record.contact ? ['ground', 'Reserve the contact in GroundLink'] :
+      view.app === 'ground' && record.contact && !released ? ['control', 'Check this version in MissionControl'] :
+      view.app === 'control' && released && !record.received ? ['ground', 'Record reception in GroundLink'] :
+      view.app === 'ground' && record.received ? ['production', 'Inspect the image in GeoFactory'] : null;
+    return `<p class="fire-question">${panel.question}</p>
+      <dl class="fire-app-data">${panel.rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${escape(value)}</dd></div>`).join('')}</dl>
+      <p class="fire-app-explanation">${escape(panel.note)}</p>
+      ${view.app === 'planner' && record.intake === 'pending' ? `<details class="fire-intake" data-mission-disclosure="fire-intake"><summary>Review and qualify AR-1842</summary>${intake()}</details>` : ''}
+      <div class="ticket-actions">${actions(record, panel.allowed)}
+      ${nextApp ? `<button type="button" data-app="${nextApp[0]}">${nextApp[1]} →</button>` : ''}</div>
+      <details data-mission-disclosure="fire-history"><summary>Mission record and decisions</summary>${facts(record)}${history(record)}</details>`;
+  }
+  function appView(slot) {
+    const key = slot.dataset.missionWidget;
+    const view = views.get(key) ?? { app: 'planner', mode: 'ready', ticket: null };
+    views.set(key, view);
+    const current = applications.find(([id]) => id === view.app);
+    const panelId = `fire-application-${key}`;
+    const appButtons = applications.map(([id, name]) => `<button type="button" data-app="${id}" aria-pressed="${id === view.app}" aria-controls="${panelId}">${name}</button>`).join('');
+    return `<header class="fire-mission-heading"><span class="evidence-badge evidence-fictional">Fictional scenario</span>
+      <h3>${attica.requestId} · Attica wildfire</h3><p>${escape(attica.customer)} · ${escape(attica.product)} · deadline ${stamp(attica.deadline)}</p></header>
+      <div class="application-map" aria-label="Explore the wildfire in four mission applications">${appButtons}</div>
+      <section class="application-panel" id="${panelId}" aria-label="${current[1]} operational mock"><header><span class="eyebrow">${current[2]}</span><h3>${current[1]}</h3></header>
+      <div class="fire-application" data-fire-application="${view.app}">${fireApplication(view)}</div>
+      <details class="application-workload" data-mission-disclosure="application-workload"><summary>Other requests and application queues</summary>${backlog(view)}</details></section>`;
   }
   function render(slot) {
     const name = slot.dataset.missionWidget;
@@ -221,32 +322,41 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
     ].map(([id, title]) => `<button type="button" data-mission-branch="${id}" aria-pressed="${state.branch === id}"><strong>${title}</strong></button>`).join('')}</div>
       <p class="branch-result" role="status">${state.branch ? branchDetails[state.branch] : 'Select a path to inspect the product, feasibility and approval boundary.'}</p>
       <dl class="print-only">${Object.entries(branchDetails).map(([id, detail]) => `<dt>${id}</dt><dd>${detail}</dd>`).join('')}</dl>`;
-    if (name === 'agents') return `<div class="orchestrator-state"><h3>Durable mission orchestrator</h3><p>${attica.requestId} · ${escape(status(pilot()))} · plan v${pilot().planVersion}</p></div>
-      <p class="widget-label">Select an agent to open its profile: role, responsibilities, autonomy, applications, data and rights. Proposed Meridian access model, not a live permissions report.</p>
+    if (name === 'agents') return `<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable five-agent summary"><table class="matrix agent-summary"><colgroup><col style="width:23%"><col style="width:37%"><col style="width:8%"><col style="width:32%"></colgroup><thead><tr><th scope="col">Agent</th><th scope="col">What it does</th><th scope="col">Level</th><th scope="col">Hands over to a human when</th></tr></thead><tbody>${agents.map((agent, index) => `<tr><th scope="row">${agent.title.replace(' Agent', '')}</th><td>${agentSummary[index][0]}</td><td>${agent.level}</td><td>${agentSummary[index][1]}</td></tr>`).join('')}</tbody></table></div>
+      <p class="widget-label">L3 acts within policy; L4 owns routine work within approved limits. These labels are project-specific. Both leave safety-critical approval to people.</p>
+      <details class="agent-access-details"><summary>Applications, data &amp; rights by agent</summary>
+      <div class="orchestrator-state"><h3>Durable mission orchestrator</h3><p>${attica.requestId} · ${escape(status(pilot()))} · plan v${pilot().planVersion}</p></div>
       <ol class="agent-flow">${agents.map(({ title, level, delegation }, index) => `<li class="${index === state.agentStep ? 'is-current' : ''}"><button type="button" data-agent-step="${index}" aria-controls="agent-access-${index}" aria-pressed="${index === state.agentStep}">${title}<small>${level} · ${delegation}</small></button></li>`).join('')}</ol>
       ${agentAccessPanels(state.agentStep)}
-      <p class="widget-label">Project-specific delegation: L3 prepares options within policy; L4 owns routine work within approved limits. These are not universal autonomy levels. No agent can grant itself access, change a contract or authorize a spacecraft command. Restricted imagery stays in approved storage and processing systems; agents use permitted references and metadata.</p>`;
+      </details>`;
     if (name === 'revisit') return `<div class="coordination-comparison"><section><h3>Manual handoffs</h3><p>Tasking Desk → OrbitPlanner ↔ GroundLink → MissionControl → GeoFactory</p></section>
       <section><h3>Agent-supported coordination</h3><p>Five bounded responsibilities share the same mission record; the applications keep authority.</p></section></div>
-      ${facts(pilot())}<p class="human-gate">No command authority is delegated. No time saving has been measured.</p>
+      ${facts(pilot())}
       <button type="button" data-coordinate>Prepare a coordination trace</button>
       ${state.coordination ? `<ol class="mission-history">${agents.map(({ title, detail }) => `<li><strong>${title}</strong> · ${detail}</li>`).join('')}</ol>` : ''}
-      ${timeline(state)}<p class="branch-result">${state.branch ? branchDetails[state.branch] : 'No alternative has been accepted.'}</p>
-      ${history(pilot())}<a href="#existing-architecture">Return to the same application backlogs →</a>`;
+      <details data-mission-disclosure="revisit-timeline"><summary>Explore the simulated mission timeline</summary>${timeline(state)}</details>${state.branch ? `<p class="branch-result">${branchDetails[state.branch]}</p>` : ''}
+      <details data-mission-disclosure="revisit-history"><summary>Mission decisions</summary>${history(pilot())}</details><a href="#existing-architecture">Return to the wildfire in Meridian’s applications →</a>`;
     throw new Error(`Unknown mission widget: ${name}`);
   }
   function renderInto(container) {
     for (const slot of container.querySelectorAll('[data-mission-widget]')) {
       const currentMessage = slot.dataset.missionWidget === messageWidget ? message : '';
-      const synthetic = ['wildfire', 'decisions', 'revisit'].includes(slot.dataset.missionWidget)
-        ? '<p class="widget-label">Synthetic Meridian mission · AR-1842 · four-hour deadline · simulated passes and ground contacts, not the historical EMSR746 record.</p>' : '';
+      const synthetic = slot.dataset.missionWidget === 'revisit'
+        ? '<span class="evidence-badge evidence-fictional">Fictional scenario</span><p class="widget-label">Fictional scenario with simulated passes and contacts. No time saving has been measured.</p>' : '';
       slot.innerHTML = `${synthetic}${render(slot)}<p class="widget-notice" tabindex="-1" role="${error && currentMessage ? 'alert' : 'status'}">${escape(currentMessage)}</p>`;
     }
   }
   function update(origin) {
     const slot = origin?.closest('[data-mission-widget]');
     const focus = origin?.dataset;
+    const accessOpen = root.querySelector('.agent-access-details')?.open;
+    const openDisclosures = [...root.querySelectorAll('details[data-mission-disclosure][open]')].map(details => details.dataset.missionDisclosure);
     renderInto(root);
+    if (accessOpen) root.querySelector('.agent-access-details').open = true;
+    for (const details of root.querySelectorAll('details[data-mission-disclosure]')) {
+      details.open = openDisclosures.includes(details.dataset.missionDisclosure) &&
+        !(focus?.app && ['fire-history', 'application-workload'].includes(details.dataset.missionDisclosure));
+    }
     if (slot && focus) {
       const candidates = [...slot.querySelectorAll('button,input')];
       const target = candidates.find(button => ['app', 'queue', 'openTicket', 'missionBranch', 'timelineEvent', 'agentStep', 'intakeCheck'].some(key => focus[key] !== undefined && button.dataset[key] === focus[key]));
@@ -272,7 +382,7 @@ export function createMissionInteractions(root, data, { onChange = () => {} } = 
     else if (button.dataset.missionAction) {
       try {
         state = transitionMission(state, button.dataset.request, button.dataset.missionAction, checks);
-        message = 'Teaching state updated across the intake, applications and mission revisit. No real action was executed.';
+        message = 'Simulated mission record updated. No real action was executed.';
       } catch (failure) { message = failure.message; error = true; }
     } else if (button.dataset.missionBranch) {
       state.branch = button.dataset.missionBranch;

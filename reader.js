@@ -43,7 +43,7 @@ function escape(value) {
 }
 
 function leaf(page, offset) {
-  const chapter = page.chapter ? `PART ${page.chapter} / SEQUENCE ${page.sectionNumber}` : 'EARTH OBSERVATION / WHITE PAPER';
+  const chapter = page.chapter ? `PART ${page.chapter}` : 'EARTH OBSERVATION / WHITE PAPER';
   const layout = layouts.get(page.id);
   const exists = currentLeaf + offset < layout.count;
   const folio = exists && page.id !== 'cover' ? String(layout.start + currentLeaf + offset).padStart(2, '0') : '';
@@ -57,13 +57,13 @@ function contentsBody(page) {
   const left = `<span class="section-label">Contents / ${first ? 'I' : 'II'}</span><h2>${first ? 'Contents' : 'Contents<br><em>continued.</em>'}</h2>${renderContents(page.contents.slice(0, middle), pages)}`;
   const right = `<span class="section-label">${first ? 'Contents continued' : 'Case study & appendices'}</span>${renderContents(page.contents.slice(middle), pages)}${first ?
     `<a class="text-button" href="#contents-continued">Part III and supporting material <span aria-hidden="true">→</span></a>` :
-    `<section class="toc-chapter"><h3>Supporting material</h3><ol class="toc-sections">${pages.filter(entry => entry.type === 'back').map(entry => `<li><a href="#${entry.id}" data-toc-section="${entry.id}"><span class="toc-section-number">${entry.label}</span><span>${entry.title}</span><span class="toc-section-folio">${String(entry.folio).padStart(2, '0')}</span></a></li>`).join('')}</ol></section><a class="text-button" href="#contents">Parts I–II <span aria-hidden="true">←</span></a>`}`;
+    `<section class="toc-chapter"><h3>Supporting material</h3><ol class="toc-sections">${pages.filter(entry => entry.type === 'back').map(entry => `<li><a href="#${entry.id}" data-toc-section="${entry.id}"><span>${entry.title}</span><span class="toc-section-folio">${String(entry.folio).padStart(2, '0')}</span></a></li>`).join('')}</ol></section><a class="text-button" href="#contents">Parts I–II <span aria-hidden="true">←</span></a>`}`;
   return { left, right };
 }
 
 function flowContent(page) {
   const body = page.contents ? contentsBody(page) : page;
-  const opening = page.chapter ? `${page.opening ? `<div class="chapter-topline"><span>PART ${page.chapter}</span><span>${page.sectionNumber}</span></div><h2>${page.chapterTitle}</h2>` : ''}<span class="section-label">SEQUENCE ${page.sectionNumber}</span><h2>${escape(page.title)}</h2>` : '';
+  const opening = page.chapter ? `${page.opening ? `<div class="chapter-topline"><span>PART ${page.chapter}</span></div><h2>${page.chapterTitle}</h2>` : ''}<h2>${escape(page.title)}</h2>` : '';
   if (page.id === 'cover') {
     return `<section class="cover-page cover-left">${body.left}</section><section class="cover-page cover-right">${body.right}</section>`;
   }
@@ -206,7 +206,7 @@ function buildNavigation() {
   const simpleLink = entry => `<a class="nav-link" data-page="${entry.id}" href="#${entry.id}" ${entry.id === page.id ? 'aria-current="page"' : ''}><span class="nav-number">${entry.label}</span>${entry.title}</a>`;
   navigation.innerHTML = `<span class="nav-group">FRONT MATTER</span>${front.map(simpleLink).join('')}<span class="nav-group">PARTS</span>${chapters.map(chapter => {
     const active = page.chapter === chapter.number;
-    return `<a class="nav-link ${active ? 'active-chapter' : ''}" data-page="${chapter.id}" data-chapter="${chapter.number}" href="#${chapter.id}" ${page.id === chapter.id ? 'aria-current="page"' : ''}><span class="nav-number">${chapter.number}</span>${chapter.title}</a>${active ? `<div class="nav-subsections">${chapter.sections.map(([id, title]) => `<a href="#${id}" data-page="${id}" ${id === page.id ? 'aria-current="location"' : ''}><span>${pages.find(page => page.id === id).sectionNumber}</span>${title}</a>`).join('')}</div>` : ''}`;
+    return `<a class="nav-link ${active ? 'active-chapter' : ''}" data-page="${chapter.id}" data-chapter="${chapter.number}" href="#${chapter.id}" ${page.id === chapter.id ? 'aria-current="page"' : ''}><span class="nav-number">${chapter.number}</span>${chapter.title}</a>${active ? `<div class="nav-subsections">${chapter.sections.map(([id, title]) => `<a href="#${id}" data-page="${id}" ${id === page.id ? 'aria-current="location"' : ''}>${title}</a>`).join('')}</div>` : ''}`;
   }).join('')}<span class="nav-group">APPENDICES</span>${back.map(simpleLink).join('')}`;
   chapterTabs.innerHTML = chapters.map(chapter => `<a class="chapter-tab" href="#${chapter.id}" ${page.chapter === chapter.number ? 'aria-current="true"' : ''} aria-label="Part ${chapter.number}: ${chapter.title}" title="${chapter.title}">${chapter.number}</a>`).join('');
   const savedLink = document.querySelector('#saved-page');
@@ -214,7 +214,7 @@ function buildNavigation() {
   savedLink.hidden = !markedPage;
   if (markedPage) {
     savedLink.href = `#${readingMark}`;
-    savedLink.textContent = `Bookmark: ${markedPage.sectionNumber ?? markedPage.title}`;
+    savedLink.textContent = `Bookmark: ${markedPage.title}`;
   }
 }
 
@@ -255,7 +255,7 @@ function renderPage() {
     restoreInteractions();
   }
   document.title = page.id === 'cover' ? bookTitle : `${page.title} | ${bookTitle}`;
-  document.querySelector('#breadcrumb').textContent = page.chapter ? `${page.chapter} / ${page.sectionNumber} ${page.title}` : page.title;
+  document.querySelector('#breadcrumb').textContent = page.chapter ? `Part ${page.chapter} / ${page.title}` : page.title;
   document.querySelector('#web-view').href = `./#${page.id}`;
   buildNavigation();
   applyPagePosition(!initialNavigation, currentIndex === oldIndex ? Math.sign(currentLeaf - oldLeaf) : Math.sign(currentIndex - oldIndex));
@@ -272,7 +272,7 @@ function renderPage() {
     book.focus({ preventScroll: true });
   }
   initialNavigation = false;
-  document.querySelector('#announcement').textContent = `${page.chapter ? `Section ${page.sectionNumber}: ` : ''}${page.title}. ${document.querySelector('#position').textContent}`;
+  document.querySelector('#announcement').textContent = `${page.title}. ${document.querySelector('#position').textContent}`;
 }
 
 definitionDialog.addEventListener('close', () => {

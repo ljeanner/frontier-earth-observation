@@ -172,7 +172,8 @@ export function enhanceProcessIllustrations(container) {
     status.setAttribute('role', 'status');
     const instruction = document.createElement('p');
     instruction.className = 'process-instruction';
-    instruction.textContent = 'Select a step to change the illustration. Conceptual sequence, not live mission progress.';
+    instruction.textContent = 'Conceptual sequence.';
+    map.setAttribute('aria-label', 'Select one of seven steps to change the illustration');
     map.before(instruction);
     map.after(status);
     const buttons = steps.map((step, index) => {
@@ -188,6 +189,7 @@ export function enhanceProcessIllustrations(container) {
       step.removeAttribute('tabindex');
       step.replaceChildren(button);
       const scene = scenes[index];
+      scene.querySelector('figcaption').classList.add('sr-only');
       scene.classList.add('process-scene');
       scene.id = `${prefix}-scene-${index}`;
       scene.setAttribute('role', 'region');

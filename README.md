@@ -22,7 +22,8 @@ reading copies and reference lineage are retained. They do not illustrate the
 historical Varnavas landscape or establish a rescue. The externally hosted
 film itself remains unchanged, including its internal title.
 
-Selecting one of the five agents opens a bordered profile with its role,
+The five agents are summarised in one table. An optional access panel opens
+a selected agent's bordered profile with its role,
 responsibilities, project-specific L3/L4 autonomy, connected applications,
 data and access rights. Human approval boundaries remain explicit. The
 responsibility slider, separate integration diagram and gateway callout
@@ -96,12 +97,13 @@ strip follows the opening film, rather than being repeated between parts.
 The masthead, cover and headings share one responsive width and gutter; text keeps
 a readable measure while illustrations, scientific plates, diagrams and interactive
 applications use the wider composition. The first three parts retain
-the approved revised manuscript (4, 6 and 6 subsections); Part IV is
+the revised manuscript (4, 6 and 6 subsections); Part IV is
 **Architecture and Foundry technical notes**, promoted from the supporting
 material before the remaining appendices. Its content and existing deep link
-are preserved, with no duplicate part/subsection title. Its technical subsections
-are expanded as article text, with the original drawings and qualifications, not
-hidden behind accordion controls. Existing subsection and supporting-note anchors
+are preserved, with no duplicate part/subsection title. Eight compact technical
+subsections show a short introduction and table; implementation detail remains
+available in closed disclosures. One Foundry capability note covers the part.
+Existing subsection and supporting-note anchors
 remain addressable in the same document.
 Subsections have smaller, italic, unnumbered titles with no section-counter labels;
 the status bar identifies only the current part. Contents retains their
@@ -118,12 +120,12 @@ The paginated book remains available separately.
 The industry introduction uses a dedicated conceptual satellite-and-landscape
 drawing. Its prose remains beside the illustration on desktop and before it on
 mobile. Foundry includes the readable drawing of the five deployed demo agents.
-The opening retains the dated ESA/Copernicus figures and sources and reaches
-the full-width Explorer after 124 words. Its exact italic instruction and optional
-“How to explore” and simulation/accessibility panels precede the general
+The opening retains the dated ESA/Copernicus figures, with sources after the prose.
+The full-width Explorer has one italic instruction and one closed
+“About this simulation” panel before the general
 observation and ground-contact explanation. The optical/radar explanation,
 scientific images and cloud demonstration remain in Part I without company references.
-Meridian's exact introduction, logo, conceptual offices and Rome locator open Part II.
+Meridian's introduction, logo, conceptual offices and Rome locator open Part II.
 The company and map limitations remain in the captions and image credits.
 The current approved source is `content/agentic-earth-observation-manuscript-v3.md`;
 v1 and v2 remain archived unchanged. `#meet-meridian` now links directly to Part II.
@@ -140,12 +142,12 @@ offscreen disposal, failure/retry and its educational limitations.
 | --- | --- |
 | Optical/radar and clouds | Original image pairs, provenance, image zoom and synthetic-only opacity control |
 | Delivery process fresco | Seven keyboard-accessible stages with matching hatched drawings; original acquisition/downlink images retained for print |
-| Customer request | AR-1842 form with entitlement, export and product checks before planning |
+| Customer request | AR-1842 qualification form inside OrbitPlanner, with entitlement, export and product checks before planning |
 | Historical Varnavas chronology | Official CEMS products and timestamp intervals, distinct from the fictional mission |
-| Current systems | Four independent app/backlog/detail views over the same five source requests |
+| Current systems | One selected application shows AR-1842 data and permitted actions; the full five-request workload is optional |
 | Agent anatomy / five agents | Model/tools/state boundaries and keyboard-accessible profiles covering role, responsibilities, autonomy, applications, data and rights |
 | Secure architecture / Foundry | Per-agent access and human-approval boundaries, retained technical notes and Foundry engineering guidance |
-| Wildfire replay | Same-state revisit and coordination trace without advancing approvals or claiming savings |
+| Wildfire replay | Same-state revisit and coordination trace, with optional timeline/history and no claimed savings |
 
 OrbitPlanner accepts approved intake; GroundLink accepts scheduled acquisitions.
 GeoFactory separates expected incoming data from data actually received and
@@ -154,11 +156,18 @@ check and command-authorization queues, not a final delivery stage.
 Attica processing enters a quality hold; radar is not an equivalent optical
 product without customer acceptance. State resets on reload or edition switch.
 Moving between article parts preserves the shared teaching state.
+Selecting an application keeps the fictional wildfire request in view. Candidate
+windows remain distinct from reservations and command authorisation. GeoFactory
+reveals observed cloud and usable coverage only after its simulated quality check.
+The separate real CEMS record is never presented as Meridian telemetry.
+Agent summaries, technical tables and image credits retain readable mobile column
+widths with bounded horizontal scrolling. Full credits and methodology are grouped
+in the appendices. Book subsections no longer display source-sequence counters.
 Other bookings and processing capacity are contextual, not a numerical solver.
 The old Planning Under Constraints sequence is omitted from the reading
 edition. Legacy `#challenges` links resolve to the historical wildfire chapter;
-the film is not duplicated in Part II. Original manuscript sections remain
-archived unchanged, including the omitted source passages.
+the film is not duplicated in Part II. Manuscripts v1 and v2 remain archived
+unchanged, including the omitted source passages.
 
 No scientific imagery was replaced, recoloured or cropped. The Earth illustration
 was completed on 15 November after the author identified its clipped spacecraft

@@ -77,9 +77,11 @@ export function createExplorerPreview(book, { editorial = false } = {}) {
       if (intro?.frame !== frame) return;
       stopIntro();
       slot.dataset.state = 'error';
+      status.classList.remove('sr-only');
       status.textContent = 'The external introduction could not be loaded. Retry or use the separate-tab link.';
     };
     slot.dataset.state = 'loading';
+    status.classList.add('sr-only');
     status.textContent = 'Loading the opening film…';
     slot.querySelector('[data-mission-intro-start]').hidden = true;
     intro = { slot, frame, timeout: setTimeout(failIntro, 30000) };

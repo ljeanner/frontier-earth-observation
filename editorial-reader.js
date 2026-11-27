@@ -209,11 +209,10 @@ function renderSection(section) {
     row.append(copy, visual);
     if (visual.dataset.orbitalConcept === 'orbits') {
       const paragraphs = [...copy.querySelectorAll(':scope>p')];
-      const geoLabel = paragraphs[2]?.querySelectorAll('strong')[1];
-      const lead = geoLabel?.previousSibling;
-      if (paragraphs.length !== 4 || lead?.nodeType !== Node.TEXT_NODE || !lead.textContent.endsWith(' In ')) throw new Error('The orbit layout requires the original LEO, MEO and GEO passages.');
-      const boundary = lead.splitText(lead.textContent.lastIndexOf('In '));
-      const nodes = [...paragraphs[2].childNodes];
+      const lead = [...paragraphs[1].childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.includes('At about'));
+      if (paragraphs.length !== 3 || !lead) throw new Error('The orbit layout requires the LEO, MEO/GEO and path explanations.');
+      const boundary = lead.splitText(lead.textContent.indexOf('At about'));
+      const nodes = [...paragraphs[1].childNodes];
       const offset = nodes.indexOf(boundary);
       const meo = document.createElement('span');
       meo.dataset.orbitCopy = 'meo';
@@ -221,11 +220,10 @@ function renderSection(section) {
       const geo = document.createElement('span');
       geo.dataset.orbitCopy = 'geo';
       geo.append(...nodes.slice(offset));
-      paragraphs[2].replaceChildren(meo, geo);
-      paragraphs[2].classList.add('orbit-shared-copy');
-      paragraphs[0].classList.add('orbit-introduction');
-      paragraphs[1].dataset.orbitCopy = 'leo';
-      paragraphs[3].classList.add('orbit-geometry');
+      paragraphs[1].replaceChildren(meo, geo);
+      paragraphs[1].classList.add('orbit-shared-copy');
+      paragraphs[0].dataset.orbitCopy = 'leo';
+      paragraphs[2].classList.add('orbit-geometry');
       row.classList.add('orbital-altitude-row');
       visual.querySelector('svg').classList.add('orbit-print-overview');
       const panels = document.createElement('div');
@@ -248,6 +246,16 @@ function renderSection(section) {
       aside.append(visual);
       const portrait = prose.querySelector('.meridian-portrait');
       if (portrait) composition.after(portrait);
+    }
+  }
+  if (['sensors-and-customers', 'customers', 'business-case', 'agents-and-workflows', 'deployment-and-evaluation'].includes(section.id)) {
+    for (const copy of [...prose.querySelectorAll(':scope>.manuscript-prose')]) {
+      const visual = copy.nextElementSibling;
+      if (!visual?.matches('.sensor-plate,.comparison-plate,.customer-uses,.business-choices,.si-diagram,.process-list')) continue;
+      const pair = document.createElement('div');
+      pair.className = 'explanation-pair';
+      copy.before(pair);
+      pair.append(copy, visual);
     }
   }
   for (const plate of [...prose.querySelectorAll('.process-plate,.comparison-plate,.sensor-plate')]) {

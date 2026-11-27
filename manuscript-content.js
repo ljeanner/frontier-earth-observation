@@ -1,7 +1,7 @@
 import { manuscriptSections } from './manuscript-data.js';
 import { missionData } from './mission-data.js';
 import { sketch, spacecraft } from './process-illustrations.js';
-import { atticaHistoricalChapter, atticaBibliography, atticaEvidenceNotes } from './attica-timeline.js';
+import { atticaHistoricalChapter, atticaBibliography } from './attica-timeline.js';
 
 const ids = [
   'industry', 'meet-meridian', 'orbital-network', 'sensors-and-customers',
@@ -52,7 +52,7 @@ const noteLink = (id, label) => `<p class="support-link"><a href="#${id}">${labe
 
 const orbitSource = 'https://www.esa.int/Enabling_Support/Space_Transportation/Types_of_orbits';
 const downlinkSource = 'https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Data_Systems';
-const orbitReferences = `<p class="plate-note orbital-sources">Scientific background: <a href="${orbitSource}" target="_blank" rel="noopener noreferrer">ESA — Types of orbits</a> (30 March 2020); <a href="${downlinkSource}" target="_blank" rel="noopener noreferrer">ESA — Data Systems</a> (22 June 2009); <a href="https://www.nasa.gov/mission/tracking-and-data-relay-satellites/" target="_blank" rel="noopener noreferrer">NASA — Tracking and Data Relay Satellites</a>. Consulted 16 November 2026. Drawings are conceptual, not to scale or an operational contact calculation.</p>`;
+const orbitReferences = `<p class="plate-note orbital-sources">Sources: <a href="${orbitSource}" target="_blank" rel="noopener noreferrer">ESA — Types of orbits</a>; <a href="${downlinkSource}" target="_blank" rel="noopener noreferrer">ESA — Data Systems</a>; <a href="https://www.nasa.gov/mission/tracking-and-data-relay-satellites/" target="_blank" rel="noopener noreferrer">NASA — Tracking and Data Relay Satellites</a>. Consulted 16 November 2026.</p>`;
 const conceptFigure = (kind, drawing, caption) => `<figure class="orbital-concept-figure" data-orbital-concept="${kind}">${drawing}<figcaption>${caption}</figcaption></figure>`;
 
 function missionTypesDrawing() {
@@ -114,11 +114,11 @@ function orbitTypesDrawing() {
 
 function explorerExplanation(section) {
   const illustrations = {
-    '### What Satellites Do': conceptFigure('missions', missionTypesDrawing(), 'Observation measures the planet; communications relay information; navigation broadcasts timing and orbit information. The navigation sketch shows some links, not a complete positioning solution.'),
-    '### Where Satellites Fly': conceptFigure('orbits', orbitTypesDrawing(), 'Altitude families, not a scale drawing. LEO and MEO can have different inclinations. GEO is circular and equatorial, matching Earth’s rotation. Polar and sun-synchronous describe the path and its orientation, not a fourth altitude band.'),
+    '### What Satellites Do': conceptFigure('missions', missionTypesDrawing(), 'Observe, relay, navigate.'),
+    '### Where Satellites Fly': conceptFigure('orbits', orbitTypesDrawing(), 'Altitude families, not to scale.'),
     '### Bringing Data Back to Earth': `<div class="orbital-data-journey">
-      ${conceptFigure('acquisition', '<img src="./art/orbital-observation-reading.webp" width="1143" height="1200" alt="Graphite illustration of an observation satellite, its solar panels and instrument aimed at terrain below. The dashed boundaries indicate an observation footprint, not a radio downlink.">', 'First: the instrument collects measurements and stores them on board. No ground reception is shown.')}
-      ${conceptFigure('downlink', '<img src="./art/satellite-downlink-reading.webp" width="1200" height="1200" alt="Graphite illustration of a satellite transmitting toward a ground receiving dish. A dashed sage arrow runs from the spacecraft communications antenna to the dish, representing a radio link rather than visible light.">', 'Later, during a compatible contact: the satellite transmits stored data to a receiving station. Processing and product acceptance still follow.')}
+      ${conceptFigure('acquisition', '<img src="./art/orbital-observation-reading.webp" width="1143" height="1200" alt="Graphite illustration of an observation satellite, its solar panels and instrument aimed at terrain below. The dashed boundaries indicate an observation footprint, not a radio downlink.">', '1 · Acquire: the instrument collects and stores the data.')}
+      ${conceptFigure('downlink', '<img src="./art/satellite-downlink-reading.webp" width="1200" height="1200" alt="Graphite illustration of a satellite transmitting toward a ground receiving dish. A dashed sage arrow runs from the spacecraft communications antenna to the dish, representing a radio link rather than visible light.">', '2 · Downlink: during a later contact, the data reaches a ground station.')}
     </div>${orbitReferences}`,
   };
   const groups = [];
@@ -137,13 +137,14 @@ function explorerExplanation(section) {
 function meridianCompany(section) {
   return `<section class="meridian-company-plate wide-block" aria-label="Meridian and its mission">
     <div class="meridian-company-introduction">
-      ${image('meridian-logo-reading.webp', 'Meridian wordmark beside a graphite Earth, inclined orbit and satellite dot.', 'Meridian — illustrated company identity.', 'meridian-logo')}
+      ${image('meridian-logo-reading.webp', 'Meridian wordmark beside a graphite Earth, inclined orbit and satellite dot.', '', 'meridian-logo')}
       ${prose(section)}
     </div>
     <div class="meridian-company-drawings">
-      ${image('meridian-offices-rome-reading.webp', 'Conceptual Meridian offices in Rome, with a stone facade, trees and an orbital emblem beside the entrance.', 'Conceptual offices in Rome, not an actual facility or a ground station.')}
-      ${image('meridian-world-map-reading.webp', 'Graphite world map locating Meridian in Rome, Italy, with an enlarged Italian peninsula inset.', 'Rome, Italy — illustrative cartography, not a georeferenced map.')}
+      ${image('meridian-offices-rome-reading.webp', 'Conceptual Meridian offices in Rome, with a stone facade, trees and an orbital emblem beside the entrance.', '')}
+      ${image('meridian-world-map-reading.webp', 'Graphite world map locating Meridian in Rome, Italy, with an enlarged Italian peninsula inset.', '')}
     </div>
+    <p class="plate-note">Fictional company. Illustrations are conceptual.</p>
   </section>`;
 }
 
@@ -168,20 +169,20 @@ function customers() {
     ['Agriculture', 'Comparable observations across a growing season', 'Seasonal consistency'],
     ['Emergency response', 'Recent information before a response decision', 'Product and deadline'],
     ['Defence', 'Controlled access, handling and delivery', 'Authorized recipients'],
-  ].map(([title, need, boundary]) => `<section><span class="eyebrow">${boundary}</span><h3>${title}</h3><p>${need}</p></section>`).join('')}</div>`;
+  ].map(([title]) => `<section><h3>${title}</h3></section>`).join('')}</div>`;
 }
 function agentConcept() {
   return `<figure class="si-diagram" aria-label="Agent components and mechanism boundaries"><div class="agent-ingredients">${[
     'Model', 'Context', 'Tools', 'State', 'Policies', 'Human approval',
   ].map(title => `<div class="domain"><strong>${title}</strong></div>`).join('')}</div>
   <dl class="mechanism-comparison" aria-label="Choose the mechanism for the responsibility"><div><dt>Agent</dt><dd>Context gathering and bounded option selection</dd></div><div><dt>Workflow</dt><dd>Known states, approvals, retries and routing</dd></div><div><dt>Deterministic solver</dt><dd>Resource conflicts, windows and feasibility</dd></div></dl>
-  <figcaption>Mission systems validate and authorize execution; none of these mechanisms removes that boundary.</figcaption></figure>`;
+  <figcaption>Model, tools and workflow have distinct responsibilities.</figcaption></figure>`;
 }
 function foundryJourney() {
   return `<ol class="process-list" aria-label="Foundry engineering lifecycle">${[
     ['Responsibility', 'Define each agent’s work and authority.'],
-    ['Model and instructions', 'Compare candidates on the same mission cases.'],
-    ['Tools and context', 'Connect approved operations and authorized sources.'],
+    ['Model', 'Compare candidates on the same mission cases.'],
+    ['Tools', 'Connect approved operations and authorized sources.'],
     ['Evaluation', 'Test tool calls, constraints, evidence and approvals.'],
     ['Deployment', 'Approve processing geography, network paths and data handling.'],
     ['Observability', 'Trace the request, compare changes and retain release evidence.'],
@@ -193,11 +194,69 @@ function supportingPage(id, title, sourcePages) {
       `<details class="supporting-note"><summary>${escape(page.title)}</summary><div>${page.left}${page.right}</div></details>`).join(''),
   };
 }
+const matrix = (headings, rows) => `<table class="matrix"><thead><tr>${headings.map(label => `<th scope="col">${label}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${row.map((value, index) => `<${index ? 'td' : 'th scope="row"'}>${value}</${index ? 'td' : 'th'}>`).join('')}</tr>`).join('')}</tbody></table>`;
+function sourceTable(page) {
+  const table = (page.left + page.right).match(/<table\b[\s\S]*?<\/table>/)?.[0];
+  if (!table) throw new Error(`Missing reference table: ${page.id}`);
+  return table;
+}
+function technicalNotes(old) {
+  const entry = (title, text, body, detail = '') => ({ title, left: `<p>${text}</p>`, right: body + (detail ? `<details class="technical-detail"><summary>Implementation detail</summary>${detail}</details>` : '') });
+  return [
+    entry('Mission record and replanning',
+      'The orchestrator keeps one versioned mission record. Each change has an owner, so one agent cannot silently overwrite another’s reservation. When a new request, a weather update, a station conflict or a failed quality check arrives, the plan is recomputed from a consistent snapshot, keeping approved work stable where possible. Before retrying an action, the orchestrator checks its last status; if the plan has changed, it checks whether the approval still applies.',
+      sourceTable(old('continuous-planning')),
+      old('continuous-planning').right.replace(/<span class="section-label">[\s\S]*?<\/span>|<h2>[\s\S]*?<\/h2>|<aside[\s\S]*?<\/aside>/g, '')),
+    entry('Hybrid integration',
+      'Mission and enterprise sources each retain their own access boundary.',
+      matrix(['Source', 'Rule'], [
+        ['Mission systems via self-hosted MCP gateway', 'Narrow, typed adapters with separate read, reserve and execution-request scopes'],
+        ['SharePoint procedures', 'Retrieved under the user’s identity, with version and effective date. A procedure informs a decision; it never grants a permission'],
+        ['CRM and analytics', 'Entitlements and SLA terms read from the system of record, with the policy version used'],
+      ]) + '<p class="note-foot">MCP authorisation secures the integration; it does not prove the business action is authorised.</p>',
+      '<h4>Tool contracts</h4>' + sourceTable(old('hybrid-connectivity'))),
+    entry('Model selection',
+      'Start from the job, not a favourite model. Foundry lets Meridian compare up to three candidates on the same instructions, tools and test state. Measure cost across the whole task rather than per token, and keep a selection record per agent: the five agents do not need the same model. A language-model benchmark says nothing about optical or radar processing accuracy, which needs its own qualification.',
+      sourceTable(old('building-with-foundry'))),
+    entry('Evaluation cases',
+      'Each test case states the mission situation, what the agent may know and what a correct outcome looks like. Cover the exceptions, not only the request: ambiguous coordinates, a protected commitment, a contact that is visible but not confirmed, a product whose rights forbid delivery, stale data, duplicates and injection attempts. Include legitimate crisis vocabulary such as fire or explosion. Domain experts approve the expected outcomes, and tuning and validation sets stay separate.',
+      matrix(['Test record', 'Required evidence'], [
+        ['Initial state', 'Request, permitted context, policy versions and available tools'],
+        ['Expected outcome', 'Required and prohibited actions, including the resulting API state'],
+        ['Validation', 'Domain-owner review and an independent, versioned validation set'],
+      ]),
+      '<p>Map the fields required by the selected evaluator; one schema is not universal.</p>' + sourceTable(old('foundry-dataset'))),
+    entry('Deployment choices',
+      'Choose where inference runs according to the customer contract, the data classification and the recipient. Global, Data Zone and geography-based deployments are different answers: check the exact processing footprint rather than the resource name. Restricted image pixels stay in GeoFactory; agents only exchange identifiers, metadata and results. Apply the same boundary to evaluation judges and traces. GDPR, licensing and export obligations need their own legal review.',
+      sourceTable(old('foundry-deployment'))),
+    entry('Runtime and tools',
+      'A prompt agent runs in Foundry’s managed runtime, a hosted agent brings its own code, and an agent running elsewhere can still be observed and evaluated. Give each agent only the capabilities its job needs: narrow typed operations, not a general shell into mission systems. Foundry Toolboxes group each agent’s tools behind an MCP endpoint, while the self-hosted gateway still controls access to Meridian’s hybrid environment. A tool approval is not MissionControl’s authorisation of a command.',
+      sourceTable(old('foundry-runtime')),
+      '<p>Choose runtime features according to supported models, regions and connectivity. A Toolbox change changes the agent’s reachable capabilities and requires evaluation.</p>'),
+    entry('Safeguards and evaluation',
+      'Guardrails can inspect user input, tool calls, tool responses and outputs; Prompt Shields detects injected instructions. Test them on real crisis requests so that useful vocabulary is not blocked. Before release, Foundry evaluators assess intent, task completion and tool use, while code-based checks verify exact facts: schema, coordinates, duplicates and the final state of the mission system. A described reservation is not a reservation: check the system.',
+      matrix(['Check', 'Evidence'], [
+        ['Guardrails', 'Injection detection and appropriate treatment of legitimate crisis vocabulary'],
+        ['Evaluators', 'Intent, task completion, tool selection and use of returned evidence'],
+        ['Code-based checks', 'Exact schema, coordinates, plan version, duplicate-action prevention and authoritative API receipt'],
+      ]),
+      '<p>Confirm intervention coverage for the selected integration. Agent policy replaces the model guardrail policy; do not assume omitted controls survive. Runtime Task Adherence signals and offline evaluator scores serve different purposes. Calibrate rubric judges with domain experts and retain their versions.</p>'),
+    entry('Observation and governance',
+      'Tracing, based on OpenTelemetry and Application Insights, follows a request across the five agents and their APIs; business events record reservations, quality reviews and approvals. Control Plane gives the inventory and governance view of the agents, while MissionControl keeps authority over space operations. Any change of model, prompt, tool or policy re-runs the relevant tests, and an observed failure becomes a regression case.',
+      matrix(['Record', 'Purpose'], [
+        ['Trace', 'Correlated calls, errors, latency and permitted telemetry'],
+        ['Business event', 'Reservations, quality decisions and approvals'],
+        ['Release record', 'Owner, configuration versions, regression results and rollback'],
+      ]),
+      '<p>Configure masking, access and retention; keep required audit events separate from sampled traces. Bound monitoring volume and cost, retain judge versions and inspect failures by customer profile and risk.</p>'),
+  ];
+}
 function cleanSupporting(html) {
   return html
     .replace(/<a class="text-button" href="#[^"]+"[^>]*>[\s\S]*?<\/a>/g, '')
     .replace(/(?:FIELD STUDY|INSTRUMENT STUDY|ENGINEERING STUDY|OPERATIONS STUDY|PLATE [\w.]+|FIG\. [\d.]+|CLOSING PLATE)\s*—\s*/g, '')
-    .replace(/Chapter 5/g, 'sequence 14').replace(/Chapter 7/g, 'sequence 10')
+    .replace(/Chapter 5/g, 'Part III').replace(/Chapter 7/g, 'the wildfire case')
+    .replace(/<span class="section-label">[\s\S]*?<\/span>/g, '')
     .replace(/section 3\.3/g, 'the supporting safety notes');
 }
 
@@ -211,34 +270,20 @@ export function createManuscriptBook(data, supporting, helpers) {
     return page;
   };
   const art = {};
-  const openingSources = `<span class="opening-sources"><a href="https://sdup.esoc.esa.int/discosweb/statistics/" target="_blank" rel="noopener noreferrer">ESA — Space Environment Statistics</a>. Updated 13 November 2026; consulted 15 November 2026. The functioning-satellite figure covers all missions, not only Earth observation.</span>
-    <span class="opening-sources"><a href="https://dataspace.copernicus.eu/news/2026-9-24-copernicus-data-space-ecosystem-cdse-releases-annual-report-2025" target="_blank" rel="noopener noreferrer">Copernicus Data Space Ecosystem — Annual Report 2025</a>. End-of-2025 archive; report announcement 24 September 2026; consulted 15 November 2026.</span>`;
-  art[1] = image('changing-planet-observation-reading.webp', 'Graphite Earth-observation satellite above a conceptual coastline, agricultural fields, a river and a city; a sage outline marks an illustrative observation area.', `Observing land, water and human activity on a changing planet. Conceptual drawing, not a satellite image or a verified sensor footprint.${openingSources}`, 'industry-observation');
+  const openingSources = `<p class="opening-sources">¹ <a href="https://sdup.esoc.esa.int/discosweb/statistics/" target="_blank" rel="noopener noreferrer">ESA, Space Environment Statistics</a>, updated 13 November 2026. All missions, not only Earth observation. ² <a href="https://dataspace.copernicus.eu/news/2026-9-24-copernicus-data-space-ecosystem-cdse-releases-annual-report-2025" target="_blank" rel="noopener noreferrer">Copernicus Data Space Ecosystem, Annual Report 2025</a>. Consulted 15 November 2026.</p>`;
+  art[1] = image('changing-planet-observation-reading.webp', 'Graphite Earth-observation satellite above a conceptual coastline, agricultural fields, a river and a city; a sage outline marks an illustrative observation area.', 'Conceptual drawing.', 'industry-observation') + openingSources;
   art[2] = '<p class="plate-note">Meridian is a fictional Italian company used throughout this article.</p>';
-  art[3] = plate(helpers.explorerPlate()) + `<div class="explorer-information"><details class="explorer-guide"><summary>How to explore</summary>
-    <p>Watch the satellites move along their orbital planes. Drag to rotate and scroll to zoom; the full Explorer includes the ground network and planning views.</p>
-    <dl class="explorer-cues">${[
-    ['Orbit', 'Follow the moving spacecraft, not a fixed point above the customer.'],
-    ['Observation opportunity', 'Look at the ground beneath the selected path.'],
-    ['Station contact', 'Reception needs a compatible ground window.'],
-    ['Elapsed simulated time', 'The playback clock runs at 60×, not real time.'],
-  ].map(([title, detail]) => `<div><dt>${title}</dt><dd>${detail}</dd></div>`).join('')}</dl></details>
-    <details class="explorer-limitations"><summary>Simulation and accessibility information</summary>
-    <p>Visualization only: not live telemetry and not an operational feasibility calculation.</p>
-    <p>Orbital simulation: time runs at 60×, not in real time. Spacecraft sizes are exaggerated. Playback stops when the explorer leaves the viewport.</p>
-    <p>The teaching constellation has 30 satellites in five orbital planes, with 15 optical and 15 radar instruments, and three ground stations with four antennas in Norway, Spain and Kenya. Observation opportunities and compatible station contacts are separate constraints.</p>
-    <p>Reduced-motion preferences require an explicit start. The globe has labelled controls, a fullscreen option and a separate full-Explorer link. If the visualization is unavailable, the static poster and this description remain available. Interactive geometry is a teaching aid, not a calculation of visibility, radio compatibility, weather or an approved mission plan.</p>
-    </details></div>`;
+  art[3] = plate(helpers.explorerPlate()) + `<div class="explorer-information"><details class="explorer-limitations"><summary>About this simulation</summary><p>The teaching constellation has 30 satellites in five orbital planes (15 optical, 15 radar) and three ground stations with four antennas in Norway, Spain and Kenya. Spacecraft sizes are exaggerated. An observation opportunity and a station contact are two separate constraints.</p></details></div>`;
   art[5] = fresco() + doeVignette('clearing', 'Graphite doe standing in a pine clearing, with upright ears, a pale rump patch and all four hooves on the ground.', 'A life beneath the orbit. Fictional graphite study.');
   art[6] = customers();
-  art[7] = widget('intake');
+  art[7] = noteLink('existing-architecture', 'Follow AR-1842 through Meridian’s applications');
   art[8] = widget('applications') + noteLink('architecture-notes', 'Current hosting, operator responsibilities and manual handoffs');
   const trailer = { id: 'trailer', title: 'The opening story', type: 'front', label: '—', left: '', right: `<section class="mission-intro" aria-label="The illustrated opening story">
     <div class="mission-intro-slot" data-mission-intro-featured data-state="idle">
       <button type="button" data-mission-intro-start hidden>Reload the film</button>
-      <p data-mission-intro-status role="status">Loading the opening film. Use its play, pause and timeline controls; sound is off unless you enable it.</p>
+      <p class="sr-only" data-mission-intro-status role="status">Loading the opening film. Use its play, pause and timeline controls; sound is off unless you enable it.</p>
     </div>
-    <p>From orbit to a forest threatened by fire, follow a doe and the operators asked to provide an observation. The Doe Project takes its name from the animal at the heart of this fictional story. It is not a reconstruction of the 2024 Varnavas fire.</p>
+    <p>A fictional story: a doe, a forest threatened by fire, and the operators asked to observe it. Not a reconstruction of the 2024 Varnavas fire.</p>
     <p><a href="https://polite-tree-06ae32c10.3.azurestaticapps.net/intro/" target="_blank" rel="noopener noreferrer">Open the film in a separate tab</a> · <a class="start-reading" href="#industry">Continue the article →</a></p>
     </section>` };
   art[11] = `<div class="business-choices"><section><h3>Expand physical capacity</h3><p>Satellites · antennas · processing infrastructure</p></section><section><h3>Improve coordination</h3><p>Planning time · contact utilization · manual reconciliation</p></section></div>` +
@@ -250,10 +295,9 @@ export function createManuscriptBook(data, supporting, helpers) {
     noteLink('regulatory-notes', 'Legal, data and command-authorization qualifications');
   art[15] = `<figure class="manuscript-illustration foundry-deployment wide-block">
     <a href="./art/foundry-agents-graphite.png" target="_blank" rel="noopener noreferrer"><img src="./art/foundry-agents-graphite-reading.webp" alt="Microsoft Foundry Agents view showing meridian-product-delivery, meridian-downlink-processing, meridian-acquisition-planning, meridian-priority-negotiation and meridian-tasking-intake."></a>
-    <figcaption>Meridian’s five demo agents in Microsoft Foundry. AI-generated illustrated reconstruction of the supplied deployment screenshot, not a live status view.</figcaption>
+    <figcaption>Illustrated reconstruction of the Foundry deployment, not a live view.</figcaption>
     </figure>` + foundryJourney() +
     image('mission-review-reading.webp', 'A hand reviews a mission plan with a pencil.', 'Evaluate the proposal and verify the authoritative operational state.') +
-    `<p class="note-foot">Capability snapshot: 13 November 2026. Preview features, regional availability and service-specific terms require confirmation before adoption.</p>` +
     noteLink('technical-notes', 'Foundry deployment, tools, safeguards, evaluators and observability qualifications');
   art[16] = widget('revisit');
   art[17] = `<ol class="process-list">${[
@@ -282,6 +326,7 @@ export function createManuscriptBook(data, supporting, helpers) {
     let left = section.number === 3 ? '' : prose(section);
     let right = art[section.number] ?? '';
     if (section.number === 2) left = meridianCompany(section);
+    if (section.number === 7) left = '<span class="evidence-badge evidence-fictional">Fictional scenario</span>' + left;
     if (section.number === 3) {
       right = right.replace('<div class="explorer-information">', `${prose(section, section.blocks.slice(0, 1))}<div class="explorer-information">`) +
         `<div class="explorer-explanation">${explorerExplanation(section)}</div>`;
@@ -303,33 +348,42 @@ export function createManuscriptBook(data, supporting, helpers) {
     });
   }
   const methodology = supportingPage('methodology', 'Methodology and business assumptions', [
-    { title: 'Publication and evidence', left: `<p>${escape(supporting.caseNote)}</p><p>The operational screens use a local teaching snapshot built from the shared request and Attica scenario sources. Status changes are demonstrations, not spacecraft execution. No measured improvement is asserted.</p>`, right: '' },
+    { title: 'Publication and evidence', left: '<p>Meridian is a fictional operator. Financial figures and performance targets are working assumptions, not measured results. The demo screens use a teaching dataset; their status changes do not command any spacecraft.</p><p>Unknown booking times do not establish overlapping station windows. The Attica scenario geometry is separate from the constellation Explorer. Queue counts do not measure throughput.</p>', right: '' },
     old('business-case'), old('deployment-and-evaluation'),
+    { title: 'Reading the illustrations', left: '<p>Orbital views are schematics: LEO and MEO inclinations vary; GEO is circular and equatorial. Sun-synchronous geometry supports comparable local solar time, not guaranteed daily coverage or identical weather. Navigation links illustrate broadcasts, not a complete positioning solution.</p><p>Optical illumination and cloud constraints depend on the instrument and product. Visibility alone does not establish calibration, geometry or acceptance. The Sentinel examples have different dates and extents; they are not a controlled performance comparison. The simulated cloud layer changes no terrain pixels.</p><p>The Explorer stops offscreen, respects reduced-motion preferences and keeps a static poster and labelled controls available. These behaviours do not calculate operational radio compatibility or mission feasibility.</p>', right: '' },
   ]);
   const regulatory = supportingPage('regulatory-notes', 'Regulatory, rights and safety notes', [
     old('regulation'), old('rights-and-data'), old('safety-and-approval'),
   ]);
   const architecture = supportingPage('architecture-notes', 'Current systems and hosting notes', [
-    old('existing-architecture'), old('business-applications'), old('current-planning'), old('information-boundaries'),
+    { title: 'Current systems', left: '<p>Four applications support the people who plan observations, receive data, produce imagery and authorise spacecraft operations. The Customer Tasking Portal and Tasking Desk are entry points; CRM and SharePoint supply context. The diagrams below show the manual workflow between operators and where each service runs today. The agentic layer sits on top of these applications; it does not replace them or move restricted imagery into a model.</p>', right: old('existing-architecture').right },
+    { title: 'Simplified operator workflow', left: '', right: helpers.operatorFlow() },
+    { title: 'Current hosting', left: helpers.runtimeView(), right: matrix(['Service', 'Reference hosting boundary'], [
+      ['OrbitPlanner / GroundLink', 'On-premises or private-cloud planning and ground operations'],
+      ['GeoFactory', 'Permitted image storage and optical / SAR processing environment'],
+      ['MissionControl', 'Isolated engineering validation and flight-control / TT&C environment'],
+      ['CRM / SharePoint', 'Separate enterprise sources, accessed through controlled interfaces'],
+    ]) },
   ]);
-  const technical = supportingPage('technical-notes', 'Architecture and Foundry technical notes', [
-    old('agent-responsibilities'), old('continuous-planning'), old('hybrid-connectivity'),
-    ...supporting.pages.filter(page => page.chapter === '06'),
-  ]);
+  const technical = supportingPage('technical-notes', 'Architecture and Foundry technical notes', technicalNotes(old));
+  technical.left = '<p class="note-foot foundry-status">Foundry capabilities described here follow Microsoft Learn as of 13 November 2026. Preview features carry no SLA and are not recommended for production; confirm terms and regional availability before adoption.</p>';
+  technical.right += '<p>In short: shortlist a model, test it on mission cases, approve its deployment boundary, connect narrow tools, challenge its safeguards, trace it, and compare each new version against the reference.</p>';
   const references = { ...old('references') };
   references.right += atticaBibliography();
   references.right += `<section class="opening-reference-notes"><h3>Opening statistics</h3>${openingSources}</section>`;
   references.right += `<section><h3>Satellite missions, orbits and downlink</h3>${orbitReferences}</section>`;
-  const imageCredits = { ...old('image-credits') };
-  imageCredits.right += `<section><h3>The Doe Project — recurring doe drawings</h3><p>Three AI-assisted graphite studies were generated on 26 November 2026 for this article: <a href="./art/doe-clearing.png">the clearing</a>, <a href="./art/doe-listening.png">listening</a> and <a href="./art/doe-onward.png">onward</a>. The opening film’s approved doe sprite was the character reference for the first drawing, which then served as the reference for the two variations. The slender build, long ears, pale rump patch and pine-clearing setting form a recurring visual motif; the drawings are not pixel-identical animation frames. Complete originals and uncropped proportional reading copies are retained, with generation and reference hashes in <a href="./art/provenance.json">image provenance</a>. These are fictional illustrations, not wildlife observations, a reconstruction of Varnavas, or evidence that an animal was rescued.</p></section>`;
-  imageCredits.right += `<section><h3>Observing a changing planet</h3><p>The <a href="./art/changing-planet-observation.png">opening satellite-and-landscape drawing</a> was generated with AI on 19 November 2026 for the industry introduction. Graphite coastline, fields, river and city illustrate the subjects of Earth observation; the sage outline is conceptual. This is not a real satellite scene, named location, verified orbit, sensor footprint or measured change. The full original and an uncropped proportional reading copy are retained in <a href="./art/provenance.json">image provenance</a>. The earlier globe drawing remains unchanged on the cover and elsewhere.</p></section>`;
-  imageCredits.right += `<section><h3>Microsoft Foundry agent deployment illustration</h3><p>The <a href="./art/foundry-agents-graphite.png">Foundry agent roster drawing</a> was generated with AI on 17 November 2026 from the supplied Microsoft Foundry screenshot, then revised to retain the product name and five exact agent names. It is an illustrated reconstruction, not an unaltered screenshot or evidence of current agent health, production readiness or mission execution. Incidental account and subscription identifiers are omitted. The complete generated PNG and an uncropped, same-resolution lossless WebP reading copy are retained; see <a href="./art/provenance.json">image provenance</a>.</p></section>`;
-  imageCredits.right += `<section><h3>Historical Attica maps</h3><p>Copernicus Emergency Management Service, EMSR746, © 2024 European Union. Nine complete map images were retrieved from the official CEMS StoryMap on 16 November 2026: four published product maps, one fire-evolution illustration and four grading overview/detail images. Details and evolution views are not additional acquisitions. Original files, legends, embedded third-party imagery credits and source identifiers are retained in <a href="./art/provenance.json">image provenance</a>. Reading copies are proportionally resized without cropping, recolouring or compositing. No raw commercial satellite scene is redistributed. The source maps identify European Union, ESA and commercial imagery rights; the ArcGIS item does not specify a separate licence. Confirm the applicable CEMS product reuse terms before external republication.</p></section>` + atticaEvidenceNotes();
-  imageCredits.right += `<section><h3>Meridian company illustrations</h3>
-    <p>The <a href="./art/meridian-logo-original.png">company identity</a>, <a href="./art/meridian-offices-rome-concept.png">office exterior</a> and <a href="./art/meridian-world-map-rome.png">Rome locator map</a> were generated with AI for this fictional company on 16 November 2026. They are conceptual illustrations, not evidence of a real facility, address or corporate footprint. The office is not an additional ground station. The map is illustrative rather than georeferenced; its main Rome marker was corrected after generation.</p>
-    <p>Originals are retained. The logo reading copy trims transparent outer margins; the office and map reading copies are proportionally resized without cropping. <a href="./art/provenance.json">Image provenance and limitations</a>.</p></section>`;
-  imageCredits.right += `<section><h3>Mission, orbit and downlink drawings</h3><p>The mission-family and orbit-family sketches are authored SVG teaching diagrams, not satellite images, hardware blueprints or scale models. The acquisition illustration reuses the approved <a href="./art/orbital-observation.png">satellite observation drawing</a>. The companion <a href="./art/satellite-downlink.png">satellite-to-station downlink drawing</a> was generated with AI on 16 November 2026 using that illustration as its visual reference. Originals and proportionally resized reading copies are retained. The dashed downlink arrow represents radio transmission, not a visible beam. These conceptual views distinguish on-board collection from ground reception without computing an actual contact window or establishing physical scale. The seven-stage interactive process retains its existing SVG drawings. Scientific background is linked in the orbital explanation and bibliography; <a href="./art/provenance.json">image provenance and limitations</a> are retained.</p></section>`;
-  pages.push(methodology, regulatory, architecture, technical, { ...old('glossary') }, references, imageCredits);
+  const imageCredits = { ...old('image-credits'), left: '', right: matrix(['Image', 'Source and credit', 'Note'], [
+    ['Optical example, Rome', 'European Union, Copernicus Sentinel-2 (2023), processed by @DEFIS_EU', 'Resized, not cropped'],
+    ['Radar example, central Italy', 'Contains modified Copernicus Sentinel data (2018), processed by ESA; <a href="https://creativecommons.org/licenses/by-sa/3.0/igo/">CC BY-SA 3.0 IGO</a>', 'False colours; resized, not cropped'],
+    ['Varnavas maps (9 images)', '© 2024 European Union, Copernicus EMS, EMSR746. <a href="https://storymaps.arcgis.com/stories/e72e6348c2f04c1f80e934345e796feb">Official CEMS source</a>', 'Complete originals and embedded imagery credits retained. Published maps, not raw commercial scenes. Confirm CEMS reuse terms before republication'],
+    ['Graphite illustrations, doe studies, Meridian identity, office and Rome map', 'AI-generated for this article, November 2026', 'Conceptual, not real facilities or evidence of a rescue. Logo margins trimmed; other reading copies proportionally resized'],
+    ['Foundry agent roster', 'AI-generated reconstruction of a Foundry screenshot', 'Not a live status view'],
+    ['Cloud comparison', 'AI-generated fictional terrain with simulated cloud overlay', 'Same terrain in both panels'],
+    ['Orbit and mission diagrams', 'Authored SVG diagrams', 'Not to scale'],
+  ]) + '<p><a href="./art/provenance.json">Originals, source links and image provenance</a>.</p>' };
+  const glossary = { ...old('glossary') };
+  glossary.left = '<p>Mission and architecture terms, in alphabetical order.</p>';
+  pages.push(methodology, regulatory, architecture, technical, glossary, references, imageCredits);
   pages.push({
     id: 'back-cover', title: 'Publication', type: 'back', label: '—',
     left: image('earth-sketch-complete-reading.webp', 'Complete Earth-observation illustration.', 'Conceptual illustration; see image credits.'),

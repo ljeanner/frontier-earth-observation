@@ -134,7 +134,7 @@ figcaption{font:8px/1.7 Consolas,monospace;letter-spacing:.3px;color:#697660;mar
 .toc-chapter .toc-title{font-size:20px;line-height:1.25}
 .toc-chapter .toc-entry{grid-template-columns:24px minmax(0,auto) minmax(10px,1fr) 22px;gap:8px}
 .toc-sections{list-style:none;padding:0;margin:9px 0}
-.toc-sections a{display:grid;grid-template-columns:25px minmax(0,1fr) 22px;gap:8px;text-decoration:none;padding:8px 0;font-size:11px;line-height:1.55;color:#53634b}
+.toc-sections a{display:grid;grid-template-columns:minmax(0,1fr) 22px;gap:8px;text-decoration:none;padding:8px 0;font-size:11px;line-height:1.55;color:#53634b}
 .toc-sections a:hover{text-decoration:underline;text-underline-offset:3px}
 .toc-section-number,.toc-section-folio{font:8px/2 Consolas,monospace;color:#718065}
 .toc-section-folio{text-align:right}

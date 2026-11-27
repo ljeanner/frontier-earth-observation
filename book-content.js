@@ -83,7 +83,7 @@ export const definitions = [
   ['Geospatial information', 'Information tied to a location on Earth. Its location makes it possible to compare observations with maps, other measurements and the same place at another time.'],
   ['Remote sensing', 'Measuring an object or area from a distance using an instrument. Satellite Earth observation uses signals such as reflected sunlight or radar echoes to learn about the surface without visiting it.'],
   ['Spatial resolution', 'A measure of the spatial detail an observation can distinguish. Pixel size is related, but does not by itself guarantee that a feature can be identified reliably.'],
-];
+].sort(([left], [right]) => left.localeCompare(right, 'en'));
 
 const readingTerms = [
   'Earth observation', 'Constellation', 'Ground station', 'Geospatial information',
@@ -168,7 +168,7 @@ const processPlate = () => `<section class="illustration-plate process-plate" ar
   ['Process', 'Prepare the product and check its quality.'],
   ['Deliver', 'Send the accepted product to an authorized recipient.'],
 ].map(([title, detail], index) => `<li><span class="process-map-number">${index + 1}</span><div><strong>${title}</strong><span>${detail}</span></div></li>`).join('')}</ol><p class="plate-note">Each stage depends on the one before it. Acquiring data does not yet deliver the customer’s product.</p></section>`;
-const comparisonPlate = () => `<section class="illustration-plate comparison-plate" aria-label="Synthetic comparison of visible and cloud-obscured terrain"><span class="section-label">PLATE 2 / OPTICAL PRODUCT QUALITY</span><h2>Acquired does not<br>mean <em>usable.</em></h2><div class="observation-pair"><figure><div class="observation-image"><img src="./art/synthetic-optical-terrain-reading.webp" alt="Synthetic optical-style view of wooded terrain and a visible dark burned patch."><span class="aoi-outline" aria-hidden="true"></span></div><figcaption><strong>Area visible</strong><span>Candidate for analysis, subject to the other quality checks.</span></figcaption></figure><figure><div class="observation-image cloud-obscured"><img src="./art/synthetic-optical-terrain-reading.webp" alt="The exact same synthetic terrain, with a simulated cloud layer obscuring the area required for analysis."><span class="simulated-cloud" aria-hidden="true"></span><span class="aoi-outline" aria-hidden="true"></span></div><figcaption><strong>Required area obscured</strong><span>Insufficient visibility for complete coverage of the marked area.</span></figcaption></figure></div><p class="plate-note">Synthetic teaching example, not real satellite imagery. The terrain is identical in both panels; only the simulated cloud layer changes. The outlined area is the same. Visibility alone does not establish calibration, geometry or product acceptance.</p></section>`;
+const comparisonPlate = () => `<section class="illustration-plate comparison-plate" aria-label="Synthetic comparison of visible and cloud-obscured terrain"><span class="section-label">PLATE 2 / OPTICAL PRODUCT QUALITY</span><h2>Acquired does not<br>mean <em>usable.</em></h2><div class="observation-pair"><figure><div class="observation-image"><img src="./art/synthetic-optical-terrain-reading.webp" alt="Synthetic optical-style view of wooded terrain and a visible dark burned patch."><span class="aoi-outline" aria-hidden="true"></span></div><figcaption>Area visible</figcaption></figure><figure><div class="observation-image cloud-obscured"><img src="./art/synthetic-optical-terrain-reading.webp" alt="The exact same synthetic terrain, with a simulated cloud layer obscuring the area required for analysis."><span class="simulated-cloud" aria-hidden="true"></span><span class="aoi-outline" aria-hidden="true"></span></div><figcaption>Required area obscured</figcaption></figure></div><p class="plate-note">Synthetic example: same terrain, only the simulated cloud layer changes.</p></section>`;
 const sensorExamples = () => `<section class="illustration-plate sensor-plate" aria-label="Real optical and radar satellite image examples">
   <span class="section-label">PLATE 3 / TWO KINDS OF MEASUREMENT</span>
   <h2>Optical and radar<br>show <em>different things.</em></h2>
@@ -177,17 +177,16 @@ const sensorExamples = () => `<section class="illustration-plate sensor-plate" a
       <a class="observation-image" href="./art/sentinel-2-rome-2023-original.webp" target="_blank" rel="noopener noreferrer" aria-label="Open the full Sentinel-2 optical image of Rome">
         <img src="./art/sentinel-2-rome-2023-reading.webp" alt="Real Sentinel-2 optical image of Rome: urban areas, green fields and the winding Tiber, displayed in familiar colours.">
       </a>
-      <figcaption><strong>Optical: reflected sunlight</strong><span>Sentinel-2 · Rome<br>16 March 2023 ${cite(10)}</span><span>Useful for examining land cover. Cloud can hide the surface; reflected-light imaging needs suitable illumination.</span></figcaption>
+      <figcaption>Optical: Sentinel-2, Rome, 16 March 2023. ${cite(10)}</figcaption>
     </figure>
     <figure>
       <a class="observation-image" href="./art/sentinel-1-central-italy-2018-original.jpg" target="_blank" rel="noopener noreferrer" aria-label="Open the full Sentinel-1B radar image of central Italy">
         <img src="./art/sentinel-1-central-italy-2018-reading.webp" alt="Real Sentinel-1B dual-polarisation radar image of central Italy, displayed in false colours, with green terrain and pink urban areas.">
       </a>
-      <figcaption><strong>Radar: returned echoes</strong><span>Sentinel-1B · Central Italy<br>6 July 2018 ${cite(11)}</span><span>Works in darkness and through cloud. These false colours encode radar channels, not the colours of the ground.</span></figcaption>
+      <figcaption>Radar: Sentinel-1B, central Italy, 6 July 2018 (false colours). ${cite(11)}</figcaption>
     </figure>
   </div>
-  <p class="plate-note">Real Copernicus examples, not acquisitions from the teaching constellation. Dates and extents differ: this is not a matched sensor-performance test. Select an image to inspect the original.</p>
-  <p class="plate-note sensor-credits">Optical: European Union, Copernicus Sentinel-2 imagery (2023), processed by @DEFIS_EU. Radar: contains modified Copernicus Sentinel data (2018), processed by ESA; <a href="https://creativecommons.org/licenses/by-sa/3.0/igo/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0 IGO</a>. Reading copies resized, not cropped.</p>
+  <p class="plate-note">Different dates and areas: an illustration, not a sensor comparison. <a href="#image-credits">Image credits</a>.</p>
 </section>`;
 const domain = (title, detail) => `<div class="domain"><strong>${title}</strong><span>${detail}</span></div>`;
 const applicationUse = (id, name, role, text) => `<section class="application-use" data-core-application="${id}"><h3>${name}</h3><span class="application-role">${role}</span>${p(text)}</section>`;
@@ -387,7 +386,7 @@ export function createSupportingBook(data) {
     lead('The same observation request can raise questions about cybersecurity, privacy, licensing and export controls.') +
     p('Meridian is based in Italy and uses ground stations in Norway, Spain and Kenya. To determine which requirements apply, the team needs to examine the legal entity, service, data, recipient and processing arrangements as well as those locations.') +
     p('Keep the sources of each requirement clear. Legislation, Copernicus data conditions and commercial licenses can impose different obligations. Record the obligation, the control intended to meet it and the evidence that the control works.') +
-    note('The following mapping is architectural guidance for the supplied case, not a legal determination.'),
+    note('Architectural guidance, not a legal determination.'),
     heading('3.1 / Regulatory landscape', 'Requirements<br>to <em>assess.</em>') +
     table(['Source', 'Relevance to this case'], [
       [`EU Space Act ${cite(1)}`, 'Proposal; the case assumes application targeted for 2030. Plan for safety and resilience requirements without presenting them as enacted obligations.'],
@@ -416,8 +415,7 @@ export function createSupportingBook(data) {
 
   add('safety-and-approval',
     heading('3.3 / Safety-critical execution', 'Command validation<br>and <em>approval.</em>') +
-    p('The proposed architecture separates a candidate mission plan from the command product used by spacecraft operations. Structured outputs pass through deterministic checks before an execution path is available.',
-      'Mission control remains responsible for safety-critical oversight. Approval is bound to the exact plan version and relevant preconditions; material changes require the appropriate checks and renewed approval.') +
+    p('An agent’s plan and the command sent to a spacecraft are different objects. Every plan passes deterministic checks, then mission-control approval bound to that exact plan version; any material change requires new approval.') +
     sketch('mission-review-reading.webp', 'Graphite close-up of a hand checking time windows on a proposed mission plan with a pencil.', 'PLAN REVIEW — Human approval applies to a particular plan version, not every future revision.') +
     domain('Candidate plan', 'AGENT + SOLVER') +
     '<div class="system-link"></div>' +
@@ -427,7 +425,7 @@ export function createSupportingBook(data) {
     '<div class="system-link"></div>' +
     domain('Controlled execution', 'AUTHORIZED MISSION SYSTEM'),
     heading('Failure handling', 'When execution<br>must <em>stop.</em>') +
-    definitionList([
+    table(['Failure', 'Handling'], [
       ['No feasible plan', 'Return the unsatisfied constraints and authorized alternatives. Do not invent a satellite pass, a station window or processing capacity.'],
       ['Expired conditions', 'Revalidate stale forecasts, resource reservations and policy decisions. Do not execute an old approval against a changed plan.'],
       ['Uncertain execution state', 'Reconcile with the mission system before retrying. Idempotency and durable state prevent duplicate reservations or repeated actions.'],
@@ -771,10 +769,10 @@ export function createSupportingBook(data) {
       '<ol class="bibliography"><li><a href="https://defence-industry-space.ec.europa.eu/eu-space-act_en" target="_blank" rel="noopener noreferrer">European Commission — EU Space Act</a>. Proposal overview and legislative status.</li><li><a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj/eng" target="_blank" rel="noopener noreferrer">Directive (EU) 2022/2555 — NIS2</a>. Assess entity scope and national implementation.</li><li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng" target="_blank" rel="noopener noreferrer">Regulation (EU) 2016/679 — GDPR</a>. Assess the personal-data processing in scope.</li><li><a href="https://eur-lex.europa.eu/eli/reg/2021/821/oj/eng" target="_blank" rel="noopener noreferrer">Regulation (EU) 2021/821</a>. Union regime for dual-use items.</li></ol>' +
       note('Primary sources consulted 9 November 2026. Linking a source does not establish that every provision applies to the reference operator.'),
       right: heading('References continued', 'Protocol, policy<br>and <em>case evidence.</em>') +
-      '<ol class="bibliography" start="5"><li><a href="https://eur-lex.europa.eu/eli/reg_del/2013/1159/oj/eng" target="_blank" rel="noopener noreferrer">Delegated Regulation (EU) No 1159/2013</a>. GMES dedicated data and service-information access and licensing; assess the conditions of the actual Copernicus product.</li><li><a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization" target="_blank" rel="noopener noreferrer">MCP authorization specification, 2025-06-18</a>. Version-pinned HTTP transport authorization reference, not a claim to the latest revision.</li><li>Supplied business case: <em>Agentic Earth-Observation Tasking and Downlink for an Italian Space Operator</em>.</li><li>Shared Meridian dataset, version ' + data.version + '. Synthetic fleet, company, station and wildfire reference data.</li><li><a href="https://www.esa.int/articles/about-us/directorates/earth-observation-programmes/what-is-earth-observation" target="_blank" rel="noopener noreferrer">European Space Agency — What is Earth observation?</a> Published 27 May 2004; consulted 9 November 2026. Introduction to observations over time, optical and radar instruments, spatial detail and uses of Earth-observation data.</li></ol>' +
+      '<ol class="bibliography" start="5"><li><a href="https://eur-lex.europa.eu/eli/reg_del/2013/1159/oj/eng" target="_blank" rel="noopener noreferrer">Delegated Regulation (EU) No 1159/2013</a>. Copernicus product access and licensing.</li><li><a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization" target="_blank" rel="noopener noreferrer">MCP authorization specification, 2025-06-18</a>.</li><li>Business assumptions: <a href="#methodology">Methodology</a>.</li><li><a href="./data/meridian.json">Meridian teaching dataset</a>, version ' + data.version + '.</li><li><a href="https://www.esa.int/articles/about-us/directorates/earth-observation-programmes/what-is-earth-observation" target="_blank" rel="noopener noreferrer">European Space Agency — What is Earth observation?</a> Published 27 May 2004; consulted 9 November 2026.</li></ol>' +
       '<ol class="bibliography" start="10"><li><a href="https://eu-space.europa.eu/components/earth-observation-copernicus/image-of-the-day/rome-italy" target="_blank" rel="noopener noreferrer">European Union, Copernicus — Rome, Italy</a>. Sentinel-2 optical scene acquired 16 March 2023. Image of the Day published 25 March 2023; consulted 10 November 2026.</li><li><a href="https://www.esa.int/ESA_Multimedia/Images/2018/09/Central_Italy" target="_blank" rel="noopener noreferrer">European Space Agency — Central Italy</a>. Sentinel-1B dual-polarisation radar scene acquired 6 July 2018; false-colour display. Contains modified Copernicus Sentinel data (2018), processed by ESA; CC BY-SA 3.0 IGO. Consulted 10 November 2026.</li><li>Meridian information-system reference model. Application catalogue, manual operator workflow and hosting responsibilities for OrbitPlanner, GroundLink, GeoFactory and MissionControl. These names identify the reference applications, not a verified vendor installation.</li></ol>' +
       '<ol class="bibliography foundry-bibliography" start="13">' + foundryReferences.map(([title, sources]) =>
-        `<li>Microsoft Learn — ${title}. ${sources.map(([name, path]) => `<a href="https://learn.microsoft.com/en-us/azure/foundry/${path}" target="_blank" rel="noopener noreferrer">${name}</a>`).join('; ')}. Capability snapshot: 13 November 2026.</li>`).join('') + '</ol>' +
+        `<li>Microsoft Learn — ${title}. ${sources.map(([name, path]) => `<a href="https://learn.microsoft.com/en-us/azure/foundry/${path}" target="_blank" rel="noopener noreferrer">${name}</a>`).join('; ')}.</li>`).join('') + '</ol>' +
       note(caseNote) +
       link('image-credits', 'Image credits') },
     { id: 'image-credits', title: 'Image credits', type: 'back', label: 'C', folio: folio + 3, left:
@@ -815,7 +813,7 @@ export function renderContents(chapterNumbers, pages) {
     const first = pages.find(page => page.id === chapter.id);
     return `<section class="toc-chapter"><a href="#${chapter.id}" class="toc-entry"><span class="toc-num">${chapter.number}</span><span class="toc-title">${chapter.title}</span><span class="toc-dots"></span><span class="toc-page">${String(first.folio).padStart(2, '0')}</span></a><ol class="toc-sections">${chapter.sections.map(([id, title], sectionIndex) => {
       const page = pages.find(entry => entry.id === id);
-      return `<li><a href="#${id}" data-toc-section="${id}"><span class="toc-section-number">${page.sectionNumber}</span><span>${title}</span><span class="toc-section-folio">${String(page.folio).padStart(2, '0')}</span></a></li>`;
+      return `<li><a href="#${id}" data-toc-section="${id}"><span>${title}</span><span class="toc-section-folio">${String(page.folio).padStart(2, '0')}</span></a></li>`;
     }).join('')}</ol></section>`;
   }).join('');
 }

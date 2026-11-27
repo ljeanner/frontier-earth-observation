@@ -6,7 +6,7 @@
 .meridian-portrait{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:24px 0;margin:24px 0;border-block:1px solid var(--line)}
 .meridian-portrait dt{font:30px/1.2 var(--serif);color:var(--green)}
 .meridian-portrait dd{margin:8px 0 0;font:12px/1.6 Consolas,monospace}
-.web-reader .meridian-company-plate{margin:40px 0 32px;padding-top:32px;border-top:1px solid var(--line)}
+.web-reader .meridian-company-plate{margin:24px 0;padding-top:20px;border-top:1px solid var(--line)}
 .web-reader .meridian-company-introduction{display:grid;grid-template-columns:minmax(200px,.8fr) minmax(0,1.2fr);gap:64px;align-items:center}
 .web-reader .meridian-company-plate .meridian-logo{width:100%;max-width:420px;margin:0 auto!important}
 .web-reader .meridian-logo figcaption{text-align:center}
@@ -60,6 +60,20 @@ body:not(.web-reader) .mechanism-comparison dd{font-size:12px}
 .supporting-landscape{max-width:560px;margin:32px auto!important}
 .support-link{margin-block:24px!important;font:15px/1.7 "Segoe UI",sans-serif!important}
 .mission-widget{margin:36px 0;min-width:0;border-block:1px solid var(--line);padding:24px 0}
+.evidence-badge{display:inline-block;padding:6px 10px;margin-bottom:16px;border:1px solid currentColor;font:12px/1.5 "Segoe UI",Arial,sans-serif;letter-spacing:.05em}
+.evidence-real{color:var(--green)}
+.evidence-fictional{color:#765335}
+.agent-summary{font:15px/1.65 "Segoe UI",Arial,sans-serif;width:100%;table-layout:fixed}
+.agent-summary th,.agent-summary td{overflow-wrap:anywhere}
+.mission-widget .agent-summary{margin-block:0}
+.agent-summary tbody th{font:15px/1.65 "Segoe UI",Arial,sans-serif;letter-spacing:0;text-transform:none;vertical-align:top}
+.agent-access-details{margin-top:24px}
+.agent-access-details>summary,.technical-detail>summary{cursor:pointer;color:var(--green);font:16px/1.6 "Segoe UI",Arial,sans-serif;padding-block:12px}
+@media screen and (max-width:800px){
+  .web-reader .agent-summary{min-width:700px}
+  .web-reader #technical-notes .table-scroll>table,.web-reader #image-credits .table-scroll>table{min-width:600px}
+  .web-reader #agent-responsibilities .table-scroll::before,.web-reader #technical-notes .table-scroll::before,.web-reader #image-credits .table-scroll::before{content:"Swipe or scroll to read all columns.";display:block;position:sticky;left:0;margin-bottom:12px;font:12px/1.5 "Segoe UI",Arial,sans-serif;color:var(--muted)}
+}
 .mission-widget button{border:1px solid var(--line);padding:12px 16px;min-height:44px;background:transparent;color:inherit;font:inherit;cursor:pointer}
 .mission-widget button:hover{border-color:var(--green)}
 .mission-widget button:focus-visible,.mission-widget input:focus-visible{outline:2px solid var(--green);outline-offset:3px}
@@ -87,6 +101,26 @@ body:not(.web-reader) .mechanism-comparison dd{font-size:12px}
 .application-map>button{flex:1}
 .application-panel{padding:24px;border:1px solid var(--line)}
 .application-panel>header{border-bottom:1px solid var(--line);margin-bottom:20px}
+.fire-mission-heading h3{margin:0 0 12px;font:30px/1.3 var(--serif)}
+.fire-mission-heading>p{margin:0}
+.fire-mission-heading .evidence-badge{margin-bottom:12px}
+.web-reader [data-mission-widget="applications"]{scroll-margin-top:112px}
+.web-reader .application-panel>header>.eyebrow{margin:0}
+.web-reader .application-panel>header h3{font:28px/1.3 var(--serif);margin:12px 0 16px}
+.mission-widget .fire-question{font:23px/1.4 var(--serif);margin:20px 0;color:var(--green)}
+.fire-app-data{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px;margin:20px 0}
+.fire-app-data>div{min-width:0;padding:12px 0;border-top:1px solid var(--line);break-inside:avoid}
+.fire-app-data dt{font:12px/1.6 "Segoe UI",Arial,sans-serif;color:var(--muted)}
+.fire-app-data dd{font:18px/1.5 var(--serif);margin:8px 0 0;overflow-wrap:anywhere}
+.mission-widget .fire-app-explanation{font-size:15px;margin:20px 0}
+.fire-application>details,.application-workload{margin-top:20px}
+.fire-application>details>summary,.application-workload>summary,.mission-widget>details>summary{cursor:pointer;font:15px/1.6 "Segoe UI",Arial,sans-serif;color:var(--green);padding:12px 0}
+.application-workload{border-top:1px solid var(--line)}
+.fire-intake .request-form{margin-top:16px}
+@media(max-width:620px){.fire-app-data{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}.fire-app-data dd{font-size:16px}.mission-widget .fire-question{font-size:21px}}
+body:not(.web-reader) .fire-app-data{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body:not(.web-reader) .fire-app-data dd{font-size:13px}
+body:not(.web-reader) .fire-app-data dt{font-size:10px}
 .ticket-list{list-style:none;padding:0;display:grid;gap:12px}
 .ticket-list>li{position:relative;break-inside:avoid;border:1px solid var(--line);padding:12px 16px}
 .ticket-list button{text-align:left;width:100%;display:block;border:0;padding:0;min-height:0}
